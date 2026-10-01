@@ -27,7 +27,7 @@ Field inspections are prioritized strictly when $\text{ENV} > 0$ and ranked to m
 ## 3. Current Project Status
 
 - **Phase 1: Data Acquisition & Environment Setup** — *Completed / Operational*
-- **Phase 2: Data Preprocessing & Validation Pipeline** — *Upcoming*
+- **Phase 2: EDA, Data Cleaning & AMI Time-Series Understanding** — *Completed / Operational*
 - **Phase 3: Feature Engineering (Temporal & Theft Signatures)** — *Upcoming*
 - **Phase 4: Anomaly & Supervised Classification Modeling (LightGBM/XGBoost)** — *Upcoming*
 - **Phase 5: Financial Loss Function & Dynamic ENV Thresholding** — *Upcoming*
@@ -35,7 +35,7 @@ Field inspections are prioritized strictly when $\text{ENV} > 0$ and ranked to m
 - **Phase 7: Real-Time FastAPI Inference Engine & Monitoring Dashboard** — *Upcoming*
 
 > [!NOTE]
-> Phase 1 establishes the engineering foundation, dependency management, high-performance Polars ingestion framework, validation engine, local MLflow tracking, test suite, and data governance contracts. Model training, FastAPI endpoints, and dashboard are planned for subsequent phases.
+> Phases 1 & 2 establish the engineering foundation, high-performance Polars ingestion framework, validation engine, statistical time-series profiler, localized bounded-gap cleaning pipeline, canonical Parquet datasets, and comprehensive EDA reports.
 
 ---
 
@@ -231,24 +231,34 @@ Grid-Guard uses local MLflow tracking without requiring cloud credentials or ext
 
 ---
 
-## 10. Development Workflow
+## 10. EDA, Profiling & Data Cleaning (Phase 2)
 
-1. Configure settings in `configs/default.yaml` or through environment variables prefixed with `GRID_GUARD_`.
-2. Map new dataset schemas in `configs/dataset_mappings.yaml`.
-3. Ingest datasets through `grid_guard.data.ingestion.DataIngestionEngine`.
-4. Validate data integrity through `grid_guard.data.validation.DataValidator`.
-5. Run `verify_setup.py` to confirm environment health:
-   ```bash
-   python scripts/verify_setup.py
-   ```
+Grid-Guard provides an end-to-end command for profiling, localized bounded temporal imputation, canonical Parquet export, and visualization:
+
+```bash
+# Run full profiling, cleaning, Parquet export, and figure generation
+python scripts/run_eda_cleaning.py --action all
+
+# Run specific stages or with custom imputation gap limits:
+python scripts/run_eda_cleaning.py --action profile
+python scripts/run_eda_cleaning.py --action clean --max-gap 3
+python scripts/run_eda_cleaning.py --action visualize
+```
+
+### Generated Artifacts
+- **Clean Wide Parquet**: `data/processed/canonical_ami_clean.parquet` (77.6 MB)
+- **Clean Long Series Parquet**: `data/processed/canonical_ami_series.parquet` (395.8 MB, 43,812,648 rows)
+- **Comprehensive Audit Report**: `docs/eda/eda_report.md`
+- **Transformation Lineage**: `docs/eda/data_lineage.json`
+- **Statistical Profile JSON**: `docs/eda/dataset_profile.json`
+- **Figures Suite**: `docs/eda/figures/fig1_dataset_overview.png` to `fig5_imputation_impact.png`
 
 ---
 
 ## 11. Upcoming Phases
 
-- **Phase 2**: Automated reshaping (wide-to-long), missing timestamp imputation, calendar alignment.
-- **Phase 3**: Extraction of daily profiles, consumption volatility, zero-consumption runs, abnormal drop ratios.
-- **Phase 4**: LightGBM training with temporal cross-validation and SMOTE/class-weighting for extreme imbalance.
+- **Phase 3**: Extraction of multi-scale daily profiles, consumption volatility, zero-consumption runs, abnormal drop ratios.
+- **Phase 4**: LightGBM training with temporal cross-validation and cost-weighting for extreme class imbalance.
 - **Phase 5**: Implementation of the custom utility financial loss function and optimal threshold selection ($ENV^*$).
 - **Phase 6**: SHAP tree explainers generating inspector briefing sheets for field validation.
 - **Phase 7**: FastAPI microservice for scoring streaming meter readings and operational triage dashboard.

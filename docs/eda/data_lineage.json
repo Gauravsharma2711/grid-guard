@@ -1,0 +1,20 @@
+{
+  "source_name": "electric-data.csv",
+  "source_rows": 42372,
+  "source_cols": 1036,
+  "output_rows": 42372,
+  "output_cols": 1040,
+  "start_date": "2014-01-01",
+  "end_date": "2016-10-31",
+  "observed_days": 1034,
+  "duplicates_removed": 0,
+  "imputation": {
+    "max_gap_allowed": 3,
+    "missing_before": 11233528,
+    "values_imputed": 290195,
+    "missing_after": 10943333,
+    "imputation_percentage": 2.58,
+    "meters_affected": 34912
+  },
+  "execution_timestamp": "2026-10-01 19:57:31 UTC"
+}

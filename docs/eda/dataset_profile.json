@@ -1,0 +1,54 @@
+{
+  "dataset_name": "electric-data",
+  "file_size_bytes": 163119034,
+  "total_meters": 42372,
+  "total_columns": 1036,
+  "sampling_frequency": "daily",
+  "start_date": "2014-01-01",
+  "end_date": "2016-10-31",
+  "expected_days": 1035,
+  "observed_days": 1034,
+  "missing_calendar_dates": [
+    "2016-09-18"
+  ],
+  "total_cells": 43812648,
+  "total_nulls": 11233528,
+  "null_ratio": 0.2564,
+  "total_zeros": 5788603,
+  "zero_ratio": 0.1321,
+  "total_negatives": 0,
+  "tampering_label_available": true,
+  "label_distribution": {
+    "0": 38757,
+    "1": 3615
+  },
+  "tampering_ratio": 0.0853,
+  "consumption": {
+    "min_kwh": 0.0,
+    "mean_kwh": 9.1129,
+    "std_kwh": 64.5016,
+    "median_kwh": 4.59,
+    "p25_kwh": 0.73,
+    "p75_kwh": 9.75,
+    "p95_kwh": 25.26,
+    "p99_kwh": 69.96,
+    "max_kwh": 800003.32
+  },
+  "quality_tiers": {
+    "excellent_le_5pct": 18239,
+    "good_5_to_20pct": 7355,
+    "partial_20_to_50pct": 5594,
+    "sparse_50_to_99pct": 11179,
+    "empty_100pct": 5
+  },
+  "gaps": {
+    "total_gaps": 39780,
+    "gaps_1_day": 13222,
+    "gaps_2_to_3_days": 17294,
+    "gaps_4_to_7_days": 4915,
+    "gaps_8_to_30_days": 2590,
+    "gaps_over_30_days": 1759,
+    "median_gap_days": 2.0,
+    "max_gap_days": 946
+  }
+}
