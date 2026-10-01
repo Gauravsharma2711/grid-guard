@@ -1,0 +1,901 @@
+{
+  "total_features": 62,
+  "features_by_category": {
+    "calendar": 9,
+    "lag": 6,
+    "rolling": 16,
+    "ratio": 3,
+    "variability": 4,
+    "peak": 2,
+    "autocorrelation": 3,
+    "behavior_shift": 2,
+    "zero_streak": 5,
+    "step_down": 4,
+    "peer_context": 3,
+    "data_quality": 5
+  },
+  "features": [
+    {
+      "name": "day_of_week",
+      "category": "calendar",
+      "source_columns": [
+        "timestamp"
+      ],
+      "window_days": null,
+      "lag_days": null,
+      "description": "Day of week (1=Monday, 7=Sunday)",
+      "dtype": "Int8",
+      "leakage_risk": "safe",
+      "min_history_days": 1,
+      "requires_context": false
+    },
+    {
+      "name": "day_of_month",
+      "category": "calendar",
+      "source_columns": [
+        "timestamp"
+      ],
+      "window_days": null,
+      "lag_days": null,
+      "description": "Day of month (1-31)",
+      "dtype": "Int8",
+      "leakage_risk": "safe",
+      "min_history_days": 1,
+      "requires_context": false
+    },
+    {
+      "name": "month",
+      "category": "calendar",
+      "source_columns": [
+        "timestamp"
+      ],
+      "window_days": null,
+      "lag_days": null,
+      "description": "Calendar month (1-12)",
+      "dtype": "Int8",
+      "leakage_risk": "safe",
+      "min_history_days": 1,
+      "requires_context": false
+    },
+    {
+      "name": "quarter",
+      "category": "calendar",
+      "source_columns": [
+        "timestamp"
+      ],
+      "window_days": null,
+      "lag_days": null,
+      "description": "Calendar quarter (1-4)",
+      "dtype": "Int8",
+      "leakage_risk": "safe",
+      "min_history_days": 1,
+      "requires_context": false
+    },
+    {
+      "name": "is_weekend",
+      "category": "calendar",
+      "source_columns": [
+        "timestamp"
+      ],
+      "window_days": null,
+      "lag_days": null,
+      "description": "Binary indicator for Saturday or Sunday (1=Weekend, 0=Weekday)",
+      "dtype": "Int8",
+      "leakage_risk": "safe",
+      "min_history_days": 1,
+      "requires_context": false
+    },
+    {
+      "name": "dow_sin",
+      "category": "calendar",
+      "source_columns": [
+        "timestamp"
+      ],
+      "window_days": null,
+      "lag_days": null,
+      "description": "Cyclical sine encoding of day of week",
+      "dtype": "Float32",
+      "leakage_risk": "safe",
+      "min_history_days": 1,
+      "requires_context": false
+    },
+    {
+      "name": "dow_cos",
+      "category": "calendar",
+      "source_columns": [
+        "timestamp"
+      ],
+      "window_days": null,
+      "lag_days": null,
+      "description": "Cyclical cosine encoding of day of week",
+      "dtype": "Float32",
+      "leakage_risk": "safe",
+      "min_history_days": 1,
+      "requires_context": false
+    },
+    {
+      "name": "month_sin",
+      "category": "calendar",
+      "source_columns": [
+        "timestamp"
+      ],
+      "window_days": null,
+      "lag_days": null,
+      "description": "Cyclical sine encoding of calendar month",
+      "dtype": "Float32",
+      "leakage_risk": "safe",
+      "min_history_days": 1,
+      "requires_context": false
+    },
+    {
+      "name": "month_cos",
+      "category": "calendar",
+      "source_columns": [
+        "timestamp"
+      ],
+      "window_days": null,
+      "lag_days": null,
+      "description": "Cyclical cosine encoding of calendar month",
+      "dtype": "Float32",
+      "leakage_risk": "safe",
+      "min_history_days": 1,
+      "requires_context": false
+    },
+    {
+      "name": "consumption_kwh_lag_1d",
+      "category": "lag",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": null,
+      "lag_days": 1,
+      "description": "Backward historical consumption reading shifted by 1 days",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 2,
+      "requires_context": false
+    },
+    {
+      "name": "consumption_kwh_lag_2d",
+      "category": "lag",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": null,
+      "lag_days": 2,
+      "description": "Backward historical consumption reading shifted by 2 days",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 3,
+      "requires_context": false
+    },
+    {
+      "name": "consumption_kwh_lag_3d",
+      "category": "lag",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": null,
+      "lag_days": 3,
+      "description": "Backward historical consumption reading shifted by 3 days",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 4,
+      "requires_context": false
+    },
+    {
+      "name": "consumption_kwh_lag_7d",
+      "category": "lag",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": null,
+      "lag_days": 7,
+      "description": "Backward historical consumption reading shifted by 7 days",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 8,
+      "requires_context": false
+    },
+    {
+      "name": "consumption_kwh_lag_14d",
+      "category": "lag",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": null,
+      "lag_days": 14,
+      "description": "Backward historical consumption reading shifted by 14 days",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 15,
+      "requires_context": false
+    },
+    {
+      "name": "consumption_kwh_lag_30d",
+      "category": "lag",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": null,
+      "lag_days": 30,
+      "description": "Backward historical consumption reading shifted by 30 days",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 31,
+      "requires_context": false
+    },
+    {
+      "name": "rolling_mean_7d",
+      "category": "rolling",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": 7,
+      "lag_days": null,
+      "description": "Trailing 7-day rolling mean consumption",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 3,
+      "requires_context": false
+    },
+    {
+      "name": "rolling_std_7d",
+      "category": "rolling",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": 7,
+      "lag_days": null,
+      "description": "Trailing 7-day rolling standard deviation of consumption",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 3,
+      "requires_context": false
+    },
+    {
+      "name": "rolling_min_7d",
+      "category": "rolling",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": 7,
+      "lag_days": null,
+      "description": "Trailing 7-day minimum consumption reading",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 3,
+      "requires_context": false
+    },
+    {
+      "name": "rolling_max_7d",
+      "category": "rolling",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": 7,
+      "lag_days": null,
+      "description": "Trailing 7-day maximum (peak) consumption reading",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 3,
+      "requires_context": false
+    },
+    {
+      "name": "rolling_median_7d",
+      "category": "rolling",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": 7,
+      "lag_days": null,
+      "description": "Trailing 7-day median (50th percentile) consumption",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 3,
+      "requires_context": false
+    },
+    {
+      "name": "rolling_mean_14d",
+      "category": "rolling",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": 14,
+      "lag_days": null,
+      "description": "Trailing 14-day rolling mean consumption",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 7,
+      "requires_context": false
+    },
+    {
+      "name": "rolling_std_14d",
+      "category": "rolling",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": 14,
+      "lag_days": null,
+      "description": "Trailing 14-day rolling standard deviation of consumption",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 7,
+      "requires_context": false
+    },
+    {
+      "name": "rolling_mean_30d",
+      "category": "rolling",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": 30,
+      "lag_days": null,
+      "description": "Trailing 30-day rolling mean consumption",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 15,
+      "requires_context": false
+    },
+    {
+      "name": "rolling_std_30d",
+      "category": "rolling",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": 30,
+      "lag_days": null,
+      "description": "Trailing 30-day rolling standard deviation of consumption",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 15,
+      "requires_context": false
+    },
+    {
+      "name": "rolling_min_30d",
+      "category": "rolling",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": 30,
+      "lag_days": null,
+      "description": "Trailing 30-day minimum consumption reading",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 15,
+      "requires_context": false
+    },
+    {
+      "name": "rolling_max_30d",
+      "category": "rolling",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": 30,
+      "lag_days": null,
+      "description": "Trailing 30-day maximum (peak) consumption reading",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 15,
+      "requires_context": false
+    },
+    {
+      "name": "rolling_median_30d",
+      "category": "rolling",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": 30,
+      "lag_days": null,
+      "description": "Trailing 30-day median (50th percentile) consumption",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 15,
+      "requires_context": false
+    },
+    {
+      "name": "rolling_mean_60d",
+      "category": "rolling",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": 60,
+      "lag_days": null,
+      "description": "Trailing 60-day rolling mean consumption",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 30,
+      "requires_context": false
+    },
+    {
+      "name": "rolling_std_60d",
+      "category": "rolling",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": 60,
+      "lag_days": null,
+      "description": "Trailing 60-day rolling standard deviation of consumption",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 30,
+      "requires_context": false
+    },
+    {
+      "name": "rolling_mean_90d",
+      "category": "rolling",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": 90,
+      "lag_days": null,
+      "description": "Trailing 90-day rolling mean consumption",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 45,
+      "requires_context": false
+    },
+    {
+      "name": "rolling_std_90d",
+      "category": "rolling",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": 90,
+      "lag_days": null,
+      "description": "Trailing 90-day rolling standard deviation of consumption",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 45,
+      "requires_context": false
+    },
+    {
+      "name": "ratio_7d_30d",
+      "category": "ratio",
+      "source_columns": [
+        "rolling_mean_7d",
+        "rolling_mean_30d"
+      ],
+      "window_days": 30,
+      "lag_days": null,
+      "description": "Ratio of trailing 7-day mean to 30-day baseline mean",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 30,
+      "requires_context": false
+    },
+    {
+      "name": "ratio_14d_60d",
+      "category": "ratio",
+      "source_columns": [
+        "rolling_mean_14d",
+        "rolling_mean_60d"
+      ],
+      "window_days": 60,
+      "lag_days": null,
+      "description": "Ratio of trailing 14-day mean to 60-day baseline mean",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 60,
+      "requires_context": false
+    },
+    {
+      "name": "ratio_30d_90d",
+      "category": "ratio",
+      "source_columns": [
+        "rolling_mean_30d",
+        "rolling_mean_90d"
+      ],
+      "window_days": 90,
+      "lag_days": null,
+      "description": "Ratio of trailing 30-day mean to 90-day baseline mean",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 90,
+      "requires_context": false
+    },
+    {
+      "name": "wow_consumption_change",
+      "category": "behavior_shift",
+      "source_columns": [
+        "rolling_mean_7d"
+      ],
+      "window_days": 14,
+      "lag_days": 7,
+      "description": "Absolute week-over-week difference in 7-day rolling mean",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 14,
+      "requires_context": false
+    },
+    {
+      "name": "wow_consumption_ratio",
+      "category": "behavior_shift",
+      "source_columns": [
+        "rolling_mean_7d"
+      ],
+      "window_days": 14,
+      "lag_days": 7,
+      "description": "Ratio of current 7-day mean to preceding 7-day mean (lagged by 7d)",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 14,
+      "requires_context": false
+    },
+    {
+      "name": "par_7d",
+      "category": "peak",
+      "source_columns": [
+        "rolling_max_7d",
+        "rolling_mean_7d"
+      ],
+      "window_days": 7,
+      "lag_days": null,
+      "description": "Peak-to-Average Ratio over trailing 7 days (max_7d / mean_7d)",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 7,
+      "requires_context": false
+    },
+    {
+      "name": "par_30d",
+      "category": "peak",
+      "source_columns": [
+        "rolling_max_30d",
+        "rolling_mean_30d"
+      ],
+      "window_days": 30,
+      "lag_days": null,
+      "description": "Peak-to-Average Ratio over trailing 30 days (max_30d / mean_30d)",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 30,
+      "requires_context": false
+    },
+    {
+      "name": "zero_count_7d",
+      "category": "zero_streak",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": 7,
+      "lag_days": null,
+      "description": "Number of zero or near-zero consumption days in trailing 7 days",
+      "dtype": "Int8",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 7,
+      "requires_context": false
+    },
+    {
+      "name": "zero_ratio_7d",
+      "category": "zero_streak",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": 7,
+      "lag_days": null,
+      "description": "Proportion of zero or near-zero days in trailing 7 days",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 7,
+      "requires_context": false
+    },
+    {
+      "name": "zero_count_30d",
+      "category": "zero_streak",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": 30,
+      "lag_days": null,
+      "description": "Number of zero or near-zero consumption days in trailing 30 days",
+      "dtype": "Int8",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 30,
+      "requires_context": false
+    },
+    {
+      "name": "zero_ratio_30d",
+      "category": "zero_streak",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": 30,
+      "lag_days": null,
+      "description": "Proportion of zero or near-zero days in trailing 30 days",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 30,
+      "requires_context": false
+    },
+    {
+      "name": "current_zero_streak",
+      "category": "zero_streak",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": null,
+      "lag_days": null,
+      "description": "Current trailing count of consecutive zero-consumption days",
+      "dtype": "Int32",
+      "leakage_risk": "safe",
+      "min_history_days": 1,
+      "requires_context": false
+    },
+    {
+      "name": "rolling_cv_7d",
+      "category": "variability",
+      "source_columns": [
+        "rolling_std_7d",
+        "rolling_mean_7d"
+      ],
+      "window_days": 7,
+      "lag_days": null,
+      "description": "Trailing 7-day coefficient of variation (std / safe(mean))",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 7,
+      "requires_context": false
+    },
+    {
+      "name": "rolling_cv_30d",
+      "category": "variability",
+      "source_columns": [
+        "rolling_std_30d",
+        "rolling_mean_30d"
+      ],
+      "window_days": 30,
+      "lag_days": null,
+      "description": "Trailing 30-day coefficient of variation (std / safe(mean))",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 30,
+      "requires_context": false
+    },
+    {
+      "name": "daily_diff_abs_7d_mean",
+      "category": "variability",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": 7,
+      "lag_days": null,
+      "description": "Trailing 7-day mean of absolute day-to-day consumption changes",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 8,
+      "requires_context": false
+    },
+    {
+      "name": "flatline_streak",
+      "category": "variability",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": null,
+      "lag_days": null,
+      "description": "Trailing consecutive days of near-constant consumption (|diff| <= tol)",
+      "dtype": "Int32",
+      "leakage_risk": "safe",
+      "min_history_days": 2,
+      "requires_context": false
+    },
+    {
+      "name": "baseline_deviation_ratio",
+      "category": "step_down",
+      "source_columns": [
+        "rolling_mean_14d",
+        "rolling_mean_60d"
+      ],
+      "window_days": 74,
+      "lag_days": 14,
+      "description": "Ratio of recent 14-day consumption to historical baseline (60d shifted by 14d)",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 74,
+      "requires_context": false
+    },
+    {
+      "name": "sustained_drop_ratio",
+      "category": "step_down",
+      "source_columns": [
+        "rolling_mean_14d",
+        "rolling_mean_60d"
+      ],
+      "window_days": 74,
+      "lag_days": 14,
+      "description": "Fractional drop from baseline: max(0, 1 - (recent_14d / safe(baseline_60d)))",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 74,
+      "requires_context": false
+    },
+    {
+      "name": "sustained_drop_magnitude",
+      "category": "step_down",
+      "source_columns": [
+        "rolling_mean_14d",
+        "rolling_mean_60d"
+      ],
+      "window_days": 74,
+      "lag_days": 14,
+      "description": "Absolute consumption collapse: max(0, baseline_60d - recent_14d) in kWh",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 74,
+      "requires_context": false
+    },
+    {
+      "name": "sustained_drop_duration",
+      "category": "step_down",
+      "source_columns": [
+        "consumption_kwh",
+        "rolling_mean_60d"
+      ],
+      "window_days": 74,
+      "lag_days": 14,
+      "description": "Trailing consecutive days where consumption < 50% of historical baseline",
+      "dtype": "Int32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 74,
+      "requires_context": false
+    },
+    {
+      "name": "dow_profile_deviation",
+      "category": "autocorrelation",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": 28,
+      "lag_days": 7,
+      "description": "Difference between current reading and average of past 4 same-weekday readings",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 28,
+      "requires_context": false
+    },
+    {
+      "name": "dow_profile_ratio",
+      "category": "autocorrelation",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": 28,
+      "lag_days": 7,
+      "description": "Ratio of current reading to average of past 4 same-weekday readings",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 28,
+      "requires_context": false
+    },
+    {
+      "name": "weekly_autocorr_30d",
+      "category": "autocorrelation",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": 30,
+      "lag_days": 7,
+      "description": "Trailing 30-day autocorrelation with 7-day backward lag",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 37,
+      "requires_context": false
+    },
+    {
+      "name": "peer_group_mean",
+      "category": "peer_context",
+      "source_columns": [
+        "consumption_kwh",
+        "feeder_id"
+      ],
+      "window_days": null,
+      "lag_days": null,
+      "description": "Leave-one-out peer average consumption for the same timestamp and feeder",
+      "dtype": "Float32",
+      "leakage_risk": "context_dependent",
+      "min_history_days": 1,
+      "requires_context": true
+    },
+    {
+      "name": "meter_to_peer_ratio",
+      "category": "peer_context",
+      "source_columns": [
+        "consumption_kwh",
+        "feeder_id"
+      ],
+      "window_days": null,
+      "lag_days": null,
+      "description": "Ratio of meter consumption to leave-one-out peer group average",
+      "dtype": "Float32",
+      "leakage_risk": "context_dependent",
+      "min_history_days": 1,
+      "requires_context": true
+    },
+    {
+      "name": "peer_group_deviation",
+      "category": "peer_context",
+      "source_columns": [
+        "consumption_kwh",
+        "feeder_id"
+      ],
+      "window_days": null,
+      "lag_days": null,
+      "description": "Absolute difference between meter consumption and leave-one-out peer group mean",
+      "dtype": "Float32",
+      "leakage_risk": "context_dependent",
+      "min_history_days": 1,
+      "requires_context": true
+    },
+    {
+      "name": "coverage_ratio",
+      "category": "data_quality",
+      "source_columns": [
+        "coverage_ratio"
+      ],
+      "window_days": null,
+      "lag_days": null,
+      "description": "Historical proportion of valid observed days per meter",
+      "dtype": "Float32",
+      "leakage_risk": "safe",
+      "min_history_days": 1,
+      "requires_context": false
+    },
+    {
+      "name": "missing_ratio",
+      "category": "data_quality",
+      "source_columns": [
+        "missing_ratio"
+      ],
+      "window_days": null,
+      "lag_days": null,
+      "description": "Historical proportion of missing reading days per meter",
+      "dtype": "Float32",
+      "leakage_risk": "safe",
+      "min_history_days": 1,
+      "requires_context": false
+    },
+    {
+      "name": "imputation_ratio",
+      "category": "data_quality",
+      "source_columns": [
+        "imputation_ratio"
+      ],
+      "window_days": null,
+      "lag_days": null,
+      "description": "Historical proportion of values linearly imputed during cleaning",
+      "dtype": "Float32",
+      "leakage_risk": "safe",
+      "min_history_days": 1,
+      "requires_context": false
+    },
+    {
+      "name": "missing_count_30d",
+      "category": "data_quality",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": 30,
+      "lag_days": null,
+      "description": "Trailing 30-day count of null / missing readings for this meter",
+      "dtype": "Int8",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 30,
+      "requires_context": false
+    },
+    {
+      "name": "missing_ratio_30d",
+      "category": "data_quality",
+      "source_columns": [
+        "consumption_kwh"
+      ],
+      "window_days": 30,
+      "lag_days": null,
+      "description": "Trailing 30-day proportion of null / missing readings for this meter",
+      "dtype": "Float32",
+      "leakage_risk": "warmup_dependent",
+      "min_history_days": 30,
+      "requires_context": false
+    }
+  ]
+}

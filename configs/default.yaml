@@ -20,3 +20,15 @@ dataset:
 
 tracking:
   experiment_name: "grid-guard-ntl-detection"
+
+features:
+  lags: [1, 2, 3, 7, 14, 30]
+  rolling_windows: [7, 14, 30, 60, 90]
+  step_down_recent_window: 14
+  step_down_baseline_window: 60
+  step_down_baseline_lag: 14
+  zero_threshold: 0.001
+  flatline_tolerance: 0.01
+  min_history_days: 30
+  epsilon: 0.0001
+  batch_size_meters: 10000

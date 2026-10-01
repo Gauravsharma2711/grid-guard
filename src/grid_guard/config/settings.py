@@ -53,6 +53,24 @@ class TrackingSettings(BaseModel):
     artifact_location: str | None = None
 
 
+class FeatureSettings(BaseModel):
+    """Configuration for temporal feature extraction and tampering signatures."""
+
+    lags: list[int] = Field(default_factory=lambda: [1, 2, 3, 7, 14, 30])
+    rolling_windows: list[int] = Field(default_factory=lambda: [7, 14, 30, 60, 90])
+    ratio_pairs: list[tuple[int, int]] = Field(
+        default_factory=lambda: [(7, 30), (14, 60), (30, 90)]
+    )
+    step_down_recent_window: int = 14
+    step_down_baseline_window: int = 60
+    step_down_baseline_lag: int = 14
+    zero_threshold: float = 0.001
+    flatline_tolerance: float = 0.01
+    min_history_days: int = 30
+    epsilon: float = 1e-4
+    batch_size_meters: int = 10000
+
+
 class Settings(BaseSettings):
     """Global Grid-Guard application and pipeline settings."""
 
@@ -81,6 +99,7 @@ class Settings(BaseSettings):
     # Sub-configurations
     dataset: DatasetSettings = Field(default_factory=DatasetSettings)
     tracking: TrackingSettings = Field(default_factory=TrackingSettings)
+    features: FeatureSettings = Field(default_factory=FeatureSettings)
 
     def model_post_init(self, __context: Any) -> None:
         """Resolve and initialize default directory paths relative to project root."""

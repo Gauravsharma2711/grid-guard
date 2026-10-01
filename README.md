@@ -28,14 +28,14 @@ Field inspections are prioritized strictly when $\text{ENV} > 0$ and ranked to m
 
 - **Phase 1: Data Acquisition & Environment Setup** — *Completed / Operational*
 - **Phase 2: EDA, Data Cleaning & AMI Time-Series Understanding** — *Completed / Operational*
-- **Phase 3: Feature Engineering (Temporal & Theft Signatures)** — *Upcoming*
+- **Phase 3: Temporal Feature Engineering & Tampering Signatures** — *Completed / Operational*
 - **Phase 4: Anomaly & Supervised Classification Modeling (LightGBM/XGBoost)** — *Upcoming*
 - **Phase 5: Financial Loss Function & Dynamic ENV Thresholding** — *Upcoming*
 - **Phase 6: Explainable AI (SHAP Tampering Signatures)** — *Upcoming*
 - **Phase 7: Real-Time FastAPI Inference Engine & Monitoring Dashboard** — *Upcoming*
 
 > [!NOTE]
-> Phases 1 & 2 establish the engineering foundation, high-performance Polars ingestion framework, validation engine, statistical time-series profiler, localized bounded-gap cleaning pipeline, canonical Parquet datasets, and comprehensive EDA reports.
+> Phases 1–3 establish the production foundation: high-performance Polars ingestion, data validation rules, localized bounded-gap imputation, EDA reports, and a 60-feature temporal extraction pipeline capturing sudden consumption collapses, zero streaks, flatlines, multi-scale ratios, and week-over-week dynamics.
 
 ---
 
@@ -255,10 +255,54 @@ python scripts/run_eda_cleaning.py --action visualize
 
 ---
 
-## 11. Upcoming Phases
+## 11. Temporal Feature Engineering & Tampering Signatures (Phase 3)
 
-- **Phase 3**: Extraction of multi-scale daily profiles, consumption volatility, zero-consumption runs, abnormal drop ratios.
-- **Phase 4**: LightGBM training with temporal cross-validation and cost-weighting for extreme class imbalance.
-- **Phase 5**: Implementation of the custom utility financial loss function and optimal threshold selection ($ENV^*$).
-- **Phase 6**: SHAP tree explainers generating inspector briefing sheets for field validation.
-- **Phase 7**: FastAPI microservice for scoring streaming meter readings and operational triage dashboard.
+Grid-Guard converts canonical smart-meter time series into a documented, leakage-safe, model-ready feature representation. All 60 registered features use strictly backward trailing windows ($\le t$), preserving mathematical causality and preventing future data leakage.
+
+### Feature Families
+1. **Calendar & Cyclical Harmonics** (9 features): Day of week, day of month, month, quarter, weekend indicator, and cyclical sine/cosine harmonics (`dow_sin`, `dow_cos`, `month_sin`, `month_cos`).
+2. **Backward Lags** (6 features): Previous-day and previous-week lags (`1d`, `2d`, `3d`, `7d`, `14d`, `30d`).
+3. **Trailing Rolling Statistics** (16 features): Trailing mean, std, min, max, and median across `7d`, `14d`, `30d`, `60d`, and `90d` historical windows.
+4. **Multi-Scale Ratios & Dynamics** (7 features): Moving average ratios (`7d/30d`, `14d/60d`, `30d/90d`), Week-over-Week changes/ratios, and Peak-to-Average Ratios (`PAR 7d`, `PAR 30d`).
+5. **Tampering Signatures** (13 features):
+   - **Zero Streaks**: Trailing zero count (`7d`, `30d`), zero ratio, and current continuous zero streak.
+   - **Flatline Metering**: Trailing coefficient of variation (`CV 7d`, `CV 30d`), daily absolute differences, and consecutive identical-reading streaks.
+   - **Sustained Step-Down**: Baseline collapse ratio ($R_{14d} / B_{60d}$), sustained drop ratio, absolute drop magnitude, and depressed consumption duration.
+6. **Periodicity & Autocorrelation** (3 features): Same-weekday personal profile deviation (`dow_profile_deviation`, `dow_profile_ratio`) and trailing 30-day weekly lag-7 autocorrelation.
+7. **Context & Quality** (6 features): Historical coverage ratio, missing ratio, imputation ratio, trailing 30-day missingness, and leave-one-out peer aggregates (when feeder metadata exists).
+
+### Running Feature Engineering
+
+```bash
+# Run complete feature pipeline: export dictionary, generate figures, process dataset, and audit
+python scripts/run_feature_engineering.py all
+
+# Run specific actions:
+python scripts/run_feature_engineering.py dictionary  # Exports registry JSON & Markdown dictionary
+python scripts/run_feature_engineering.py visualize   # Generates diagnostic validation plots
+python scripts/run_feature_engineering.py generate    # Computes canonical_features.parquet
+python scripts/run_feature_engineering.py validate    # Audits distributions, finiteness & uniqueness
+```
+
+### Generated Artifacts
+- **Canonical Feature Parquet**: `data/processed/canonical_features.parquet` (2,726.35 MB, 43,812,648 rows $\times$ 64 columns)
+- **Feature Dictionary (Markdown)**: `docs/features/feature_dictionary.md`
+- **Machine-Readable Registry (JSON)**: `docs/features/feature_registry.json`
+- **Feature Quality & Audit Report (JSON)**: `docs/features/feature_quality_report.json`
+- **Feature Summary Report (Markdown)**: `docs/features/feature_summary_report.md`
+- **Validation Figures**:
+  - `docs/features/figures/fig1_step_down_tampering.png`
+  - `docs/features/figures/fig2_zero_streak_detection.png`
+  - `docs/features/figures/fig3_flatline_variance_collapse.png`
+  - `docs/features/figures/fig4_multi_scale_ratios_and_par.png`
+  - `docs/features/figures/fig5_real_meters_comparison.png`
+
+---
+
+## 12. Upcoming Phases
+
+- **Phase 4**: Anomaly & Supervised Classification Modeling (LightGBM/XGBoost with temporal CV).
+- **Phase 5**: Custom Financial Loss Function & Dynamic ENV Threshold Optimization.
+- **Phase 6**: SHAP Tree Explainers & Field Inspector Briefing Sheets.
+- **Phase 7**: FastAPI Operational Microservice & Real-Time Triage Dashboard.
+
