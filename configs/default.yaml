@@ -1,0 +1,22 @@
+project_name: "grid-guard"
+environment: "development"
+random_seed: 42
+log_level: "INFO"
+
+dataset:
+  name: "sgcc_electricity_theft"
+  raw_filename: "electric-data.csv"
+  format: "csv"
+  layout: "wide"
+  allow_negative_consumption: false
+  columns:
+    meter_id: "CONS_NO"
+    timestamp: null
+    consumption: null
+    label: "FLAG"
+    tariff: null
+    customer_category: null
+    feeder_id: null
+
+tracking:
+  experiment_name: "grid-guard-ntl-detection"

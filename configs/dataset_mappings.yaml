@@ -1,0 +1,49 @@
+# Dataset Schema Mappings for Grid-Guard Ingestion Engine
+
+# 1. State Grid Corporation of China (SGCC) Dataset (Default Benchmark)
+sgcc_electricity_theft:
+  name: "sgcc_electricity_theft"
+  raw_filename: "electric-data.csv"
+  format: "csv"
+  layout: "wide" # Dates are columns, one row per consumer
+  allow_negative_consumption: false
+  columns:
+    meter_id: "CONS_NO"
+    timestamp: null # Date columns span wide headers (e.g., 2014/1/1 to 2016/10/31)
+    consumption: null
+    label: "FLAG" # 1 = theft / tampering, 0 = normal
+    tariff: null
+    customer_category: null
+    feeder_id: null
+
+# 2. Commission for Energy Regulation (CER) Smart Meter Trials (Ireland)
+cer_smart_meter:
+  name: "cer_smart_meter"
+  raw_filename: "cer_smart_meter.csv"
+  format: "csv"
+  layout: "long" # Long time-series format
+  allow_negative_consumption: false
+  columns:
+    meter_id: "ID"
+    timestamp: "Date_Code"
+    consumption: "Demand"
+    label: "Tampered"
+    tariff: "Tariff_Type"
+    customer_category: "Code"
+    feeder_id: null
+
+# 3. Standard Long-Format Canonical AMI Schema (Internal Model Target)
+canonical_ami:
+  name: "canonical_ami"
+  raw_filename: "readings.parquet"
+  format: "parquet"
+  layout: "long"
+  allow_negative_consumption: false
+  columns:
+    meter_id: "meter_id"
+    timestamp: "timestamp"
+    consumption: "consumption_kwh"
+    label: "is_tampered"
+    tariff: "tariff_id"
+    customer_category: "customer_class"
+    feeder_id: "feeder_id"
