@@ -1,5 +1,6 @@
 """Configuration package for Grid-Guard."""
 
+from grid_guard.config.financial import BaselineModelSettings, FinancialAssumptions
 from grid_guard.config.settings import (
     DatasetColumnMapping,
     DatasetSettings,
@@ -11,9 +12,11 @@ from grid_guard.config.settings import (
 )
 
 __all__ = [
+    "BaselineModelSettings",
     "DatasetColumnMapping",
     "DatasetSettings",
     "FeatureSettings",
+    "FinancialAssumptions",
     "Settings",
     "TrackingSettings",
     "find_project_root",

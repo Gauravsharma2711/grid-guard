@@ -11,6 +11,8 @@ import yaml
 from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from grid_guard.config.financial import BaselineModelSettings, FinancialAssumptions
+
 
 def find_project_root() -> Path:
     """Find the root directory of the project by searching for pyproject.toml."""
@@ -95,11 +97,14 @@ class Settings(BaseSettings):
     external_data_dir: Path | None = None
     mlruns_dir: Path | None = None
     configs_dir: Path | None = None
+    artifacts_dir: Path | None = None
 
     # Sub-configurations
     dataset: DatasetSettings = Field(default_factory=DatasetSettings)
     tracking: TrackingSettings = Field(default_factory=TrackingSettings)
     features: FeatureSettings = Field(default_factory=FeatureSettings)
+    financial: FinancialAssumptions = Field(default_factory=FinancialAssumptions)
+    baseline: BaselineModelSettings = Field(default_factory=BaselineModelSettings)
 
     def model_post_init(self, __context: Any) -> None:
         """Resolve and initialize default directory paths relative to project root."""
@@ -125,6 +130,8 @@ class Settings(BaseSettings):
             self.mlruns_dir = root / "mlruns"
         if self.configs_dir is None:
             self.configs_dir = root / "configs"
+        if self.artifacts_dir is None:
+            self.artifacts_dir = root / "artifacts"
 
         # Resolve tracking URI if not explicitly set
         if self.tracking.tracking_uri is None:

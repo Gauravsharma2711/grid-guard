@@ -82,10 +82,78 @@
 
 ---
 
-### 4. Next Phase
+## Phase 3: Temporal Feature Engineering & Tampering Signature Extraction
 
-- **Phase 3: Feature Engineering & Tampering Signatures**
-  - Extract multi-scale rolling statistics (7-day, 14-day, 30-day mean, std, and drop ratios).
-  - Extract temporal features (day of week, seasonality, month-over-month drop ratio).
-  - Extract tampering signatures: abnormal zero-consumption streaks, sudden historical variance collapse.
-  - Construct clean feature matrices for anomaly detection and gradient boosted trees.
+- **Status**: Completed / Operational
+- **Completed Date**: 2026-10-02
+- **Lead Implementation Engineer**: Antigravity Autonomous Agent
+
+### Summary
+- Constructed 60 temporal and statistical features natively in Polars across 43,812,648 records.
+- Feature extraction categories:
+  - Trailing lags: 1d, 2d, 3d, 7d, 14d, 30d.
+  - Multi-window rolling statistics: 7d, 14d, 30d, 60d, 90d (mean, std, min, max, median, CV, absolute difference).
+  - Step-down ratios: 14d/60d, 30d/60d, 30d/90d.
+  - Tampering signatures: zero streak length, zero ratios, abnormal drop severity.
+  - Cyclical calendar features: day of week, day of month, month sine/cosine.
+- Validated absence of future lookahead leakage (strict causal windows $\le t$).
+- Exported model-ready dataset: `data/processed/canonical_features.parquet` (2,726.35 MB).
+
+---
+
+## Phase 4: Cost Matrix Definition & Unweighted Baseline Modeling
+
+- **Status**: Completed / Operational
+- **Completed Date**: 2026-10-02
+- **Lead Implementation Engineer**: Antigravity Autonomous Agent
+
+### 1. Completed Items
+- [x] **Configurable Financial Framework (`grid_guard.evaluation.financial`)**:
+  - Implemented `LeakageEstimator` computing per-meter daily deficit, monthly volume, and cumulative leakage cost ($C_{\text{FN}}$).
+  - Implemented `FinancialCostEvaluator` tracking $C_{\text{dispatch}}$, wasted FP dispatch cost, undetected FN leakage cost, and net recovery.
+  - Formalized strict 3-tier provenance separation (**Observed** vs. **Derived** vs. **Assumed**).
+- [x] **Strictly Time-Aware Data Splitter (`grid_guard.models.splitting`)**:
+  - Implemented non-overlapping chronological partitions:
+    - Train: `2014-04-01` to `2015-12-31` (932,184 rows, 42,372 meters).
+    - Validation: `2016-01-01` to `2016-05-31` (254,232 rows, 42,372 meters).
+    - Held-out Test: `2016-06-01` to `2016-10-31` (254,232 rows, 42,372 meters).
+  - Ensured strict exclusion of `tamper_label` / `FLAG` and `meter_id` from feature matrix $X$.
+- [x] **Unweighted LightGBM Baseline Model (`grid_guard.models.baseline`)**:
+  - Trained an ordinary unweighted LightGBM binary classifier on 932,184 samples across 60 features in 17 seconds.
+  - Maintained conventional 0.5 decision threshold without class weights or cost weighting.
+- [x] **Baseline Evaluation on Real Held-Out Test Set**:
+  - **Statistical Metrics**:
+    - Prevalence: `8.53%` (21,690 actual thefts vs. 232,542 normal).
+    - PR-AUC: `0.2959` (vs. 0.0853 random baseline).
+    - ROC-AUC: `0.7711`.
+    - Precision: `46.89%` (3,161 TP, 3,580 FP).
+    - Recall: `14.57%` (18,529 undetected thefts).
+    - F1-Score: `0.2224`.
+  - **Operational Ranking Metrics**:
+    - Precision@10: `80.00%` (8 / 10).
+    - Precision@50: `84.00%` (42 / 50).
+    - Precision@100: `82.00%` (82 / 100).
+    - Precision@500: `63.20%` (316 / 500).
+    - Precision@1000: `57.00%` (570 / 1000).
+    - Precision@2000: `51.45%` (1,029 / 2000).
+  - **Financial Metrics (Base $C_{\text{dispatch}} = \$100$, Tariff = $\$0.15/\text{kWh}$)**:
+    - Wasted FP Dispatch Cost: `USD 358,000.00`
+    - Undetected FN Revenue Leakage: `USD 765,766.00`
+    - Total Baseline Operational Loss: **`USD 1,123,766.00`**
+    - Estimated Gross Recovery: `USD 1,447,265.25`
+    - Estimated Net Recovery: `USD 773,165.25`
+- [x] **Experiment Tracking & Artifact Generation (`grid_guard.tracking.experiment`)**:
+  - Tracked parameters, scalar metrics, and visual artifacts to MLflow experiment `grid-guard-ntl-detection` (Run ID: `3ab6e61fd27a4c96b0c87cbed14dad80`).
+  - Exported `artifacts/baseline/` containing `baseline_metrics.json`, `financial_cost_report.md`, `baseline_predictions.parquet`, `feature_importance_gain.csv`, and 7 figures.
+- [x] **CLI Pipeline Script**:
+  - Created `scripts/run_baseline.py` supporting `--stride`, `--dispatch-cost`, and `--tariff`.
+- [x] **Test Suite & Verification**:
+  - 57 automated unit, leakage audit, and pipeline integration tests passing with **88.88%** line coverage.
+  - Ruff linting and formatting 100% clean across 68 files.
+
+---
+
+### 2. Next Phase
+
+- **Phase 5: Class Imbalance & Representation Strategies**
+  - Implement and evaluate balanced sub-sampling, SMOTE / focal loss alternatives, and minority representation enhancement without leaking test data.

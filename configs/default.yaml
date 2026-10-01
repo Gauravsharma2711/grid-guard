@@ -32,3 +32,35 @@ features:
   min_history_days: 30
   epsilon: 0.0001
   batch_size_meters: 10000
+
+financial:
+  currency: "USD"
+  dispatch_cost: 100.0
+  default_tariff: 0.15
+  tariff_source: "assumed_fallback"
+  undetected_cycles: 12
+  leakage_window_days: 30
+  min_leakage_kwh: 5.0
+
+baseline:
+  model_type: "lightgbm"
+  target_col: "tamper_label"
+  objective: "binary"
+  metric: "binary_logloss"
+  learning_rate: 0.05
+  n_estimators: 200
+  max_depth: 6
+  num_leaves: 31
+  subsample: 0.8
+  colsample_bytree: 0.8
+  random_state: 42
+  threshold: 0.5
+  sampling_stride_days: 30
+  train_start: "2014-04-01"
+  train_end: "2015-12-31"
+  val_start: "2016-01-01"
+  val_end: "2016-05-31"
+  test_start: "2016-06-01"
+  test_end: "2016-10-31"
+  top_k_values: [10, 50, 100, 500, 1000, 2000]
+

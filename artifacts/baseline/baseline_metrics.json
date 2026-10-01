@@ -1,0 +1,146 @@
+{
+  "model_type": "lightgbm",
+  "threshold": 0.5,
+  "split_dates": {
+    "train": [
+      "2014-04-01",
+      "2015-12-31"
+    ],
+    "val": [
+      "2016-01-01",
+      "2016-05-31"
+    ],
+    "test": [
+      "2016-06-01",
+      "2016-10-31"
+    ]
+  },
+  "sample_counts": {
+    "train_samples": 932184,
+    "train_meters": 42372,
+    "val_samples": 254232,
+    "val_meters": 42372,
+    "test_samples": 254232,
+    "test_meters": 42372
+  },
+  "statistical_metrics": {
+    "total_samples": 254232,
+    "actual_positives": 21690,
+    "actual_negatives": 232542,
+    "prevalence": 0.0853,
+    "confusion_matrix": {
+      "tp": 3161,
+      "fp": 3580,
+      "tn": 228962,
+      "fn": 18529
+    },
+    "precision": 0.4689,
+    "recall": 0.1457,
+    "f1_score": 0.2224,
+    "pr_auc": 0.2959,
+    "roc_auc": 0.7711,
+    "false_positive_rate": 0.0154,
+    "positive_prediction_rate": 0.0265
+  },
+  "top_k_ranking_metrics": {
+    "10": {
+      "k": 10,
+      "true_positives": 8,
+      "false_positives": 2,
+      "precision_at_k": 0.8,
+      "recall_at_k": 0.0004
+    },
+    "50": {
+      "k": 50,
+      "true_positives": 42,
+      "false_positives": 8,
+      "precision_at_k": 0.84,
+      "recall_at_k": 0.0019
+    },
+    "100": {
+      "k": 100,
+      "true_positives": 82,
+      "false_positives": 18,
+      "precision_at_k": 0.82,
+      "recall_at_k": 0.0038
+    },
+    "500": {
+      "k": 500,
+      "true_positives": 316,
+      "false_positives": 184,
+      "precision_at_k": 0.632,
+      "recall_at_k": 0.0146
+    },
+    "1000": {
+      "k": 1000,
+      "true_positives": 570,
+      "false_positives": 430,
+      "precision_at_k": 0.57,
+      "recall_at_k": 0.0263
+    },
+    "2000": {
+      "k": 2000,
+      "true_positives": 1029,
+      "false_positives": 971,
+      "precision_at_k": 0.5145,
+      "recall_at_k": 0.0474
+    }
+  },
+  "financial_metrics": {
+    "currency": "USD",
+    "dispatch_cost_per_inspection": 100.0,
+    "counts": {
+      "tp": 3161,
+      "fp": 3580,
+      "tn": 228962,
+      "fn": 18529,
+      "total_inspections": 6741
+    },
+    "financial_breakdown": {
+      "total_fp_dispatch_cost": 358000.0,
+      "total_fn_leakage_cost": 765766.0,
+      "total_baseline_operational_loss": 1123766.0,
+      "total_tp_inspection_cost": 316100.0,
+      "estimated_gross_recovery": 1447265.25,
+      "estimated_net_recovery": 773165.25
+    },
+    "audit_trail": [
+      {
+        "parameter_name": "currency",
+        "value": "USD",
+        "unit": "ISO code",
+        "source_type": "assumed",
+        "description": "Monetary currency unit for evaluation"
+      },
+      {
+        "parameter_name": "dispatch_cost",
+        "value": 100.0,
+        "unit": "USD",
+        "source_type": "assumed",
+        "description": "Operational cost to dispatch a physical field inspection crew"
+      },
+      {
+        "parameter_name": "tariff_rate",
+        "value": 0.15,
+        "unit": "USD/kWh",
+        "source_type": "assumed",
+        "description": "Configured regional benchmark tariff fallback"
+      },
+      {
+        "parameter_name": "undetected_billing_cycles",
+        "value": 12,
+        "unit": "months",
+        "source_type": "assumed",
+        "description": "Estimated horizon undetected tampering continues before discovery"
+      },
+      {
+        "parameter_name": "estimated_leakage_cost",
+        "value": "Deficit kWh x Tariff x Horizon",
+        "unit": "USD",
+        "source_type": "derived",
+        "description": "Derived financial impact of unmetered electricity theft"
+      }
+    ]
+  },
+  "execution_time_seconds": 33.33
+}

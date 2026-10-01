@@ -41,6 +41,7 @@ data/external/*
 *.zip
 *.tar.gz
 *.tar
+artifacts/baseline/*.txt
 
 # MLflow tracking artifacts & runs
 mlruns/

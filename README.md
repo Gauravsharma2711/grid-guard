@@ -29,13 +29,14 @@ Field inspections are prioritized strictly when $\text{ENV} > 0$ and ranked to m
 - **Phase 1: Data Acquisition & Environment Setup** — *Completed / Operational*
 - **Phase 2: EDA, Data Cleaning & AMI Time-Series Understanding** — *Completed / Operational*
 - **Phase 3: Temporal Feature Engineering & Tampering Signatures** — *Completed / Operational*
-- **Phase 4: Anomaly & Supervised Classification Modeling (LightGBM/XGBoost)** — *Upcoming*
-- **Phase 5: Financial Loss Function & Dynamic ENV Thresholding** — *Upcoming*
-- **Phase 6: Explainable AI (SHAP Tampering Signatures)** — *Upcoming*
-- **Phase 7: Real-Time FastAPI Inference Engine & Monitoring Dashboard** — *Upcoming*
+- **Phase 4: Cost Matrix Definition & Unweighted Baseline Modeling** — *Completed / Operational*
+- **Phase 5: Class Imbalance & Representation Strategies** — *Upcoming*
+- **Phase 6: Cost-Sensitive Optimization & Custom Loss Functions** — *Upcoming*
+- **Phase 7: Expected Net Value (ENV) & Dynamic Thresholding** — *Upcoming*
+- **Phase 8: Explainable AI (SHAP) & Operational Dashboard** — *Upcoming*
 
 > [!NOTE]
-> Phases 1–3 establish the production foundation: high-performance Polars ingestion, data validation rules, localized bounded-gap imputation, EDA reports, and a 60-feature temporal extraction pipeline capturing sudden consumption collapses, zero streaks, flatlines, multi-scale ratios, and week-over-week dynamics.
+> Phases 1–4 establish the empirical benchmark: high-performance Polars ingestion, data validation rules, localized bounded-gap imputation, a 60-feature causal temporal extraction pipeline, a strictly time-aware LightGBM baseline binary classifier, and a configurable financial cost model tracking field dispatch costs vs. undetected revenue leakage.
 
 ---
 
@@ -299,10 +300,75 @@ python scripts/run_feature_engineering.py validate    # Audits distributions, fi
 
 ---
 
-## 12. Upcoming Phases
+## 12. Cost Matrix Definition & Unweighted Baseline Modeling (Phase 4)
 
-- **Phase 4**: Anomaly & Supervised Classification Modeling (LightGBM/XGBoost with temporal CV).
-- **Phase 5**: Custom Financial Loss Function & Dynamic ENV Threshold Optimization.
-- **Phase 6**: SHAP Tree Explainers & Field Inspector Briefing Sheets.
-- **Phase 7**: FastAPI Operational Microservice & Real-Time Triage Dashboard.
+Grid-Guard establishes an ordinary, strictly unweighted LightGBM baseline binary classifier and a formal financial cost matrix. The baseline deliberately avoids SMOTE, class weights, cost weighting, or dynamic thresholds, evaluating at the conventional **0.5 decision threshold** to establish the benchmark against which later cost-sensitive methods will be judged.
+
+### A. Non-Overlapping Chronological Split
+
+| Partition | Date Range | Duration | Sample Count | Meters | Theft Rate |
+|---|---|---|---|---|---|
+| **Train** | `2014-04-01` to `2015-12-31` | 21 months | 932,184 | 42,372 | 8.53% |
+| **Validation** | `2016-01-01` to `2016-05-31` | 5 months | 254,232 | 42,372 | 8.53% |
+| **Held-Out Test** | `2016-06-01` to `2016-10-31` | 5 months | 254,232 | 42,372 | 8.53% |
+
+### B. Baseline Empirical Performance (Held-Out Test Set)
+
+| Metric | Measured Baseline Value | Operational Takeaway |
+|---|---|---|
+| **PR-AUC** | **`0.2959`** | Primary metric under class imbalance (vs. 0.0853 random rate) |
+| **ROC-AUC** | `0.7711` | Discriminative ranking capability |
+| **Precision** | `46.89%` | 3,161 true thefts detected out of 6,741 inspections |
+| **Recall** | **`14.57%`** | **Severe failure of unweighted baseline: 18,529 thefts missed (85.4%)** |
+| **F1-Score** | `0.2224` | Harmonic mean |
+| **Precision@10** | `80.00%` | 8 out of top 10 ranked meters are true thefts |
+| **Precision@50** | `84.00%` | 42 out of top 50 ranked meters are true thefts |
+| **Precision@100** | `82.00%` | 82 out of top 100 ranked meters are true thefts |
+| **Precision@500** | `63.20%` | 316 out of top 500 ranked meters are true thefts |
+| **Precision@1000** | `57.00%` | 570 out of top 1,000 ranked meters are true thefts |
+
+### C. Financial Cost Outcomes
+
+Using configured parameters ($C_{\text{dispatch}} = \$100.00$, Tariff = $\$0.15/\text{kWh}$, $H_{\text{undetected}} = 12$ months):
+- **Wasted FP Field Dispatch Cost**: `USD 358,000.00` (3,580 false alarms)
+- **Undetected FN Revenue Leakage**: `USD 765,766.00` (18,529 missed thefts)
+- **Total Baseline Operational Loss**: **`USD 1,123,766.00`**
+- **Estimated Gross Recovered Revenue**: `USD 1,447,265.25`
+- **Estimated Net Financial Recovery**: `USD 773,165.25`
+
+### D. Running the Baseline Pipeline
+
+```bash
+# Execute end-to-end baseline training, evaluation, artifact export, and MLflow logging
+python scripts/run_baseline.py all
+
+# Override operational assumptions
+python scripts/run_baseline.py all --stride 30 --dispatch-cost 120.0 --tariff 0.18
+
+# Launch local MLflow dashboard
+mlflow ui --backend-store-uri sqlite:///mlruns/mlflow.db
+```
+
+### E. Generated Baseline Artifacts
+- **Model Checkpoint**: `artifacts/baseline/baseline_lightgbm.txt`
+- **Scored Test Predictions**: `artifacts/baseline/baseline_predictions.parquet` (254,232 rows)
+- **Metrics Report**: `artifacts/baseline/baseline_metrics.json`
+- **Financial Audit Report**: `artifacts/baseline/financial_cost_report.md`
+- **Diagnostic Charts**:
+  - `artifacts/baseline/figures/pr_curve.png`
+  - `artifacts/baseline/figures/roc_curve.png`
+  - `artifacts/baseline/figures/confusion_matrix.png`
+  - `artifacts/baseline/figures/probability_distribution.png`
+  - `artifacts/baseline/figures/feature_importance.png`
+  - `artifacts/baseline/figures/financial_loss_breakdown.png`
+  - `artifacts/baseline/figures/precision_at_k.png`
+
+---
+
+## 13. Upcoming Phases
+
+- **Phase 5**: Class Imbalance & Representation Strategies (balanced sub-sampling, SMOTE, focal loss).
+- **Phase 6**: Cost-Sensitive Optimization & Custom Loss Functions ($C_{\text{dispatch}}$ vs. $C_{\text{FN}}$).
+- **Phase 7**: Expected Net Value (ENV) & Dynamic Per-Meter Inspection Thresholding.
+- **Phase 8**: Explainable AI (SHAP Tree Explainer) & FastAPI Operational Decision Dashboard.
 

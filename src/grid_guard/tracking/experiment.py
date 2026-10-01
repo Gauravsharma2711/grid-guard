@@ -129,10 +129,14 @@ class MLflowTracker:
         """Log scalar metrics to the active MLflow run."""
         mlflow.log_metrics(metrics, step=step)
 
-    def log_artifact(self, local_path: Path, artifact_path: str | None = None) -> None:
+    def log_artifact(self, local_path: Path | str, artifact_path: str | None = None) -> None:
         """Log a local file or directory as an artifact."""
         mlflow.log_artifact(str(local_path), artifact_path=artifact_path)
 
     def log_dict(self, dictionary: dict[str, Any], artifact_file: str) -> None:
         """Log a Python dictionary directly as a JSON artifact."""
         mlflow.log_dict(dictionary, artifact_file)
+
+
+# Alias for backward/forward compatibility
+ExperimentTracker = MLflowTracker
