@@ -77,3 +77,21 @@ imbalance:
   smote_k_neighbors: 5
   smote_sample_size_cap: 50000
 
+cost_sensitive:
+  enabled: true
+  objective_name: "cost_sensitive_weighted_logistic"
+  dispatch_cost: 100.0
+  default_tariff: 0.15
+  tariff_source: "assumed_fallback"
+  undetected_cycles: 12
+  min_leakage_kwh: 5.0
+  min_fn_cost: 100.0
+  cost_normalization: "dispatch_cost"
+  cost_capping: false
+  cost_cap_percentile: 99.5
+  threshold: 0.5
+  calibration_method: "isotonic"
+  selection_metric: "total_operational_loss"
+  random_seed: 42
+
+

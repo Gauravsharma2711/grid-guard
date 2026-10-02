@@ -30,8 +30,8 @@ Field inspections are prioritized strictly when $\text{ENV} > 0$ and ranked to m
 - **Phase 2: EDA, Data Cleaning & AMI Time-Series Understanding** — *Completed / Operational*
 - **Phase 3: Temporal Feature Engineering & Tampering Signatures** — *Completed / Operational*
 - **Phase 4: Cost Matrix Definition & Unweighted Baseline Modeling** — *Completed / Operational*
-- **Phase 5: Class Imbalance & Representation Strategies** — *Upcoming*
-- **Phase 6: Cost-Sensitive Optimization & Custom Loss Functions** — *Upcoming*
+- **Phase 5: Class Imbalance & Representation Strategies** — *Completed / Operational*
+- **Phase 6: Cost-Sensitive Custom Objective & Financially Weighted Learning** — *Completed / Operational*
 - **Phase 7: Expected Net Value (ENV) & Dynamic Thresholding** — *Upcoming*
 - **Phase 8: Explainable AI (SHAP) & Operational Dashboard** — *Upcoming*
 
@@ -416,10 +416,62 @@ python scripts/run_imbalance.py all --metric pr_auc --stride 30
 
 ---
 
-## 14. Upcoming Phases
+## 14. Cost-Sensitive Custom Objective & Financially Weighted Learning (Phase 6)
 
-- **Phase 6**: Cost-Sensitive Optimization & Utility Objective Loss ($C_{\text{dispatch}}$ vs. $C_{\text{FN}}$).
-- **Phase 7**: Expected Net Value (ENV) & Dynamic Per-Meter Inspection Thresholding.
+Grid-Guard aligns tree-boosting splits directly with electricity utility economics through a custom second-order differentiable **Weighted Logistic Objective**:
+$$\mathcal{L}_i(z_i) = w_i \left[ -y_i \ln(p_i) - (1 - y_i) \ln(1 - p_i) \right]$$
+where $w_i = C_{FN, i}$ (annualized unmetered revenue leakage) for tampering examples and $w_i = C_{FP} = \$100.00$ (field dispatch cost) for honest accounts. The surrogate guarantees strictly positive Hessians ($h_i = w_i p_i(1 - p_i) > 0$) for numerical stability in LightGBM and scales weights globally via reference factor $S_{\text{ref}} = \$100.00$ without altering relative economic ratios.
+
+### A. Three-Phase Performance Evolution (Held-Out Test Set)
+
+| Metric | Phase 4 (Unweighted Baseline) | Phase 5 (Imbalance Champion) | Phase 6 (Cost-Sensitive Champion) | Shift (P4 $\to$ P6) | Economic Takeaway |
+|---|---|---|---|---|---|
+| **PR-AUC** | `0.2959` | `0.3132` | `0.2566` | `-0.0393` | Shifted toward financial volume rather than frequency |
+| **ROC-AUC** | `0.7711` | `0.7693` | `0.7608` | `-0.0103` | Stable discriminative capacity |
+| **Theft Recall** | `14.57%` | `23.84%` | `2.65%` | `-11.92%` | Conventional 0.5 threshold suppresses low-leakage cases |
+| **Precision** | `46.89%` | `45.10%` | **`57.56%`** | **`+10.67%`** | **Nearly 6 out of 10 dispatched inspections confirm theft** |
+| **False Positives ($FP$)** | `3,580` | `6,293` | **`424`** | **`-3,156`** | **-88.2% drop in wasted crew dispatches** |
+| **Brier Calibration Score** | `0.0706` | `0.0811` | **`0.0704`** | **`-0.0002`** | Superior probability calibration |
+| **Wasted FP Dispatch Cost** | `$358,000.00` | `$629,300.00` | **`$42,400.00`** | **`-$315,600.00`** | **$315.6k saved in wasted inspection dispatches** |
+| **Undetected FN Leakage** | `$765,766.00` | `$490,798.88` | **`$583,798.88`** | **`-$181,967.12`** | High-volume theft prioritized |
+| **Total Operational Loss** | **`$1,123,766.00`** | **`$1,120,098.88`** | **`$626,198.88`** | **`-$497,567.12`** | **-44.3% Net Financial Loss Reduction!** |
+
+### B. Operational Inspection Ranking (Precision@K)
+
+| Quota ($K$) | Phase 4 Precision@K | Phase 5 Precision@K | Phase 6 Precision@K | Phase 6 Confirmed Thefts |
+|---|---|---|---|---|
+| **Top 10** | 80.0% | **100.0%** | 90.0% | 9 |
+| **Top 50** | **84.0%** | 82.0% | 74.0% | 37 |
+| **Top 100** | 82.0% | **84.0%** | 77.0% | 77 |
+| **Top 500** | 63.2% | **76.6%** | 61.2% | 306 |
+| **Top 1,000** | 57.0% | **69.3%** | 57.5% | 575 |
+| **Top 2,000** | 51.4% | **61.8%** | 50.9% | 1,018 |
+
+### C. Running Cost-Sensitive Experiments
+
+```bash
+# Execute end-to-end Phase 6 pipeline: candidate training, validation selection, test evaluation, plots, MLflow
+python scripts/run_cost_sensitive.py all
+
+# Customize operational dispatch cost and normalization strategy
+python scripts/run_cost_sensitive.py all --dispatch-cost 100.0 --tariff 0.15 --normalization dispatch_cost
+```
+
+### D. Generated Phase 6 Artifacts
+- **Model Checkpoint**: `artifacts/cost_sensitive/champion_model.txt`
+- **Scored Predictions**: `artifacts/cost_sensitive/champion_predictions.parquet`
+- **Weight Audit Report**: `artifacts/cost_sensitive/weight_audit_report.json`
+- **Comparison JSON**: `artifacts/cost_sensitive/cost_sensitive_comparison.json`
+- **Markdown Report**: `artifacts/cost_sensitive/cost_sensitive_comparison_report.md`
+- **Detailed Documentation**: `docs/cost_sensitive_learning.md`
+- **Publication-Grade Diagnostic Plots**: `artifacts/cost_sensitive/figures/`
+  (`expected_cost_curve.png`, `financial_weight_distribution.png`, `pr_curves_three_phase.png`, `financial_loss_three_phase.png`, `feature_importance_shift.png`, `confusion_matrix_cost_sensitive.png`)
+
+---
+
+## 15. Upcoming Phases
+
+- **Phase 7**: Expected Net Value (ENV) & Dynamic Per-Meter Inspection Thresholding ($p_i^* = C_{\text{dispatch}} / C_{FN, i}$).
 - **Phase 8**: Explainable AI (SHAP Tree Explainer) & FastAPI Operational Decision Dashboard.
 
 

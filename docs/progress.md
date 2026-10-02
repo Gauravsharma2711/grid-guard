@@ -197,8 +197,61 @@
 
 ---
 
+## Phase 6: Cost-Sensitive Custom Objective & Financially Weighted Learning
+
+- **Status**: Completed / Operational
+- **Completed Date**: 2026-10-02
+- **Lead Implementation Engineer**: Antigravity Autonomous Agent
+
+### 1. Completed Items
+- [x] **Differentiable Surrogate Objective Implementation (`grid_guard.models.objectives`)**:
+  - Implemented mathematically rigorous weighted logistic surrogate: $\mathcal{L}_i(z_i) = w_i [ -y_i \ln(p_i) - (1-y_i)\ln(1-p_i) ]$.
+  - Exact gradient wrt raw margin $z_i$: $g_i = w_i (p_i - y_i)$.
+  - Exact Hessian wrt raw margin $z_i$: $h_i = w_i p_i (1 - p_i)$.
+  - Guaranteed positive curvature ($h_i > 0$) for all finite logits and strictly positive financial weights ($w_i > 0$).
+  - Verified exact agreement against central finite-difference numerical approximations ($|g_{\text{analytical}} - g_{\text{numerical}}| < 10^{-8}$).
+- [x] **Financial Error Weights & Traceable Provenance (`grid_guard.evaluation.cost_analysis`)**:
+  - Constructed per-sample financial weights: $w_i = C_{FN, i}$ for positive tampering, $w_i = C_{FP} = \$100.00$ for honest normal.
+  - Formalized provenance audit tracking Observed labels, Derived historical consumption/leakage, and Assumed operational parameters ($C_{\text{dispatch}} = \$100$, Tariff = $\$0.15/\text{kWh}$, Horizon = 365 days).
+  - Implemented global reference scale normalization ($\tilde{w}_i = w_i / S_{\text{ref}}$ with $S_{\text{ref}} = \$100.00$) preserving exact relative cost ratios without distorting tree regularization.
+  - Evaluated 99th percentile winsorization capping sensitivity ($C_{FN}$ capped at $\$929.54$), establishing that preserving the uncapped distribution yields superior operational loss reduction.
+- [x] **Cost-Sensitive LightGBM Model Architecture (`grid_guard.models.cost_sensitive`)**:
+  - Implemented `CostSensitiveLightGBM` wrapping native LightGBM custom objective training with raw logit transformation, sigmoid mapping, and post-hoc probability calibration.
+  - Implemented validation-only probability calibration (Isotonic Regression) yielding a well-calibrated Brier score of `0.0704`.
+- [x] **Validation Selection & Held-Out Test Evaluation**:
+  - Evaluated 5 candidate configurations on the validation partition (`2016-01-01` to `2016-05-31`).
+  - Selected `phase6_cost_sensitive_dispatch_norm` as champion based on achieving lowest validation operational loss ($356,943.38 vs. $731,250.53 in baseline).
+  - Evaluated held-out test partition (`2016-06-01` to `2016-10-31`, 254,232 rows) under conventional 0.5 threshold:
+    - **Total Operational Loss**: Slashed from **`$1,123,766.00`** (baseline) to **`$626,198.88`** (**`-$497,567.12` / -44.3% net financial savings**).
+    - **Wasted FP Dispatch Cost**: Reduced from **`$358,000.00`** to **`$42,400.00`** (**-88.2% drop in wasted crew dispatches**; only 424 FPs vs. 3,580 in baseline and 6,293 in Phase 5).
+    - **Inspection Precision**: Elevated from **`46.89%`** to **`57.56%`** (**+10.67% absolute lift**).
+    - **Undetected FN Leakage**: Reduced by **`$181,967.12`** compared to baseline ($583,798.88 vs. $765,766.00), demonstrating that missed detections are concentrated in low-volume accounts while high-leakage accounts are prioritized.
+    - **Brier Score**: Improved to **`0.0704`** (superior to Phase 5's 0.0811 and Phase 4's 0.0706).
+- [x] **Operational Inspection Ranking (Top-K Capacity)**:
+  - Precision@10: **90.0%** (9 / 10 confirmed thefts).
+  - Precision@100: **77.0%** (77 / 100 confirmed thefts).
+  - Precision@1000: **57.5%** (575 / 1000 confirmed thefts).
+- [x] **MLflow Experiment Tracking & Visualizations**:
+  - Tracked run `cost_sensitive_phase6_cost_sensitive_dispatch_norm` to MLflow experiment `grid-guard-ntl-detection` (Run ID: `a80c976ebd8f47fdb88a7052f1fcb56c`).
+  - Generated 6 publication-grade diagnostic plots in `artifacts/cost_sensitive/figures/`:
+    - `expected_cost_curve.png`: Cost vs. decision threshold diagnostic.
+    - `financial_weight_distribution.png`: Histogram and CDF of normalized weights.
+    - `pr_curves_three_phase.png`: PR curves for Phases 4, 5, and 6.
+    - `financial_loss_three_phase.png`: Financial loss breakdown across phases.
+    - `feature_importance_shift.png`: Feature gain shift under financial weighting.
+    - `confusion_matrix_cost_sensitive.png`: Normalized confusion matrix.
+  - Exported `artifacts/cost_sensitive/cost_sensitive_comparison.json`, `cost_sensitive_comparison_report.md`, and `weight_audit_report.json`.
+- [x] **Automated CLI & Test Suite**:
+  - Built `scripts/run_cost_sensitive.py` supporting `--action`, `--dispatch-cost`, `--tariff`, and `--normalization`.
+  - Expanded test suite to 86 tests with **90.16%** code coverage.
+  - Ruff linting and formatting 100% clean across 96 files.
+
+---
+
 ### 2. Next Phase
 
-- **Phase 6: Cost-Sensitive Optimization & Utility Objective Loss**
-  - Implement asymmetric financial loss functions directly in gradient boosting, incorporating per-meter consumption volume, tariff structure, and dispatch cost into tree splits.
+- **Phase 7: Dynamic Cost-Optimal Thresholds & Expected Net Value (ENV) Inspection Prioritization**
+  - Implement per-meter Bayesian cost-optimal thresholding $p_i^* = \frac{C_{\text{dispatch}}}{C_{FN, i}}$.
+  - Compute Expected Net Value: $\text{ENV}_i = p_i \cdot C_{FN, i} - C_{\text{dispatch}}$.
+  - Prioritize dispatches dynamically under finite utility crew constraints ($\text{ENV}_i > 0$).
 

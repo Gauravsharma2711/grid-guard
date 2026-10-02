@@ -43,6 +43,7 @@ data/external/*
 *.tar
 artifacts/baseline/*.txt
 artifacts/imbalance/*.txt
+artifacts/cost_sensitive/*.txt
 
 # MLflow tracking artifacts & runs
 mlruns/

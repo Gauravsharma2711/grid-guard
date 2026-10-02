@@ -548,3 +548,207 @@ class ImbalanceVisualizer:
         fig.savefig(out_path, dpi=200)
         plt.close(fig)
         return out_path
+
+
+class CostSensitiveVisualizer:
+    """Publication-grade visualizer for Phase 6 cost-sensitive learning diagnostics."""
+
+    def __init__(self, output_dir: Path | str) -> None:
+        self.output_dir = Path(output_dir)
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+
+    def plot_expected_cost_curve(
+        self,
+        grid_data: list[dict[str, Any]],
+        output_filename: str = "expected_cost_curve.png",
+    ) -> Path:
+        """Diagnostic plot of operational financial loss vs. decision threshold."""
+        thresholds = [d["threshold"] for d in grid_data]
+        total_loss = [d["total_operational_loss"] for d in grid_data]
+        fp_costs = [d["fp_dispatch_cost"] for d in grid_data]
+        fn_costs = [d["fn_leakage_cost"] for d in grid_data]
+
+        fig, ax = plt.subplots(figsize=(8, 5))
+        ax.plot(
+            thresholds, total_loss, color="#742A2A", linewidth=2.5, label="Total Operational Loss"
+        )
+        ax.plot(
+            thresholds, fn_costs, color="#E53E3E", linestyle="--", label="Undetected FN Leakage"
+        )
+        ax.plot(thresholds, fp_costs, color="#DD6B20", linestyle=":", label="Wasted FP Dispatch")
+
+        # Mark conventional 0.5 threshold
+        ax.axvline(
+            0.5, color="gray", linestyle="-.", alpha=0.7, label="Conventional Threshold (0.5)"
+        )
+
+        ax.set_xlabel("Decision Cutoff Threshold")
+        ax.set_ylabel("Financial Cost (USD)")
+        ax.set_title("Diagnostic Expected Cost Curve Across Decision Thresholds")
+        ax.legend(loc="upper right")
+        ax.grid(True, linestyle="--", alpha=0.5)
+
+        out_path = self.output_dir / output_filename
+        fig.savefig(out_path, dpi=200)
+        plt.close(fig)
+        return out_path
+
+    def plot_financial_weight_distribution(
+        self,
+        c_fn_costs: np.ndarray,
+        dispatch_cost: float,
+        output_filename: str = "financial_weight_distribution.png",
+    ) -> Path:
+        """Plot the distribution of per-meter positive leakage costs alongside fixed dispatch cost."""
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4.5))
+
+        # Subplot 1: Positive Class C_FN distribution
+        c_fn = np.asarray(c_fn_costs, dtype=np.float64)
+        ax1.hist(c_fn, bins=40, color="#3182CE", edgecolor="black", alpha=0.7)
+        ax1.axvline(
+            np.median(c_fn),
+            color="#E53E3E",
+            linestyle="--",
+            linewidth=2,
+            label=f"Median C_FN: ${np.median(c_fn):,.0f}",
+        )
+        ax1.axvline(
+            dispatch_cost,
+            color="#DD6B20",
+            linestyle=":",
+            linewidth=2,
+            label=f"Fixed C_FP: ${dispatch_cost:,.0f}",
+        )
+        ax1.set_xlabel("Estimated Revenue Leakage Cost C_FN (USD)")
+        ax1.set_ylabel("Meter Frequency")
+        ax1.set_title("Positive Class Financial Leakage Distribution (C_FN)")
+        ax1.legend(loc="upper right")
+        ax1.grid(True, linestyle="--", alpha=0.5)
+
+        # Subplot 2: Relative Weight Ratio (C_FN / C_FP)
+        ratios = c_fn / dispatch_cost
+        ax2.hist(ratios, bins=40, color="#805AD5", edgecolor="black", alpha=0.7)
+        ax2.axvline(
+            np.median(ratios),
+            color="#E53E3E",
+            linestyle="--",
+            linewidth=2,
+            label=f"Median Ratio: {np.median(ratios):.1f}x",
+        )
+        ax2.set_xlabel("Relative Error Penalty Ratio (C_FN,i / C_FP)")
+        ax2.set_ylabel("Meter Frequency")
+        ax2.set_title("Financial Cost Ratio Distribution (w_i / w_neg)")
+        ax2.legend(loc="upper right")
+        ax2.grid(True, linestyle="--", alpha=0.5)
+
+        fig.tight_layout()
+        out_path = self.output_dir / output_filename
+        fig.savefig(out_path, dpi=200)
+        plt.close(fig)
+        return out_path
+
+    def plot_three_phase_pr_curves(
+        self,
+        curves_dict: dict[str, dict[str, np.ndarray | float]],
+        output_filename: str = "pr_curves_three_phase.png",
+    ) -> Path:
+        """Compare PR Curves across Phase 4, Phase 5, and Phase 6."""
+        fig, ax = plt.subplots(figsize=(8, 6))
+        colors = ["#4A5568", "#3182CE", "#E53E3E", "#38A169"]
+
+        for idx, (name, d) in enumerate(curves_dict.items()):
+            rec = d["recall"]
+            prec = d["precision"]
+            auc_val = d.get("pr_auc", 0.0)
+            color = colors[idx % len(colors)]
+            ax.plot(rec, prec, label=f"{name} (PR-AUC = {auc_val:.4f})", color=color, linewidth=2.0)
+
+        ax.set_xlabel("Recall (Theft Capture Rate)")
+        ax.set_ylabel("Precision")
+        ax.set_title("Precision-Recall Curves: Phase 4 vs. Phase 5 vs. Phase 6")
+        ax.set_xlim([0.0, 1.0])
+        ax.set_ylim([0.0, 1.05])
+        ax.legend(loc="upper right")
+        ax.grid(True, linestyle="--", alpha=0.5)
+
+        out_path = self.output_dir / output_filename
+        fig.savefig(out_path, dpi=200)
+        plt.close(fig)
+        return out_path
+
+    def plot_three_phase_financial_loss(
+        self,
+        losses_dict: dict[str, dict[str, float]],
+        output_filename: str = "financial_loss_three_phase.png",
+    ) -> Path:
+        """Grouped bar chart comparing financial outcomes across Phase 4, 5, and 6."""
+        fig, ax = plt.subplots(figsize=(9, 5))
+        phases = list(losses_dict.keys())
+        x = np.arange(len(phases))
+        width = 0.25
+
+        fp_costs = [losses_dict[p].get("fp_cost", 0.0) for p in phases]
+        fn_costs = [losses_dict[p].get("fn_cost", 0.0) for p in phases]
+        total_costs = [losses_dict[p].get("total_loss", 0.0) for p in phases]
+
+        ax.bar(x - width, fp_costs, width, label="Wasted FP Dispatch", color="#DD6B20")
+        ax.bar(x, fn_costs, width, label="Undetected FN Leakage", color="#E53E3E")
+        ax.bar(x + width, total_costs, width, label="Total Operational Loss", color="#742A2A")
+
+        ax.set_ylabel("Amount (USD)")
+        ax.set_title("Operational Financial Impact Evolution (Phase 4 -> 5 -> 6)")
+        ax.set_xticks(x)
+        ax.set_xticklabels(phases)
+        ax.legend(loc="upper right")
+        ax.grid(True, linestyle="--", alpha=0.5, axis="y")
+
+        out_path = self.output_dir / output_filename
+        fig.savefig(out_path, dpi=200)
+        plt.close(fig)
+        return out_path
+
+    def plot_feature_importance_comparison(
+        self,
+        df_p4: pl.DataFrame,
+        df_p6: pl.DataFrame,
+        top_n: int = 12,
+        output_filename: str = "feature_importance_shift.png",
+    ) -> Path:
+        """Compare top gain feature importances between Phase 4 unweighted and Phase 6 cost-sensitive."""
+        fig, ax = plt.subplots(figsize=(10, 6))
+
+        top_p6 = df_p6.head(top_n)
+        features = top_p6["feature"].to_list()
+
+        # Join to get matching Phase 4 importances
+        p6_gains = top_p6["importance"].to_list()
+        p4_dict = dict(zip(df_p4["feature"].to_list(), df_p4["importance"].to_list(), strict=False))
+        p4_gains = [p4_dict.get(f, 0.0) for f in features]
+
+        # Normalize to percentage of total gain
+        p4_sum = max(sum(df_p4["importance"].to_list()), 1e-6)
+        p6_sum = max(sum(df_p6["importance"].to_list()), 1e-6)
+        p4_pct = [(v / p4_sum) * 100.0 for v in p4_gains]
+        p6_pct = [(v / p6_sum) * 100.0 for v in p6_gains]
+
+        y = np.arange(len(features))
+        height = 0.35
+
+        ax.barh(
+            y - height / 2, p4_pct, height, label="Phase 4 (Unweighted Baseline)", color="#718096"
+        )
+        ax.barh(y + height / 2, p6_pct, height, label="Phase 6 (Cost-Sensitive)", color="#3182CE")
+
+        ax.set_yticks(y)
+        ax.set_yticklabels(features)
+        ax.invert_yaxis()
+        ax.set_xlabel("Relative Feature Importance (% Total Gain)")
+        ax.set_title(f"Top {top_n} Features: Importance Shift Under Financial Weighting")
+        ax.legend(loc="lower right")
+        ax.grid(True, linestyle="--", alpha=0.5, axis="x")
+
+        fig.tight_layout()
+        out_path = self.output_dir / output_filename
+        fig.savefig(out_path, dpi=200)
+        plt.close(fig)
+        return out_path

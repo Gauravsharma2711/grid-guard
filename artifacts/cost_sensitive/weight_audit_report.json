@@ -1,0 +1,55 @@
+{
+  "total_samples": 932184,
+  "positive_samples": 79530,
+  "negative_samples": 852654,
+  "positive_prevalence": 0.08531577456811101,
+  "c_fp_dispatch_cost": 100.0,
+  "c_fn_min": 100.0,
+  "c_fn_median": 100.0,
+  "c_fn_mean": 154.43548720283178,
+  "c_fn_p90": 100.0,
+  "c_fn_p99": 929.5433514404341,
+  "c_fn_max": 625625.5,
+  "weight_min": 1.0,
+  "weight_median": 1.0,
+  "weight_mean": 1.0464420575470208,
+  "weight_max": 6256.255,
+  "weight_ratio_median_pos_to_neg": 1.0,
+  "weight_ratio_mean_pos_to_neg": 1.5443548720283178,
+  "normalization_strategy": "dispatch_cost",
+  "reference_scale": 100.0,
+  "cost_capping_applied": false,
+  "cost_cap_percentile": null,
+  "cost_cap_value": null,
+  "samples_capped": 0,
+  "provenance_records": [
+    {
+      "parameter_name": "dispatch_cost",
+      "value": 100.0,
+      "unit": "USD",
+      "source_type": "assumed",
+      "description": "Assumed fixed operational cost C_FP to dispatch physical inspection crew"
+    },
+    {
+      "parameter_name": "min_fn_cost",
+      "value": 100.0,
+      "unit": "USD",
+      "source_type": "assumed",
+      "description": "Assumed minimum floor on positive class error cost"
+    },
+    {
+      "parameter_name": "estimated_leakage_cost",
+      "value": "Rolling Deficit x Tariff x Horizon",
+      "unit": "USD",
+      "source_type": "derived",
+      "description": "Derived revenue leakage from historical consumption collapse"
+    },
+    {
+      "parameter_name": "reference_scale",
+      "value": 100.0,
+      "unit": "USD",
+      "source_type": "derived",
+      "description": "Global normalization scale factor (method: dispatch_cost)"
+    }
+  ]
+}
