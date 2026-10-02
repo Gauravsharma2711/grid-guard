@@ -16,7 +16,7 @@ def main() -> None:
     api_script = root_dir / "scripts" / "run_api.py"
 
     print("=" * 65)
-    print("⚡ GRID-GUARD INTEGRATED APPLICATION RUNNER")
+    print("GRID-GUARD INTEGRATED APPLICATION RUNNER")
     print("=" * 65)
     print("Starting FastAPI Backend (http://localhost:8000)...")
 
@@ -31,8 +31,8 @@ def main() -> None:
     dash_proc = subprocess.Popen([sys.executable, str(dashboard_script)], env=env)
 
     print("\nServices active:")
-    print("  • FastAPI API:       http://localhost:8000  (Docs: /docs)")
-    print("  • Streamlit UI:      http://localhost:8501")
+    print("  - FastAPI API:       http://localhost:8000  (Docs: /docs)")
+    print("  - Streamlit UI:      http://localhost:8501")
     print("Press Ctrl+C to terminate both services.\n")
 
     try:
