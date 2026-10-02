@@ -1,0 +1,40 @@
+# Grid-Guard FastAPI Backend Service Dockerfile
+FROM python:3.11-slim
+
+# System dependencies for lightgbm and build tools
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libgomp1 \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Install uv package manager
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
+
+# Copy dependency configuration
+COPY pyproject.toml uv.lock ./
+
+# Install project dependencies
+RUN uv sync --frozen --no-install-project
+
+# Copy application source code and artifacts
+COPY src/ ./src/
+COPY configs/ ./configs/
+COPY artifacts/ ./artifacts/
+COPY pyproject.toml ./
+
+# Install project package in virtualenv
+RUN uv sync --frozen
+
+EXPOSE 8000
+
+ENV GRID_GUARD_API__HOST=0.0.0.0 \
+    GRID_GUARD_API__PORT=8000 \
+    PYTHONUNBUFFERED=1
+
+HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+CMD ["uv", "run", "uvicorn", "grid_guard.api.main:app", "--host", "0.0.0.0", "--port", "8000"]

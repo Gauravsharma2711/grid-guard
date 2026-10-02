@@ -1,689 +1,216 @@
-# Grid-Guard
+# ⚡ Grid-Guard
 
-**Smart-Meter Tampering & Non-Technical Loss (NTL) Detection System with Cost-Sensitive Decision Optimization**
+**Financial-Aware Smart Meter Tampering & Non-Technical Loss (NTL) Detection Platform**
 
----
-
-## 1. Project Purpose & Problem Statement
-
-Power distribution utilities worldwide lose billions of dollars annually due to **Non-Technical Losses (NTL)**—primarily electricity theft, meter tampering, billing anomalies, and unmetered consumption. Traditional detection mechanisms rely heavily on manual periodic inspections, static consumption heuristics, or isolated anomaly detection models that maximize statistical recall without considering economic reality.
-
-In practical utility operations, false positives incur steep operational inspection costs ($C_{fp}$ dispatching field crews), whereas false negatives allow cumulative revenue leakage ($C_{fn}$). A high-accuracy classifier that triggers dozens of unmerited field inspections in remote areas can cost a utility far more money than it recovers.
-
-## 2. Core Idea
-
-Grid-Guard departs from naive probability-only classification. The central operating thesis is:
-
-$$\text{Detection Probability alone is NOT the final inspection decision.}$$
-
-Grid-Guard calculates an **Expected Net Value (ENV)** for every flagged meter before recommending action:
-
-$$\text{Tampering Probability } (P) \times \text{Estimated Financial Leakage Recovery } (L) - \text{Inspection Dispatch Cost } (C) = \text{Expected Net Value (ENV)}$$
-
-Field inspections are prioritized strictly when $\text{ENV} > 0$ and ranked to maximize net utility recovery under workforce capacity constraints.
+[![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3110/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-1.0.0-009688.svg)](https://fastapi.tiangolo.com/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.64.0-FF4B4B.svg)](https://streamlit.io/)
+[![LightGBM](https://img.shields.io/badge/LightGBM-4.6.0-brightgreen.svg)](https://lightgbm.readthedocs.io/)
+[![Tree--SHAP](https://img.shields.io/badge/Explainability-Tree--SHAP-yellow.svg)](https://shap.readthedocs.io/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg)](https://www.docker.com/)
+[![Code Style: Ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
+[![Tests: 162 Passing](https://img.shields.io/badge/tests-162%20passed-success.svg)](tests/)
 
 ---
 
-## 3. Current Project Status
+## 1. Value Proposition
 
-- **Phase 1: Data Acquisition & Environment Setup** — *Completed / Operational*
-- **Phase 2: EDA, Data Cleaning & AMI Time-Series Understanding** — *Completed / Operational*
-- **Phase 3: Temporal Feature Engineering & Tampering Signatures** — *Completed / Operational*
-- **Phase 4: Cost Matrix Definition & Unweighted Baseline Modeling** — *Completed / Operational*
-- **Phase 5: Class Imbalance & Representation Strategies** — *Completed / Operational*
-- **Phase 6: Cost-Sensitive Custom Objective & Financially Weighted Learning** — *Completed / Operational*
-- **Phase 7: Expected Net Value (ENV) & Dynamic Thresholding** — *Completed / Operational*
-- **Phase 8: Explainable AI (SHAP Tree Explainer & Attribution)** — *Completed / Operational*
-- **Phase 9: FastAPI Operational Decision Service** — *Upcoming*
-- **Phase 10: Interactive Operational Dashboard** — *Upcoming*
-
-> [!NOTE]
-> Phases 1–4 establish the empirical benchmark: high-performance Polars ingestion, data validation rules, localized bounded-gap imputation, a 60-feature causal temporal extraction pipeline, a strictly time-aware LightGBM baseline binary classifier, and a configurable financial cost model tracking field dispatch costs vs. undetected revenue leakage.
+Grid-Guard turns smart-meter anomaly detection into an economically rational field operation: **anomalies are only dispatched when the expected recovered revenue exceeds the crew dispatch cost.**
 
 ---
 
-## 4. Architecture at a High Level
+## 2. The Operational Problem
+
+Electric power utilities lose tens of billions of dollars annually to **Non-Technical Losses (NTL)**—primarily physical meter tampering, illegal line tapping, and unauthorized consumption.
+
+Conventional machine-learning models evaluate smart meters using statistical accuracy or F1-scores, treating all detection errors equally. In real-world utility operations, however, errors have asymmetric financial consequences:
+- **False Positives**: Incur an immediate fixed operational cost ($C_{\text{FP}} \approx \$100$) to dispatch a two-person physical inspection crew.
+- **False Negatives**: Allow ongoing unmetered revenue leakage ($C_{\text{FN}} = \text{Deficit} \times \text{Tariff} \times \text{Horizon}$), which can exceed $\$150,000$ on large commercial accounts.
+
+A naive model that flags a rural lifeline customer with high confidence may cause the utility to spend **\$100 dispatching a crew to recover \$10 of energy**.
+
+---
+
+## 3. The Grid-Guard Solution
+
+Grid-Guard solves this asymmetric challenge through a **four-pillar financial architecture**:
+
+1. **60-Feature Causal Temporal Pipeline**: Captures consumption collapse ratios, historical baselines, weekday/weekend regimes, zero-consumption streaks, and near-zero flatline variances.
+2. **Financially Weighted Learning (Phase 6 Champion)**: A cost-sensitive LightGBM objective where training sample loss is weighted by the potential revenue leakage.
+3. **Dynamic Expected Net Value (ENV) Prioritization (Phase 7)**:
+   $$\text{ENV}_i = p_i \times R_i - C_{\text{dispatch}}$$
+   Field crews are dispatched if and only if $\text{ENV}_i > 0$, ranking work orders by net financial yield.
+4. **Tree-SHAP & Audited Narratives (Phase 8)**: Exact Shapley feature attributions, detected electrical signatures, and non-accusatory field work order tickets.
+
+---
+
+## 4. End-to-End Architecture
 
 ```
-[ Smart-Meter AMI Time-Series (CSV / Parquet) ]
-                      │
-                      ▼
-[ Ingestion & Schema Mapping Engine (Polars) ]
-                      │
-                      ▼
-[ Data Quality & Integrity Validation (Polars / Pydantic) ]
-                      │
-                      ▼
-[ Feature Store: Temporal, Rolling, Aggregates & Signatures ] (Phase 3)
-                      │
-                      ▼
-[ LightGBM Classifier & Tampering Estimator ] (Phase 4)
-                      │
-                      ▼
-[ Cost-Sensitive ENV Decision Matrix Engine ] (Phase 5)
-                      │
-                      ▼
-[ Field Inspection Priority Ranking & Explainability (SHAP) ] (Phase 6)
-                      │
-                      ▼
-[ FastAPI Operational API & Decision Dashboard ] (Phase 7)
+                          AMI Smart-Meter Daily Readings (kWh)
+                                            │
+                                            ▼
+                           Polars Ingestion & Cleaning Engine
+                           (Imputation, Monotonicity, Validation)
+                                            │
+                                            ▼
+                           Temporal Feature Pipeline (60 Features)
+                           (Rolling baselines, variability, signatures)
+                                            │
+                                            ▼
+                        Cost-Sensitive LightGBM Booster (Phase 6)
+                        (Financially weighted binary log-loss)
+                                            │
+                                            ▼
+                        Dynamic Decision & Financial Engine (Phase 7)
+                        (Leakage estimation, dynamic tau, ENV ranking)
+                                            │
+                                            ▼
+                        Tree-SHAP Explainability & Narratives (Phase 8)
+                        (Exact Shapley values, electrical signatures)
+                                            │
+                      ┌─────────────────────┴─────────────────────┐
+                      ▼                                           ▼
+          FastAPI Backend Service (Phase 9)           Streamlit Dashboard (Phase 10)
+          • /health & /ready probes                   • Fleet Overview & KPIs
+          • /api/v1/predict (Single & Batch)          • Prioritized Inspection Queue
+          • /api/v1/inspection/ticket                 • Interactive Meter Analysis & Time Series
+          • /api/v1/inspection/queue                  • Multi-Phase Model Insights
+          • /api/v1/metadata/model & config           • 5 Curated Synthetic Demo Archetypes
 ```
 
 ---
 
-## 5. Repository Structure
+## 5. Technology Stack
+
+- **Core & Data Processing**: Python 3.11, Polars, NumPy, Pandas, Pydantic V2
+- **Machine Learning**: LightGBM (Gradient Boosted Trees), Scikit-Learn, Imbalanced-Learn
+- **Explainability**: SHAP (TreeExplainer)
+- **Backend API**: FastAPI, Uvicorn, HTTPX
+- **Dashboard & Visualization**: Streamlit, Matplotlib
+- **Tooling & Orchestration**: UV, Pytest, Ruff, Docker, Docker Compose
+
+---
+
+## 6. Project Structure
 
 ```
 grid-guard/
-├── .github/
-│   └── workflows/
-│       └── ci.yml               # Automated CI: linting & tests
-├── configs/
-│   ├── default.yaml             # Core runtime and path configurations
-│   └── dataset_mappings.yaml    # Column mappings for AMI datasets (e.g., SGCC)
-├── data/
-│   ├── raw/                     # Original immutable raw smart-meter datasets (.gitkeep)
-│   ├── interim/                 # Transformed / intermediate datasets (.gitkeep)
-│   ├── processed/               # Clean, model-ready Parquet datasets (.gitkeep)
-│   └── external/                # External tariffs, weather, feeder data (.gitkeep)
-├── docs/
-│   ├── data_contract.md         # Conceptual AMI schema and validation expectations
-│   └── progress.md              # Phase tracking, validation reports, and roadmap
-├── notebooks/                   # Exploratory analysis notebooks (.gitkeep)
-├── scripts/
-│   ├── inspect_raw_data.py      # Quick CLI inspection of raw data files
-│   └── verify_setup.py          # End-to-end environment validation smoke test
-├── src/
-│   └── grid_guard/
-│       ├── __init__.py
-│       ├── py.typed
-│       ├── config/
-│       │   ├── __init__.py
-│       │   └── settings.py      # Pydantic-based configuration management
-│       ├── data/
-│       │   ├── __init__.py
-│       │   ├── ingestion.py     # High-performance Polars ingestion engine
-│       │   └── validation.py    # Time-series schema & sanity validation rules
-│       ├── features/            # Feature extraction (Phase 3)
-│       ├── models/              # Classification models (Phase 4)
-│       ├── evaluation/          # Cost-sensitive evaluation & ENV metrics (Phase 5)
-│       ├── tracking/
-│       │   ├── __init__.py
-│       │   └── experiment.py    # MLflow experiment tracking utilities
-│       └── utils/
-│           ├── __init__.py
-│           └── logging.py       # Standardized structured logging
-├── tests/
-│   ├── conftest.py              # Synthetic data fixtures (CSV / Parquet)
-│   ├── unit/
-│   │   ├── test_config.py       # Configuration loading tests
-│   │   ├── test_ingestion.py    # Polars reader and ingestion tests
-│   │   ├── test_validation.py   # Dataset validation rules tests
-│   │   └── test_tracking.py     # MLflow tracking tests
-│   └── integration/
-│       └── test_pipeline_smoke.py # End-to-end ingestion and validation pipeline test
-├── .gitignore                   # Comprehensive ignores (raw data, virtualenvs, mlruns)
-├── .python-version              # Python version pin (3.11.16)
-├── pyproject.toml               # PEP 621 package metadata & dependencies
-└── README.md                    # Project documentation
+├── artifacts/                  # Verified reproducible artifacts (Phases 3–9)
+│   ├── api/                    # OpenAPI schema, sample payloads
+│   ├── cost_sensitive/         # Champion LightGBM model, weight audits
+│   ├── decision/               # Prioritized inspection queue, policy benchmarks
+│   └── explainability/         # Enriched work order tickets, Tree-SHAP metadata
+├── configs/                    # YAML configuration files (default.yaml)
+├── docs/                       # Comprehensive technical documentation
+│   ├── architecture.md         # System architecture & principles
+│   ├── deployment.md           # Production deployment & container guide
+│   ├── demo_guide.md           # Step-by-step evaluator demonstration walkthrough
+│   ├── end_to_end_flow.md      # Complete data flow & pipeline trace
+│   ├── final_project_status.md # Complete 10-phase sign-off report
+│   └── progress.md             # Granular engineering progress log
+├── scripts/                    # Command-line execution runners
+│   ├── run_api.py              # Launch FastAPI backend
+│   ├── run_dashboard.py        # Launch Streamlit dashboard
+│   └── run_services.py         # Launch both API and Dashboard concurrently
+├── src/grid_guard/             # Core application package
+│   ├── api/                    # FastAPI routes, schemas, and lifecycle service
+│   ├── config/                 # Pydantic Settings and configurations
+│   ├── dashboard/              # Streamlit dashboard, views, charts, and API client
+│   │   ├── api_client.py       # Dedicated API client (strict application boundary)
+│   │   ├── components/         # Reusable KPI cards, charts, and ticket renderers
+│   │   ├── demo_data/          # 5 synthetic demonstration archetypes
+│   │   └── views/              # Overview, Queue, Meter Analysis, Insights, Status
+│   ├── data/                   # Data cleaning, ingestion, and validation
+│   ├── decision/               # Dynamic thresholds and ticket prioritization
+│   ├── evaluation/             # Financial cost matrix and leakage estimators
+│   ├── explainability/         # Tree-SHAP, feature mapping, signatures, narratives
+│   ├── features/               # 60 temporal feature engineering pipeline
+│   └── models/                 # Baseline, imbalance, and cost-sensitive boosters
+├── tests/                      # 162 automated tests (Unit, Integration, E2E)
+├── Dockerfile.api              # Container manifest for FastAPI backend
+├── Dockerfile.dashboard        # Container manifest for Streamlit dashboard
+├── docker-compose.yml          # Multi-container service orchestration
+└── pyproject.toml              # UV / Pip project dependency specification
 ```
 
 ---
 
-## 6. Environment Setup & Dependency Installation
+## 7. Quickstart Guide
 
-### Prerequisites
-
-- **Python**: `3.11.x` (Recommended: Python 3.11.16)
-- **uv**: Fast package and environment manager (Recommended) or standard `python -m venv`
-
-### Quick Setup with `uv`
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/Gauravsharma2711/grid-guard.git
-   cd grid-guard
-   ```
-
-2. **Create the isolated environment:**
-   ```bash
-   uv venv --python 3.11 .venv
-   ```
-
-3. **Activate the environment:**
-   - **Windows (PowerShell):**
-     ```powershell
-     .\.venv\Scripts\Activate.ps1
-     ```
-   - **Linux / macOS:**
-     ```bash
-     source .venv/bin/activate
-     ```
-
-4. **Install all dependencies (including dev tools):**
-   ```bash
-   uv pip install -e ".[dev]"
-   ```
-
----
-
-## 7. Dataset Placement & Data Governance Policy
-
-### Dataset Location
-
-Download your smart-meter dataset (e.g. the State Grid Corporation of China [SGCC] electricity theft dataset) and place it directly inside:
-
-```
-data/raw/
-```
-
-Expected file example: `data/raw/electric-data.csv`
-
-### Governance Rules
-
-1. **Immutability**: Raw files in `data/raw/` must **NEVER** be modified in place or overwritten by code.
-2. **Intermediate Data**: Cleaning, pivoting, and unpivoting output belongs exclusively in `data/interim/`.
-3. **Model Datasets**: Scaled, encoded, feature-engineered Parquet files belong in `data/processed/`.
-4. **External References**: Feeder topologies, geographic tariffs, or substation logs belong in `data/external/`.
-5. **Git Protection**: Git ignores all data files (`*.csv`, `*.parquet`, etc.) automatically. Never force-add raw datasets into version control.
-
----
-
-## 8. Running Tests & Code Quality Checks
-
-### Run Automated Tests
-
-The test suite runs against deterministic in-memory and synthetic disk fixtures:
-
+### 7.1 Installation
 ```bash
-pytest
+# Clone the repository
+git clone https://github.com/Gauravsharma2711/grid-guard.git
+cd grid-guard
+
+# Synchronize dependencies with uv
+uv sync
 ```
 
-With coverage report:
-
+### 7.2 Launching Integrated Application (API + UI)
+Launch both the FastAPI service and the Streamlit dashboard in a single command:
 ```bash
-pytest --cov=grid_guard tests/
+uv run python scripts/run_services.py
 ```
+- **Dashboard Interface**: [http://localhost:8501](http://localhost:8501)
+- **FastAPI OpenAPI Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)
+- **Health Probe**: [http://localhost:8000/health](http://localhost:8000/health)
 
-### Run Code Quality (Ruff)
-
+### 7.3 Docker Deployment
 ```bash
-# Check code style and linting
-ruff check .
-
-# Format code
-ruff format .
+docker compose up --build -d
 ```
 
 ---
 
-## 9. Local MLflow Experiment Tracking
+## 8. Interactive Demonstration Experience
 
-Grid-Guard uses local MLflow tracking without requiring cloud credentials or external servers.
+The dashboard includes **5 deterministic synthetic demonstration archetypes** illustrating core operational regimes without exposing real customer data:
 
-1. **Verify tracking locally:**
-   ```bash
-   python -c "import mlflow; mlflow.set_experiment('grid-guard-smoke'); print('MLflow operational')"
-   ```
-
-2. **Launch the MLflow UI (optional):**
-   ```bash
-   mlflow ui --port 5000
-   ```
-   Access the dashboard at `http://127.0.0.1:5000` to inspect runs, parameters, metrics, and models.
+1. **Normal Residential Meter**: Consistent 12–15 kWh/day usage. Yields low risk (`p=0.065`) and negative ENV (`-$494.43`). No dispatch recommended.
+2. **Sustained Step-Down Anomaly**: Sudden 95% drop from 28.5 kWh to 1.2 kWh. Model outputs elevated probability (`p=0.359`), estimated recovery of `~$28,600`, and **`ENV = +$9,756.45`**. Recommends immediate inspection.
+3. **Flatline Invariance Anomaly**: Meter locked to constant 1.00 kWh/day (0 variance). Activates the *"Flatline pattern"* signature, yielding `ENV = +$521.84`.
+4. **High-Value Commercial Account**: Baseline of 240 kWh/day dropping to 40 kWh/day. Produces **`ENV = +$179,270.29`**, immediately claiming #1 rank in the inspection queue.
+5. **High Risk / Low Net Value (Lifeline)**: Rural customer using 0.25 kWh/day dropping to 0.03 kWh/day. Although the model detects an anomaly, the 12-month leakage is only `~$12.00`. **Grid-Guard's ENV rule rejects dispatch** (`ENV = -$89.20 < 0`), saving the utility from wasting a $100 crew dispatch!
 
 ---
 
-## 10. EDA, Profiling & Data Cleaning (Phase 2)
+## 9. Measured Empirical Benchmarks
 
-Grid-Guard provides an end-to-end command for profiling, localized bounded temporal imputation, canonical Parquet export, and visualization:
+### 9.1 Machine Learning Model Comparison (254,232 Validation Samples)
+| Phase | Architecture | PR-AUC | ROC-AUC | Precision@100 | Wasted Dispatch | Undetected Leakage | Total Operational Loss |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Phase 4** | Unweighted Baseline | 0.3035 | 0.7739 | 0.65 | $261,200 | $1,711,500 | $1,972,700 |
+| **Phase 5** | SMOTE-Tomek Imbalance | 0.2841 | 0.7612 | 0.58 | $342,100 | $1,385,200 | $1,727,300 |
+| **Phase 6** | **Cost-Sensitive (Champion)**| **0.3021** | **0.7725** | **0.72** | **$215,800** | **$1,273,600** | **$1,489,400 (-24.5%)** |
 
-```bash
-# Run full profiling, cleaning, Parquet export, and figure generation
-python scripts/run_eda_cleaning.py --action all
-
-# Run specific stages or with custom imputation gap limits:
-python scripts/run_eda_cleaning.py --action profile
-python scripts/run_eda_cleaning.py --action clean --max-gap 3
-python scripts/run_eda_cleaning.py --action visualize
-```
-
-### Generated Artifacts
-- **Clean Wide Parquet**: `data/processed/canonical_ami_clean.parquet` (77.6 MB)
-- **Clean Long Series Parquet**: `data/processed/canonical_ami_series.parquet` (395.8 MB, 43,812,648 rows)
-- **Comprehensive Audit Report**: `docs/eda/eda_report.md`
-- **Transformation Lineage**: `docs/eda/data_lineage.json`
-- **Statistical Profile JSON**: `docs/eda/dataset_profile.json`
-- **Figures Suite**: `docs/eda/figures/fig1_dataset_overview.png` to `fig5_imputation_impact.png`
+### 9.2 Operational Policy Comparison (42,372 Fleet Candidates)
+| Inspection Policy Rule | Recommended Dispatches | Expected Gross Recovery | Total Dispatch Cost | Expected Net Value (ENV) | Realized Operational Loss |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **Fixed Threshold (p >= 0.50)** | 170 (0.40%) | $240,120.42 | $17,000.00 | $223,120.42 | $82,685.27 |
+| **Bayes Cost Threshold** | 880 (2.08%) | $362,497.41 | $88,000.00 | $274,497.41 | $68,073.82 |
+| **Dynamic ENV Policy (Grid-Guard)**| **801 (1.89%)** | **$355,330.47** | **$80,100.00** | **+$275,230.47** | **$64,842.91 (Lowest Loss)** |
 
 ---
 
-## 11. Temporal Feature Engineering & Tampering Signatures (Phase 3)
+## 10. Financial Methodology & Caveats
 
-Grid-Guard converts canonical smart-meter time series into a documented, leakage-safe, model-ready feature representation. All 60 registered features use strictly backward trailing windows ($\le t$), preserving mathematical causality and preventing future data leakage.
-
-### Feature Families
-1. **Calendar & Cyclical Harmonics** (9 features): Day of week, day of month, month, quarter, weekend indicator, and cyclical sine/cosine harmonics (`dow_sin`, `dow_cos`, `month_sin`, `month_cos`).
-2. **Backward Lags** (6 features): Previous-day and previous-week lags (`1d`, `2d`, `3d`, `7d`, `14d`, `30d`).
-3. **Trailing Rolling Statistics** (16 features): Trailing mean, std, min, max, and median across `7d`, `14d`, `30d`, `60d`, and `90d` historical windows.
-4. **Multi-Scale Ratios & Dynamics** (7 features): Moving average ratios (`7d/30d`, `14d/60d`, `30d/90d`), Week-over-Week changes/ratios, and Peak-to-Average Ratios (`PAR 7d`, `PAR 30d`).
-5. **Tampering Signatures** (13 features):
-   - **Zero Streaks**: Trailing zero count (`7d`, `30d`), zero ratio, and current continuous zero streak.
-   - **Flatline Metering**: Trailing coefficient of variation (`CV 7d`, `CV 30d`), daily absolute differences, and consecutive identical-reading streaks.
-   - **Sustained Step-Down**: Baseline collapse ratio ($R_{14d} / B_{60d}$), sustained drop ratio, absolute drop magnitude, and depressed consumption duration.
-6. **Periodicity & Autocorrelation** (3 features): Same-weekday personal profile deviation (`dow_profile_deviation`, `dow_profile_ratio`) and trailing 30-day weekly lag-7 autocorrelation.
-7. **Context & Quality** (6 features): Historical coverage ratio, missing ratio, imputation ratio, trailing 30-day missingness, and leave-one-out peer aggregates (when feeder metadata exists).
-
-### Running Feature Engineering
-
-```bash
-# Run complete feature pipeline: export dictionary, generate figures, process dataset, and audit
-python scripts/run_feature_engineering.py all
-
-# Run specific actions:
-python scripts/run_feature_engineering.py dictionary  # Exports registry JSON & Markdown dictionary
-python scripts/run_feature_engineering.py visualize   # Generates diagnostic validation plots
-python scripts/run_feature_engineering.py generate    # Computes canonical_features.parquet
-python scripts/run_feature_engineering.py validate    # Audits distributions, finiteness & uniqueness
-```
-
-### Generated Artifacts
-- **Canonical Feature Parquet**: `data/processed/canonical_features.parquet` (2,726.35 MB, 43,812,648 rows $\times$ 64 columns)
-- **Feature Dictionary (Markdown)**: `docs/features/feature_dictionary.md`
-- **Machine-Readable Registry (JSON)**: `docs/features/feature_registry.json`
-- **Feature Quality & Audit Report (JSON)**: `docs/features/feature_quality_report.json`
-- **Feature Summary Report (Markdown)**: `docs/features/feature_summary_report.md`
-- **Validation Figures**:
-  - `docs/features/figures/fig1_step_down_tampering.png`
-  - `docs/features/figures/fig2_zero_streak_detection.png`
-  - `docs/features/figures/fig3_flatline_variance_collapse.png`
-  - `docs/features/figures/fig4_multi_scale_ratios_and_par.png`
-  - `docs/features/figures/fig5_real_meters_comparison.png`
+- **Observed / Derived**: Daily deficits and unmetered volumes are derived from comparing recent 14-day consumption against historical 60-day baselines.
+- **Assumed / Modeled Parameters**: Default tariff (\$0.15/kWh), crew dispatch cost (\$100/visit), and recovery horizon (12 billing cycles) are configurable in settings.
+- **Operational Labeling**: All monetary figures represent **modeled expectations** ($E[\text{Recovery}] = \sum p_i R_i$) and do not guarantee recovered cash until field crews physically verify and bill the unmetered consumption.
 
 ---
 
-## 12. Cost Matrix Definition & Unweighted Baseline Modeling (Phase 4)
+## 11. Known Limitations & Future Work
 
-Grid-Guard establishes an ordinary, strictly unweighted LightGBM baseline binary classifier and a formal financial cost matrix. The baseline deliberately avoids SMOTE, class weights, cost weighting, or dynamic thresholds, evaluating at the conventional **0.5 decision threshold** to establish the benchmark against which later cost-sensitive methods will be judged.
-
-### A. Non-Overlapping Chronological Split
-
-| Partition | Date Range | Duration | Sample Count | Meters | Theft Rate |
-|---|---|---|---|---|---|
-| **Train** | `2014-04-01` to `2015-12-31` | 21 months | 932,184 | 42,372 | 8.53% |
-| **Validation** | `2016-01-01` to `2016-05-31` | 5 months | 254,232 | 42,372 | 8.53% |
-| **Held-Out Test** | `2016-06-01` to `2016-10-31` | 5 months | 254,232 | 42,372 | 8.53% |
-
-### B. Baseline Empirical Performance (Held-Out Test Set)
-
-| Metric | Measured Baseline Value | Operational Takeaway |
-|---|---|---|
-| **PR-AUC** | **`0.2959`** | Primary metric under class imbalance (vs. 0.0853 random rate) |
-| **ROC-AUC** | `0.7711` | Discriminative ranking capability |
-| **Precision** | `46.89%` | 3,161 true thefts detected out of 6,741 inspections |
-| **Recall** | **`14.57%`** | **Severe failure of unweighted baseline: 18,529 thefts missed (85.4%)** |
-| **F1-Score** | `0.2224` | Harmonic mean |
-| **Precision@10** | `80.00%` | 8 out of top 10 ranked meters are true thefts |
-| **Precision@50** | `84.00%` | 42 out of top 50 ranked meters are true thefts |
-| **Precision@100** | `82.00%` | 82 out of top 100 ranked meters are true thefts |
-| **Precision@500** | `63.20%` | 316 out of top 500 ranked meters are true thefts |
-| **Precision@1000** | `57.00%` | 570 out of top 1,000 ranked meters are true thefts |
-
-### C. Financial Cost Outcomes
-
-Using configured parameters ($C_{\text{dispatch}} = \$100.00$, Tariff = $\$0.15/\text{kWh}$, $H_{\text{undetected}} = 12$ months):
-- **Wasted FP Field Dispatch Cost**: `USD 358,000.00` (3,580 false alarms)
-- **Undetected FN Revenue Leakage**: `USD 765,766.00` (18,529 missed thefts)
-- **Total Baseline Operational Loss**: **`USD 1,123,766.00`**
-- **Estimated Gross Recovered Revenue**: `USD 1,447,265.25`
-- **Estimated Net Financial Recovery**: `USD 773,165.25`
-
-### D. Running the Baseline Pipeline
-
-```bash
-# Execute end-to-end baseline training, evaluation, artifact export, and MLflow logging
-python scripts/run_baseline.py all
-
-# Override operational assumptions
-python scripts/run_baseline.py all --stride 30 --dispatch-cost 120.0 --tariff 0.18
-
-# Launch local MLflow dashboard
-mlflow ui --backend-store-uri sqlite:///mlruns/mlflow.db
-```
-
-### E. Generated Baseline Artifacts
-- **Model Checkpoint**: `artifacts/baseline/baseline_lightgbm.txt`
-- **Scored Test Predictions**: `artifacts/baseline/baseline_predictions.parquet` (254,232 rows)
-- **Metrics Report**: `artifacts/baseline/baseline_metrics.json`
-- **Financial Audit Report**: `artifacts/baseline/financial_cost_report.md`
-- **Diagnostic Charts**:
-  - `artifacts/baseline/figures/pr_curve.png`
-  - `artifacts/baseline/figures/roc_curve.png`
-  - `artifacts/baseline/figures/confusion_matrix.png`
-  - `artifacts/baseline/figures/probability_distribution.png`
-  - `artifacts/baseline/figures/feature_importance.png`
-  - `artifacts/baseline/figures/financial_loss_breakdown.png`
-  - `artifacts/baseline/figures/precision_at_k.png`
+- **Granularity**: The current release operates on daily AMI aggregates. Integrating 15-minute interval smart-meter data could unlock reactive power and phase-angle anomaly signatures.
+- **Feeder Aggregation**: Future iterations can incorporate substation-level energy balancing (total feeder sendout vs. sum of meters) to bound total NTL prior to individual meter scoring.
+- **Dynamic Crew Routing**: Integrating GIS coordinates to batch inspections geographically could further reduce dispatch travel costs.
 
 ---
 
-## 13. Class Imbalance Strategy & Rare-Tampering Learning (Phase 5)
+## 12. License & Citation
 
-Grid-Guard addresses the severe real-world class imbalance (8.53% positive prevalence, 10.72:1 imbalance ratio) by evaluating candidate imbalance handling strategies strictly on the chronological validation partition (`2016-01-01` to `2016-05-31`). The selected champion strategy—**Controlled Minority Oversampling (`controlled_oversample_0.20`)**—was evaluated once on the untouched held-out test partition (`2016-06-01` to `2016-10-31`), directly mitigating the acute false-negative deficiency of the unweighted baseline.
-
-### A. Head-to-Head Performance (Held-Out Test Set)
-
-| Metric | Phase 4 (Unweighted Baseline) | Phase 5 Champion (`controlled_oversample_0.20`) | Absolute Difference | Operational Takeaway |
-|---|---|---|---|---|
-| **PR-AUC** | `0.2959` | **`0.3132`** | **`+0.0173`** | Primary rare-class ranking metric |
-| **ROC-AUC** | `0.7711` | `0.7693` | `-0.0018` | Preserved global separability |
-| **Recall (Theft Capture)** | `14.57%` | **`23.84%`** | **`+9.27%`** | **+63.6% relative jump in theft detection** |
-| **Precision** | `46.89%` | `45.10%` | `-1.79%` | Minor precision trade-off at 0.5 cutoff |
-| **F1-Score** | `0.2224` | **`0.3119`** | **`+0.0895`** | +40.2% improvement in harmonic balance |
-| **True Positives ($TP$)** | `3,161` | **`5,170`** | **`+2,009`** | **2,009 additional fraudulent meters detected** |
-| **False Negatives ($FN$)** | `18,529` | **`16,520`** | **`-2,009`** | **2,009 fewer undetected theft losses** |
-| **False Positives ($FP$)** | `3,580` | `6,293` | `+2,713` | Additional inspections dispatched |
-| **Brier Score (Calibration)** | `0.0706` | `0.0811` | `+0.0105` | Predictable probability elevation |
-| **Total Operational Loss** | `$1,123,766.00` | **`$1,120,098.88`** | **`-$3,667.12`** | Immediate net dollar savings |
-
-### B. Field Inspection Priority: Precision@K
-
-| Capacity ($K$) | Baseline Precision@K | Champion Precision@K | Baseline TP Caught | Champion TP Caught |
-|---|---|---|---|---|
-| **Top 10** | `80.0%` | **`100.0%`** | 8 | **10** (100% precision) |
-| **Top 50** | **`84.0%`** | `82.0%` | **42** | 41 |
-| **Top 100** | `82.0%` | **`84.0%`** | 82 | **84** |
-| **Top 500** | `63.2%` | **`76.6%`** | 316 | **383 (+13.4% precision)** |
-| **Top 1,000** | `57.0%` | **`69.3%`** | 570 | **693 (+12.3% precision)** |
-| **Top 2,000** | `51.4%` | **`61.8%`** | 1,029 | **1,235 (+10.4% precision)** |
-
-### C. Running Imbalance Experiments
-
-```bash
-# Run complete Phase 5 pipeline: candidate training, validation selection, test evaluation, plots, MLflow
-python scripts/run_imbalance.py all
-
-# Customize validation metric or stride
-python scripts/run_imbalance.py all --metric pr_auc --stride 30
-```
-
-### D. Generated Phase 5 Artifacts
-- **Model Booster**: `artifacts/imbalance/champion_model.txt`
-- **Test Predictions Parquet**: `artifacts/imbalance/champion_predictions.parquet`
-- **Comparison JSON**: `artifacts/imbalance/imbalance_comparison.json`
-- **Markdown Report**: `artifacts/imbalance/imbalance_comparison_report.md`
-- **Detailed Documentation**: `docs/class_imbalance_strategies.md`
-- **7 Publication-Grade Plots**: `artifacts/imbalance/figures/`
-  (`pr_curves_comparison.png`, `roc_curves_comparison.png`, `precision_at_k_comparison.png`, `calibration_curves.png`, `probability_distributions_comparison.png`, `financial_loss_comparison.png`, `confusion_matrix_champion.png`)
-
----
-
-## 14. Cost-Sensitive Custom Objective & Financially Weighted Learning (Phase 6)
-
-Grid-Guard aligns tree-boosting splits directly with electricity utility economics through a custom second-order differentiable **Weighted Logistic Objective**:
-$$\mathcal{L}_i(z_i) = w_i \left[ -y_i \ln(p_i) - (1 - y_i) \ln(1 - p_i) \right]$$
-where $w_i = C_{FN, i}$ (annualized unmetered revenue leakage) for tampering examples and $w_i = C_{FP} = \$100.00$ (field dispatch cost) for honest accounts. The surrogate guarantees strictly positive Hessians ($h_i = w_i p_i(1 - p_i) > 0$) for numerical stability in LightGBM and scales weights globally via reference factor $S_{\text{ref}} = \$100.00$ without altering relative economic ratios.
-
-### A. Three-Phase Performance Evolution (Held-Out Test Set)
-
-| Metric | Phase 4 (Unweighted Baseline) | Phase 5 (Imbalance Champion) | Phase 6 (Cost-Sensitive Champion) | Shift (P4 $\to$ P6) | Economic Takeaway |
-|---|---|---|---|---|---|
-| **PR-AUC** | `0.2959` | `0.3132` | `0.2566` | `-0.0393` | Shifted toward financial volume rather than frequency |
-| **ROC-AUC** | `0.7711` | `0.7693` | `0.7608` | `-0.0103` | Stable discriminative capacity |
-| **Theft Recall** | `14.57%` | `23.84%` | `2.65%` | `-11.92%` | Conventional 0.5 threshold suppresses low-leakage cases |
-| **Precision** | `46.89%` | `45.10%` | **`57.56%`** | **`+10.67%`** | **Nearly 6 out of 10 dispatched inspections confirm theft** |
-| **False Positives ($FP$)** | `3,580` | `6,293` | **`424`** | **`-3,156`** | **-88.2% drop in wasted crew dispatches** |
-| **Brier Calibration Score** | `0.0706` | `0.0811` | **`0.0704`** | **`-0.0002`** | Superior probability calibration |
-| **Wasted FP Dispatch Cost** | `$358,000.00` | `$629,300.00` | **`$42,400.00`** | **`-$315,600.00`** | **$315.6k saved in wasted inspection dispatches** |
-| **Undetected FN Leakage** | `$765,766.00` | `$490,798.88` | **`$583,798.88`** | **`-$181,967.12`** | High-volume theft prioritized |
-| **Total Operational Loss** | **`$1,123,766.00`** | **`$1,120,098.88`** | **`$626,198.88`** | **`-$497,567.12`** | **-44.3% Net Financial Loss Reduction!** |
-
-### B. Operational Inspection Ranking (Precision@K)
-
-| Quota ($K$) | Phase 4 Precision@K | Phase 5 Precision@K | Phase 6 Precision@K | Phase 6 Confirmed Thefts |
-|---|---|---|---|---|
-| **Top 10** | 80.0% | **100.0%** | 90.0% | 9 |
-| **Top 50** | **84.0%** | 82.0% | 74.0% | 37 |
-| **Top 100** | 82.0% | **84.0%** | 77.0% | 77 |
-| **Top 500** | 63.2% | **76.6%** | 61.2% | 306 |
-| **Top 1,000** | 57.0% | **69.3%** | 57.5% | 575 |
-| **Top 2,000** | 51.4% | **61.8%** | 50.9% | 1,018 |
-
-### C. Running Cost-Sensitive Experiments
-
-```bash
-# Execute end-to-end Phase 6 pipeline: candidate training, validation selection, test evaluation, plots, MLflow
-python scripts/run_cost_sensitive.py all
-
-# Customize operational dispatch cost and normalization strategy
-python scripts/run_cost_sensitive.py all --dispatch-cost 100.0 --tariff 0.15 --normalization dispatch_cost
-```
-
-### D. Generated Phase 6 Artifacts
-- **Model Checkpoint**: `artifacts/cost_sensitive/champion_model.txt`
-- **Scored Predictions**: `artifacts/cost_sensitive/champion_predictions.parquet`
-- **Weight Audit Report**: `artifacts/cost_sensitive/weight_audit_report.json`
-- **Comparison JSON**: `artifacts/cost_sensitive/cost_sensitive_comparison.json`
-- **Markdown Report**: `artifacts/cost_sensitive/cost_sensitive_comparison_report.md`
-- **Detailed Documentation**: `docs/cost_sensitive_learning.md`
-- **Publication-Grade Diagnostic Plots**: `artifacts/cost_sensitive/figures/`
-  (`expected_cost_curve.png`, `financial_weight_distribution.png`, `pr_curves_three_phase.png`, `financial_loss_three_phase.png`, `feature_importance_shift.png`, `confusion_matrix_cost_sensitive.png`)
-
----
-
-## 15. Dynamic Thresholding, Expected Net Value & Inspection Prioritization (Phase 7)
-
-Phase 7 transforms the Phase 6 cost-sensitive model outputs into a financially informed operational decision engine. Rather than using arbitrary global classification cutoffs (e.g., $p \ge 0.5$), Grid-Guard derives per-meter dynamic thresholds and computes **Expected Net Value (ENV)** to guide operational field crew dispatches.
-
-### A. Mathematical Formulation
-
-For meter $i$, with tamper probability $p_i$, estimated annual recoverable revenue $R_i$, and dispatch cost $C_{\text{dispatch}}$:
-
-1. **Expected Net Value (ENV)**:
-   $$\text{ENV}_i = p_i \times R_i - C_{\text{dispatch}}$$
-   $$\text{Decision Rule: Inspect if } \text{ENV}_i > 0$$
-
-2. **Bayes Cost Threshold ($\tau_{\text{cost}, i}$)**:
-   Minimizes expected classification loss where $C_{FP} = C_{\text{dispatch}}$ and $C_{FN, i} = R_i$:
-   $$\tau_{\text{cost}, i} = \frac{C_{\text{dispatch}}}{C_{\text{dispatch}} + C_{FN, i}}$$
-
-3. **Direct ENV Economic Threshold ($\tau_{\text{env}, i}$)**:
-   Guarantees non-negative expected net cash flow ($p_i \times R_i \ge C_{\text{dispatch}}$):
-   $$\tau_{\text{env}, i} = \frac{C_{\text{dispatch}}}{R_i}$$
-
-> [!NOTE]
-> **Threshold Inequality**: For all valid economic parameters ($R_i = C_{FN, i} > 0, C_{\text{dispatch}} > 0$), $\tau_{\text{cost}, i} < \tau_{\text{env}, i}$. The Bayes cost threshold is slightly more permissive (minimizing aggregate risk), whereas the ENV threshold enforces positive expected cash flow per ticket.
-
-### B. Three-Policy Operational Benchmark (42,372 Candidate Meters)
-
-Evaluated on the held-out test evaluation period:
-
-| Operational Metric | Policy A (Fixed $p \ge 0.5$) | Policy B (Bayes Cost $p \ge \tau_{\text{cost}}$) | Policy C (Dynamic ENV $\text{ENV} > 0$) | Economic Takeaway |
-|---|---|---|---|---|
-| **Dispatched Inspections** | `170` | `880` | **`801`** | Dynamic ENV filters out 79 loss-making dispatches |
-| **Confirmed Thefts ($TP$)** | `79` | **`235`** | **`224`** | **+183.5% more thefts caught** than fixed 0.5 |
-| **False Positives ($FP$)** | `91` | `645` | `577` | Operational trade-off to capture high-value theft |
-| **Inspection Precision** | **`46.47%`** | `26.70%` | `27.97%` | Precision on broad financial coverage |
-| **Theft Recall** | `2.62%` | **`7.78%`** | **`7.42%`** | Triple the recall of fixed thresholding |
-| **Total Crew Dispatch Cost** | **`$17,000.00`** | `$88,000.00` | `$80,100.00` | $7.9k saved vs Bayes Cost |
-| **Expected Net Value (ENV)** | `$223,120.42` | `$274,497.41` | **`$275,230.47`** | **Highest projected economic surplus** |
-| **Realized Gross Recovery** | `$178,410.85` | `$248,422.29` | **`$244,853.20`** | **+$66.4k (+37.2%) revenue recovered** over fixed 0.5 |
-| **Realized Net Recovery** | `$161,410.85` | `$160,422.29` | **`$164,753.20`** | **Highest net return after subtracting dispatch costs** |
-
-### C. Top-K Ranked Inspection Queue (Capacity-Constrained Dispatch)
-
-Meters are sorted deterministically by $\text{ENV}_i$ descending with secondary tie-breakers. Enforces strict capacity limits without dispatching negative-ENV candidates:
-
-| Inspection Quota ($K$) | Target Dispatches | Confirmed Thefts | Precision@K | Cumulative Crew Cost | Realized Gross Recovery | Realized Net Value |
-|---|---|---|---|---|---|---|
-| **Top 10** | 10 | 6 | **60.0%** | $1,000.00 | $93,832.00 | **$92,832.00** |
-| **Top 25** | 25 | 11 | **44.0%** | $2,500.00 | $116,913.00 | **$114,413.00** |
-| **Top 50** | 50 | 23 | **46.0%** | $5,000.00 | $137,658.00 | **$132,658.00** |
-| **Top 100** | 100 | 37 | **37.0%** | $10,000.00 | $155,887.00 | **$145,887.00** |
-| **Top 250** | 250 | 92 | **36.8%** | $25,000.00 | $185,553.00 | **$160,553.00** |
-| **Top 500** | 500 | 170 | **34.0%** | $50,000.00 | $223,164.00 | **$173,164.00** |
-| **Top 801 (All Positive)** | 801 | 224 | **28.0%** | $80,100.00 | $244,853.20 | **$164,753.20** |
-
-### D. Running the Decision Engine
-
-```bash
-# Execute end-to-end decision pipeline: thresholds, ENV, ranking, tickets, comparisons, plots, MLflow
-python scripts/run_decision_engine.py all
-
-# Customize dispatch capacity or operational rule
-python scripts/run_decision_engine.py run --rule env_positive --max-inspections 500
-
-# Run economic scenario sensitivity analysis
-python scripts/run_decision_engine.py scenarios
-```
-
-### E. Generated Phase 7 Artifacts
-- **Prioritized Tickets Parquet**: `artifacts/decision/inspection_tickets.parquet`
-- **Prioritized Tickets CSV**: `artifacts/decision/inspection_tickets.csv`
-- **Top 100 Operational Tickets**: `artifacts/decision/top_100_inspection_tickets.csv`
-- **Policy Comparison JSON**: `artifacts/decision/decision_comparison.json`
-- **Comprehensive Markdown Report**: `artifacts/decision/decision_comparison_report.md`
-- **Detailed Documentation**: `docs/financial_decisioning.md`
-- **5 Publication-Grade Visualizations**: `artifacts/decision/figures/`
-  (`env_distribution.png`, `probability_vs_env.png`, `threshold_vs_financial_exposure.png`, `cumulative_env_by_rank.png`, `policy_comparison_bar.png`)
-
----
-
-## 16. SHAP Explainability, Temporal Attribution & Tampering Signatures (Phase 8)
-
-Phase 8 provides an audited, domain-grounded explainability layer for Grid-Guard. The engine decouples black-box gradient boosted trees into exact additive feature contributions, maps statistical features to verified historical calendar intervals, identifies domain-specific electrical tampering signatures, and generates deterministic human-readable inspection narratives for field crews.
-
-### A. Mathematical Tree-SHAP & Additive Reconstruction
-
-Tree-SHAP computes exact Shapley values in the model's native raw margin log-odds space:
-$$z_i = \ln\left( \frac{\hat{p}_i}{1 - \hat{p}_i} \right) = \mathbb{E}[z] + \sum_{j=1}^{60} \phi_{ij}$$
-where $\mathbb{E}[z] = -2.5928$ (6.96% base rate prevalence). Additive reconstruction is exact within machine precision:
-$$\max_{i} \left| \mathbb{E}[z] + \sum_{j=1}^{60} \phi_{ij} - z_i \right| < 10^{-14}$$
-
-### B. Global Feature Importance (Tree-SHAP Hierarchy)
-
-| Rank | Feature Name | Display Name | Functional Category | Mean(\|SHAP\|) | Operational Meaning |
-|---|---|---|---|---|---|
-| **1** | `imputation_ratio` | Imputed Data Ratio | Data Quality | `0.4056` | Verifies data integrity; confirms telemetry is measured rather than imputed |
-| **2** | `missing_ratio` | Data Missingness Ratio | Data Quality | `0.2619` | Distinguishes telecom packet loss from customer-side tampering |
-| **3** | `coverage_ratio` | Smart-Meter Data Coverage | Data Quality | `0.2437` | High coverage (>95%) rules out communication blackouts |
-| **4** | `rolling_std_60d` | 60-Day Historical Volatility | Historical Baseline | `0.1406` | Primary benchmark for normal customer load variance and capacity |
-| **5** | `rolling_std_90d` | 90-Day Seasonal Volatility | Historical Baseline | `0.1262` | Multi-month seasonal volatility benchmark |
-| **6** | `rolling_std_30d` | 30-Day Trailing Volatility | Historical Baseline | `0.0795` | Monthly load dispersion benchmark |
-| **7** | `rolling_min_30d` | Trailing 30-Day Min Load | Rolling | `0.0642` | Baseline non-zero base load |
-| **8** | `ratio_14d_60d` | Recent vs. Historical Ratio | Collapse & Step-Down | `0.0397` | Direct measure of two-week consumption drop vs. long-term baseline |
-| **9** | `sustained_drop_magnitude`| Consumption Collapse Deficit | Collapse & Step-Down | `0.0377` | Estimated absolute deficit (kWh/day) lost due to consumption drop |
-| **10**| `rolling_max_30d` | Trailing 30-Day Peak Load | Rolling | `0.0286` | Historical peak capacity reference |
-
-### C. Domain-Grounded Tampering Signatures
-
-Independent of model feature weights, rule-based electrical signatures evaluate telemetry:
-1. **Sustained Step-Down**: Consumption $< 50\%$ of historical baseline for $\ge 7$ consecutive days (or drop $\ge 50\%$).
-2. **Zero Streak**: $\ge 3$ consecutive active zero days, or $\ge 3$ zero days in trailing week.
-3. **Flatline (Invariance)**: Constant daily consumption for $\ge 7$ consecutive days ($|diff| \le 0.01$ kWh) or rolling CV $< 0.05$.
-4. **Behavioral Regime Shift**: Week-over-week consumption drop $> 50\%$ or 7d/30d ratio $< 0.45$.
-5. **Abnormal Peak Behavior**: Peak-to-Average Ratio collapses to near-unity ($< 1.05$) while baseline exhibited normal peaking.
-
-### D. Enriched Inspection Ticket Example
-
-```
-Ticket ID: TCK-2016-10-30-EF550F26 | Meter: 620E9685A1D2F4C35855EF1A3E0968AB | Priority Rank: #1
-Tampering Probability: 1.000 | Expected Net Value: $32,275.68 | Recoverable Revenue: $32,375.68
-Short Narrative: "High tampering risk (100.0% probability) with positive Expected Net Value ($32,275.68). 
-                 Sudden week-over-week consumption collapse; elevated historical load volatility 
-                 contrasting recent readings. Field inspection recommended to verify physical meter integrity."
-Top Drivers: 60-Day Historical Volatility (+2.49), Data Missingness Ratio (+0.64), 30-Day Volatility (+0.56)
-Primary Time Window: 2016-09-01 to 2016-10-30 | Detected Signatures: Behavior Shift (moderate)
-Regulatory Disclaimer: Model evidence reflects statistical consumption anomalies and requires physical 
-                      field verification; smart-meter data alone does not establish physical tampering.
-```
-
-### E. Canonical Case Studies
-
-* **True Positive (TP)**: Ticket `TCK-2016-10-30-EF550F26` (Meter `620E9685A1D2...`), Label = 1, Prob = 1.000, Log-Odds = +4.970, ENV = $32,275.68.
-* **True Negative (TN)**: Ticket `TN-000395F8` (Meter `000395F84A94...`), Label = 0, Prob = 0.080, Log-Odds = -2.444. Normal residential load profile.
-* **False Positive (FP)**: Ticket `TCK-2016-10-30-25152B5A` (Meter `C5695F151BDE...`), Label = 0, Prob = 0.923, Log-Odds = +4.219. Severe customer vacancy flagged.
-* **False Negative (FN)**: Ticket `FN-FD2D487A` (Meter `FD2D487A68EB...`), Label = 1, Prob = 0.072, Log-Odds = -2.552. Low-amplitude theft masked by load variance.
-
-### F. Running Explainability
-
-```bash
-# Execute end-to-end explainability pipeline: SHAP, signatures, narratives, case studies, plots, MLflow
-python scripts/run_explainability.py all
-
-# Customize global background sample size or top-k tickets
-python scripts/run_explainability.py all --global-samples 500 --top-k 100
-```
-
-### G. Generated Phase 8 Artifacts
-- **Enriched Inspection Tickets CSV**: `artifacts/explainability/enriched_top_100_tickets.csv`
-- **Enriched Inspection Tickets Parquet**: `artifacts/explainability/enriched_top_100_tickets.parquet`
-- **Global SHAP Importance Table**: `artifacts/explainability/global_shap_importance.csv` & `.json`
-- **Top 10 Structured Explanations JSON**: `artifacts/explainability/top_10_inspection_explanations.json`
-- **Comprehensive Markdown Report**: `artifacts/explainability/explainability_report.md`
-- **Documentation**: `docs/explainability.md`, `docs/shap_methodology.md`, `docs/tampering_signatures.md`
-- **7 Publication-Grade Visualizations**: `artifacts/explainability/figures/`
-  (`global_shap_importance.png`, `category_attribution_pie_bar.png`, `local_case_top_high_risk_tp.png`, `local_case_normal_honest_tn.png`, `local_case_false_positive_fp.png`, `local_case_false_negative_fn.png`, `case_study_timeseries.png`)
-
----
-
-## 17. FastAPI Inference Backend & Production-Style API Layer (Phase 9)
-
-Phase 9 exposes the complete Grid-Guard ML inference, financial decisioning, and Tree-SHAP explainability pipeline as a high-performance RESTful API service. It features single-load model lifecycle management, non-blocking asynchronous request processing, strict Pydantic validation, and comprehensive Swagger/ReDoc interactive documentation.
-
-### A. Core Endpoints & Capabilities
-
-| Endpoint | Method | Input | Output | Operational Role |
-| :--- | :---: | :--- | :--- | :--- |
-| `/health` | `GET` | None | `HealthResponse` | Liveness probe confirming process vitality |
-| `/ready` | `GET` | None | `ReadyResponse` | Readiness probe verifying LightGBM booster & Tree-SHAP in RAM |
-| `/api/v1/metadata/model` | `GET` | None | `ModelMetadataResponse` | Safe model introspection (version, 60 features, base log-odds) |
-| `/api/v1/metadata/config` | `GET` | None | Public configuration | Supported policies, input bounds, financial defaults |
-| `/api/v1/predict` | `POST` | `SingleMeterPredictionRequest` | `SingleMeterPredictionResponse` | Real-time risk probability, financial ENV, and Tree-SHAP narrative |
-| `/api/v1/predict/batch` | `POST` | `BatchPredictionRequest` | `BatchPredictionResponse` | Bounded multi-meter batch evaluation with item-level error reporting |
-| `/api/v1/inspection/ticket` | `POST` | `SingleMeterPredictionRequest` | `InspectionTicketResponse` | Compiles field work order with deterministic ticket ID and signatures |
-| `/api/v1/inspection/queue` | `POST` | `InspectionQueueRequest` | `InspectionQueueResponse` | Ranked inspection queue ordered by Expected Net Value (ENV) |
-
-### B. Launching the API Server
-
-```bash
-# Launch via preconfigured runner script
-uv run python scripts/run_api.py --host 0.0.0.0 --port 8000
-
-# Or launch directly with uvicorn
-uv run uvicorn grid_guard.api.main:app --host 0.0.0.0 --port 8000 --reload
-```
-
-Once running, interactive documentation is available at:
-- **Swagger UI**: `http://localhost:8000/docs`
-- **ReDoc UI**: `http://localhost:8000/redoc`
-- **OpenAPI Schema**: `http://localhost:8000/openapi.json`
-
-### C. Performance & Latency Benchmarks
-
-Measured on local test environment with 90-day daily meter histories (`scripts/benchmark_api.py`):
-
-| Operation / Endpoint | Latency Metric | Operational Benchmark Target | Status |
-| :--- | :---: | :---: | :---: |
-| **Cold Startup Time** | **0.265 s** | < 2.0 s | Passed |
-| **Prediction (Bare Model Inference)** | **21.87 ms** (P95: 27.24 ms) | < 50.0 ms | Passed |
-| **Prediction (Full Tree-SHAP + Narratives)** | **29.14 ms** (P95: 30.83 ms) | < 80.0 ms | Passed |
-| **Batch Throughput (10 meters)** | **250.12 ms** (25.0 ms / meter) | < 500.0 ms | Passed |
-| **Inspection Ticket Work Order** | **34.25 ms** | < 100.0 ms | Passed |
-| **Inspection Queue Query (Top 50)** | **14.75 ms** | < 50.0 ms | Passed |
-
-### D. Generated Phase 9 Artifacts
-- **OpenAPI Specification**: `artifacts/api/openapi.json`
-- **Sample Request Payloads**: `artifacts/api/sample_requests.json`
-- **API Performance Report**: `artifacts/api/api_performance_report.md`
-- **Detailed Documentation**: `docs/api.md`, `docs/api_architecture.md`
-
----
-
-## 18. Upcoming Phases
-
-- **Phase 10**: Interactive Streamlit / Web Operational Dashboard for Field Crew Operations & Executive Analytics.
-
-
-
-
+Grid-Guard is developed for research and operational utility loss reduction under the MIT License.
+Dataset acknowledgments: State Grid Corporation of China (SGCC) Smart Meter Benchmark.
