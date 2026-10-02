@@ -1,0 +1,542 @@
+[
+  {
+    "rank": 1,
+    "feature_name": "imputation_ratio",
+    "display_name": "Imputed Data Ratio",
+    "category": "Data Quality & Completeness",
+    "mean_abs_shap": 0.4055714773848363,
+    "mean_signed_shap": -0.019890734210999843,
+    "description": "Fraction of consumption records restored via bounded-gap imputation"
+  },
+  {
+    "rank": 2,
+    "feature_name": "missing_ratio",
+    "display_name": "Data Missingness Ratio",
+    "category": "Data Quality & Completeness",
+    "mean_abs_shap": 0.26191036686289676,
+    "mean_signed_shap": 0.07852591203201034,
+    "description": "Proportion of missing AMI packets in the historical window"
+  },
+  {
+    "rank": 3,
+    "feature_name": "coverage_ratio",
+    "display_name": "Smart-Meter Data Coverage Ratio",
+    "category": "Data Quality & Completeness",
+    "mean_abs_shap": 0.24367456502537377,
+    "mean_signed_shap": 0.055542724457605545,
+    "description": "Proportion of valid non-null AMI readings received from this meter"
+  },
+  {
+    "rank": 4,
+    "feature_name": "rolling_std_60d",
+    "display_name": "60-Day Historical Consumption Volatility",
+    "category": "Historical Baseline",
+    "mean_abs_shap": 0.1405887066739253,
+    "mean_signed_shap": 0.06200760832768468,
+    "description": "Trailing 60-day standard deviation reflecting normal customer load variability"
+  },
+  {
+    "rank": 5,
+    "feature_name": "rolling_std_90d",
+    "display_name": "90-Day Seasonal Consumption Volatility",
+    "category": "Historical Baseline",
+    "mean_abs_shap": 0.12615887309834403,
+    "mean_signed_shap": 0.00487051739236376,
+    "description": "Long-term 90-day standard deviation of daily consumption"
+  },
+  {
+    "rank": 6,
+    "feature_name": "rolling_std_30d",
+    "display_name": "30-Day Trailing Consumption Volatility",
+    "category": "Historical Baseline",
+    "mean_abs_shap": 0.07946085709705496,
+    "mean_signed_shap": -0.008165768939417865,
+    "description": "Trailing 30-day standard deviation of daily consumption"
+  },
+  {
+    "rank": 7,
+    "feature_name": "rolling_min_30d",
+    "display_name": "Rolling Min 30D",
+    "category": "Rolling",
+    "mean_abs_shap": 0.06420613938237726,
+    "mean_signed_shap": 0.00720228415541985,
+    "description": "Trailing 30-day minimum consumption reading"
+  },
+  {
+    "rank": 8,
+    "feature_name": "ratio_14d_60d",
+    "display_name": "Recent vs. Historical Consumption Ratio (14d / 60d)",
+    "category": "Consumption Collapse & Step-Down",
+    "mean_abs_shap": 0.03966394684562209,
+    "mean_signed_shap": 0.00010008615905434582,
+    "description": "Ratio of recent 14-day average consumption to 60-day historical baseline"
+  },
+  {
+    "rank": 9,
+    "feature_name": "sustained_drop_magnitude",
+    "display_name": "Estimated Consumption Collapse Magnitude",
+    "category": "Consumption Collapse & Step-Down",
+    "mean_abs_shap": 0.03765093254003737,
+    "mean_signed_shap": 0.009545051253497945,
+    "description": "Absolute deficit between 60-day baseline and recent 14-day average"
+  },
+  {
+    "rank": 10,
+    "feature_name": "rolling_max_30d",
+    "display_name": "Rolling Max 30D",
+    "category": "Rolling",
+    "mean_abs_shap": 0.028628452393625454,
+    "mean_signed_shap": -0.004715096175841235,
+    "description": "Trailing 30-day maximum (peak) consumption reading"
+  },
+  {
+    "rank": 11,
+    "feature_name": "daily_diff_abs_7d_mean",
+    "display_name": "7-Day Mean Day-to-Day Absolute Change",
+    "category": "Variability & Flatline",
+    "mean_abs_shap": 0.026109880795331476,
+    "mean_signed_shap": -0.004181646332421058,
+    "description": "Average magnitude of day-to-day consumption changes over trailing week"
+  },
+  {
+    "rank": 12,
+    "feature_name": "rolling_min_7d",
+    "display_name": "Rolling Min 7D",
+    "category": "Rolling",
+    "mean_abs_shap": 0.025121957933021723,
+    "mean_signed_shap": -0.0015245886305567783,
+    "description": "Trailing 7-day minimum consumption reading"
+  },
+  {
+    "rank": 13,
+    "feature_name": "consumption_kwh_lag_30d",
+    "display_name": "Consumption 30 Days Prior",
+    "category": "Historical Baseline",
+    "mean_abs_shap": 0.023350340373935713,
+    "mean_signed_shap": 0.02103055792895937,
+    "description": "Observed consumption exactly one billing month prior"
+  },
+  {
+    "rank": 14,
+    "feature_name": "rolling_median_30d",
+    "display_name": "Rolling Median 30D",
+    "category": "Rolling",
+    "mean_abs_shap": 0.020336163757918642,
+    "mean_signed_shap": 0.0033511240402271125,
+    "description": "Trailing 30-day median (50th percentile) consumption"
+  },
+  {
+    "rank": 15,
+    "feature_name": "consumption_kwh_lag_14d",
+    "display_name": "Consumption Kwh Lag 14D",
+    "category": "Lag",
+    "mean_abs_shap": 0.018272626620890787,
+    "mean_signed_shap": -0.0035916600104789276,
+    "description": "Backward historical consumption reading shifted by 14 days"
+  },
+  {
+    "rank": 16,
+    "feature_name": "rolling_mean_60d",
+    "display_name": "60-Day Historical Baseline Average",
+    "category": "Historical Baseline",
+    "mean_abs_shap": 0.01740508291248472,
+    "mean_signed_shap": 0.0060988650458347095,
+    "description": "Trailing 60-day average daily electricity usage"
+  },
+  {
+    "rank": 17,
+    "feature_name": "consumption_kwh_lag_2d",
+    "display_name": "Consumption Kwh Lag 2D",
+    "category": "Lag",
+    "mean_abs_shap": 0.016772130216436736,
+    "mean_signed_shap": 0.016696810590955374,
+    "description": "Backward historical consumption reading shifted by 2 days"
+  },
+  {
+    "rank": 18,
+    "feature_name": "rolling_mean_90d",
+    "display_name": "Rolling Mean 90D",
+    "category": "Rolling",
+    "mean_abs_shap": 0.013177025152606719,
+    "mean_signed_shap": 0.0024338839327294956,
+    "description": "Trailing 90-day rolling mean consumption"
+  },
+  {
+    "rank": 19,
+    "feature_name": "rolling_std_14d",
+    "display_name": "Rolling Std 14D",
+    "category": "Rolling",
+    "mean_abs_shap": 0.011026909867219555,
+    "mean_signed_shap": -0.0026293161219493443,
+    "description": "Trailing 14-day rolling standard deviation of consumption"
+  },
+  {
+    "rank": 20,
+    "feature_name": "baseline_deviation_ratio",
+    "display_name": "Baseline Deviation Ratio",
+    "category": "Consumption Collapse & Step-Down",
+    "mean_abs_shap": 0.009674551218826405,
+    "mean_signed_shap": 0.0017921037988045704,
+    "description": "Ratio of recent 14-day consumption to pre-period 60-day historical baseline"
+  },
+  {
+    "rank": 21,
+    "feature_name": "current_zero_streak",
+    "display_name": "Current Consecutive Zero Days",
+    "category": "Zero Consumption & Streaks",
+    "mean_abs_shap": 0.009174659649648646,
+    "mean_signed_shap": -0.0041978710039775186,
+    "description": "Consecutive active days recording zero electricity consumption"
+  },
+  {
+    "rank": 22,
+    "feature_name": "rolling_cv_7d",
+    "display_name": "7-Day Coefficient of Variation",
+    "category": "Variability & Flatline",
+    "mean_abs_shap": 0.0089812335278678,
+    "mean_signed_shap": -0.0014641539738157456,
+    "description": "Relative volatility of daily consumption over past 7 days (std / mean)"
+  },
+  {
+    "rank": 23,
+    "feature_name": "ratio_30d_90d",
+    "display_name": "Monthly vs. Seasonal Ratio (30d / 90d)",
+    "category": "Consumption Collapse & Step-Down",
+    "mean_abs_shap": 0.008261804556938965,
+    "mean_signed_shap": -0.0015714295950290057,
+    "description": "Ratio of 30-day average usage to 90-day seasonal baseline"
+  },
+  {
+    "rank": 24,
+    "feature_name": "weekly_autocorr_30d",
+    "display_name": "Weekly Autocorr 30D",
+    "category": "Autocorrelation",
+    "mean_abs_shap": 0.008215257837471882,
+    "mean_signed_shap": 0.004065436152222032,
+    "description": "Trailing 30-day autocorrelation with 7-day backward lag"
+  },
+  {
+    "rank": 25,
+    "feature_name": "day_of_month",
+    "display_name": "Day Of Month",
+    "category": "Calendar",
+    "mean_abs_shap": 0.008010014319498588,
+    "mean_signed_shap": 0.003943086507443212,
+    "description": "Day of month (1-31)"
+  },
+  {
+    "rank": 26,
+    "feature_name": "rolling_mean_14d",
+    "display_name": "14-Day Trailing Consumption Average",
+    "category": "Recent Consumption",
+    "mean_abs_shap": 0.0077757889453821455,
+    "mean_signed_shap": -0.00526644104090135,
+    "description": "Trailing 14-day average daily electricity usage"
+  },
+  {
+    "rank": 27,
+    "feature_name": "flatline_streak",
+    "display_name": "Current Near-Constant Consumption Streak",
+    "category": "Variability & Flatline",
+    "mean_abs_shap": 0.007313612056685792,
+    "mean_signed_shap": -0.003941430481415732,
+    "description": "Consecutive days with identical or near-identical consumption"
+  },
+  {
+    "rank": 28,
+    "feature_name": "par_30d",
+    "display_name": "Par 30D",
+    "category": "Peak",
+    "mean_abs_shap": 0.005852565534371098,
+    "mean_signed_shap": 0.001868248001462006,
+    "description": "Peak-to-Average Ratio over trailing 30 days (max_30d / mean_30d)"
+  },
+  {
+    "rank": 29,
+    "feature_name": "rolling_cv_30d",
+    "display_name": "Rolling Cv 30D",
+    "category": "Variability",
+    "mean_abs_shap": 0.005604236878308939,
+    "mean_signed_shap": 0.0008653898156179364,
+    "description": "Trailing 30-day coefficient of variation (std / safe(mean))"
+  },
+  {
+    "rank": 30,
+    "feature_name": "zero_count_30d",
+    "display_name": "Zero-Consumption Days in Past Month",
+    "category": "Zero Consumption & Streaks",
+    "mean_abs_shap": 0.005562215186443422,
+    "mean_signed_shap": 0.0014342900160304506,
+    "description": "Count of days with zero or near-zero consumption over trailing 30 days"
+  },
+  {
+    "rank": 31,
+    "feature_name": "month_sin",
+    "display_name": "Month Sin",
+    "category": "Calendar",
+    "mean_abs_shap": 0.004588669418648991,
+    "mean_signed_shap": -0.003360207380853483,
+    "description": "Cyclical sine encoding of calendar month"
+  },
+  {
+    "rank": 32,
+    "feature_name": "rolling_median_7d",
+    "display_name": "Rolling Median 7D",
+    "category": "Rolling",
+    "mean_abs_shap": 0.004195372396246672,
+    "mean_signed_shap": 0.0011202668105284115,
+    "description": "Trailing 7-day median (50th percentile) consumption"
+  },
+  {
+    "rank": 33,
+    "feature_name": "consumption_kwh",
+    "display_name": "Current Day Observed Consumption",
+    "category": "Recent Consumption",
+    "mean_abs_shap": 0.0034087773837661877,
+    "mean_signed_shap": 0.002599807479358806,
+    "description": "Raw metered electrical consumption on evaluation date"
+  },
+  {
+    "rank": 34,
+    "feature_name": "rolling_mean_30d",
+    "display_name": "30-Day Trailing Consumption Average",
+    "category": "Historical Baseline",
+    "mean_abs_shap": 0.0033252352397980687,
+    "mean_signed_shap": 0.0011561391825651724,
+    "description": "Trailing 30-day average daily electricity usage"
+  },
+  {
+    "rank": 35,
+    "feature_name": "month",
+    "display_name": "Month",
+    "category": "Calendar",
+    "mean_abs_shap": 0.0032476189198697805,
+    "mean_signed_shap": -0.0018859647781454309,
+    "description": "Calendar month (1-12)"
+  },
+  {
+    "rank": 36,
+    "feature_name": "zero_ratio_30d",
+    "display_name": "Zero Ratio 30D",
+    "category": "Zero Streak",
+    "mean_abs_shap": 0.003189877603269929,
+    "mean_signed_shap": 0.001804838381989089,
+    "description": "Proportion of zero or near-zero days in trailing 30 days"
+  },
+  {
+    "rank": 37,
+    "feature_name": "day_of_week",
+    "display_name": "Day Of Week",
+    "category": "Calendar",
+    "mean_abs_shap": 0.0030823577373602696,
+    "mean_signed_shap": 0.002138814267982535,
+    "description": "Day of week (1=Monday, 7=Sunday)"
+  },
+  {
+    "rank": 38,
+    "feature_name": "ratio_7d_30d",
+    "display_name": "Short-Term vs. Monthly Ratio (7d / 30d)",
+    "category": "Consumption Collapse & Step-Down",
+    "mean_abs_shap": 0.002659980230636726,
+    "mean_signed_shap": 0.0003940166046341677,
+    "description": "Ratio of trailing 7-day usage to trailing 30-day usage"
+  },
+  {
+    "rank": 39,
+    "feature_name": "sustained_drop_duration",
+    "display_name": "Sustained Low-Usage Streak",
+    "category": "Consumption Collapse & Step-Down",
+    "mean_abs_shap": 0.002614472121132485,
+    "mean_signed_shap": -0.0002145162811372577,
+    "description": "Consecutive days where consumption remains <50% of historical baseline"
+  },
+  {
+    "rank": 40,
+    "feature_name": "wow_consumption_change",
+    "display_name": "Wow Consumption Change",
+    "category": "Behavior Shift",
+    "mean_abs_shap": 0.002610372604033516,
+    "mean_signed_shap": 0.0012791636952664697,
+    "description": "Absolute week-over-week difference in 7-day rolling mean"
+  },
+  {
+    "rank": 41,
+    "feature_name": "dow_profile_ratio",
+    "display_name": "Dow Profile Ratio",
+    "category": "Autocorrelation",
+    "mean_abs_shap": 0.002209178703490006,
+    "mean_signed_shap": 0.0007041973983241928,
+    "description": "Ratio of current reading to average of past 4 same-weekday readings"
+  },
+  {
+    "rank": 42,
+    "feature_name": "consumption_kwh_lag_1d",
+    "display_name": "Consumption Kwh Lag 1D",
+    "category": "Lag",
+    "mean_abs_shap": 0.002195739769789097,
+    "mean_signed_shap": 0.000559332735310396,
+    "description": "Backward historical consumption reading shifted by 1 days"
+  },
+  {
+    "rank": 43,
+    "feature_name": "dow_profile_deviation",
+    "display_name": "Dow Profile Deviation",
+    "category": "Autocorrelation",
+    "mean_abs_shap": 0.0021951213795321687,
+    "mean_signed_shap": 0.001740385425842634,
+    "description": "Difference between current reading and average of past 4 same-weekday readings"
+  },
+  {
+    "rank": 44,
+    "feature_name": "rolling_mean_7d",
+    "display_name": "7-Day Trailing Consumption Average",
+    "category": "Recent Consumption",
+    "mean_abs_shap": 0.0019174931919564984,
+    "mean_signed_shap": -0.001078015713219393,
+    "description": "Trailing 7-day average daily electricity usage"
+  },
+  {
+    "rank": 45,
+    "feature_name": "rolling_std_7d",
+    "display_name": "Rolling Std 7D",
+    "category": "Rolling",
+    "mean_abs_shap": 0.0018876275253018992,
+    "mean_signed_shap": -0.001647080861005901,
+    "description": "Trailing 7-day rolling standard deviation of consumption"
+  },
+  {
+    "rank": 46,
+    "feature_name": "sustained_drop_ratio",
+    "display_name": "Fractional Consumption Deficit",
+    "category": "Consumption Collapse & Step-Down",
+    "mean_abs_shap": 0.001783143666099154,
+    "mean_signed_shap": 0.0012263397946888665,
+    "description": "Percentage decline from historical baseline: max(0, 1 - recent/baseline)"
+  },
+  {
+    "rank": 47,
+    "feature_name": "par_7d",
+    "display_name": "Par 7D",
+    "category": "Peak",
+    "mean_abs_shap": 0.001746385443521097,
+    "mean_signed_shap": 0.0003981811036054367,
+    "description": "Peak-to-Average Ratio over trailing 7 days (max_7d / mean_7d)"
+  },
+  {
+    "rank": 48,
+    "feature_name": "zero_count_7d",
+    "display_name": "Zero-Consumption Days in Past Week",
+    "category": "Zero Consumption & Streaks",
+    "mean_abs_shap": 0.0010151532506173621,
+    "mean_signed_shap": 0.0004964545408783268,
+    "description": "Count of days with zero or near-zero consumption over trailing 7 days"
+  },
+  {
+    "rank": 49,
+    "feature_name": "consumption_kwh_lag_7d",
+    "display_name": "Consumption Kwh Lag 7D",
+    "category": "Lag",
+    "mean_abs_shap": 0.0009100785659799226,
+    "mean_signed_shap": -6.448064231078355e-05,
+    "description": "Backward historical consumption reading shifted by 7 days"
+  },
+  {
+    "rank": 50,
+    "feature_name": "month_cos",
+    "display_name": "Month Cos",
+    "category": "Calendar",
+    "mean_abs_shap": 0.0008246608144899238,
+    "mean_signed_shap": -0.0001923357002601841,
+    "description": "Cyclical cosine encoding of calendar month"
+  },
+  {
+    "rank": 51,
+    "feature_name": "zero_ratio_7d",
+    "display_name": "Zero Ratio 7D",
+    "category": "Zero Streak",
+    "mean_abs_shap": 0.000736101643282631,
+    "mean_signed_shap": 0.00034274541978163706,
+    "description": "Proportion of zero or near-zero days in trailing 7 days"
+  },
+  {
+    "rank": 52,
+    "feature_name": "rolling_max_7d",
+    "display_name": "Rolling Max 7D",
+    "category": "Rolling",
+    "mean_abs_shap": 0.000644503065769493,
+    "mean_signed_shap": -0.00011072258848320835,
+    "description": "Trailing 7-day maximum (peak) consumption reading"
+  },
+  {
+    "rank": 53,
+    "feature_name": "quarter",
+    "display_name": "Quarter",
+    "category": "Calendar",
+    "mean_abs_shap": 0.0004351926267385857,
+    "mean_signed_shap": -0.00012347687259194447,
+    "description": "Calendar quarter (1-4)"
+  },
+  {
+    "rank": 54,
+    "feature_name": "consumption_kwh_lag_3d",
+    "display_name": "Consumption Kwh Lag 3D",
+    "category": "Lag",
+    "mean_abs_shap": 0.0003482015750235088,
+    "mean_signed_shap": -7.79037009405096e-05,
+    "description": "Backward historical consumption reading shifted by 3 days"
+  },
+  {
+    "rank": 55,
+    "feature_name": "dow_sin",
+    "display_name": "Dow Sin",
+    "category": "Calendar",
+    "mean_abs_shap": 0.00011303579338874742,
+    "mean_signed_shap": -5.983356237481266e-05,
+    "description": "Cyclical sine encoding of day of week"
+  },
+  {
+    "rank": 56,
+    "feature_name": "wow_consumption_ratio",
+    "display_name": "Wow Consumption Ratio",
+    "category": "Behavior Shift",
+    "mean_abs_shap": 3.273684170356141e-05,
+    "mean_signed_shap": 1.3087742095285023e-05,
+    "description": "Ratio of current 7-day mean to preceding 7-day mean (lagged by 7d)"
+  },
+  {
+    "rank": 57,
+    "feature_name": "dow_cos",
+    "display_name": "Dow Cos",
+    "category": "Calendar",
+    "mean_abs_shap": 5.177798651054583e-06,
+    "mean_signed_shap": -3.388452078843022e-07,
+    "description": "Cyclical cosine encoding of day of week"
+  },
+  {
+    "rank": 58,
+    "feature_name": "missing_ratio_30d",
+    "display_name": "Missing Ratio 30D",
+    "category": "Data Quality",
+    "mean_abs_shap": 0.0,
+    "mean_signed_shap": 0.0,
+    "description": "Trailing 30-day proportion of null / missing readings for this meter"
+  },
+  {
+    "rank": 59,
+    "feature_name": "missing_count_30d",
+    "display_name": "Missing Count 30D",
+    "category": "Data Quality",
+    "mean_abs_shap": 0.0,
+    "mean_signed_shap": 0.0,
+    "description": "Trailing 30-day count of null / missing readings for this meter"
+  },
+  {
+    "rank": 60,
+    "feature_name": "is_weekend",
+    "display_name": "Is Weekend",
+    "category": "Calendar",
+    "mean_abs_shap": 0.0,
+    "mean_signed_shap": 0.0,
+    "description": "Binary indicator for Saturday or Sunday (1=Weekend, 0=Weekday)"
+  }
+]

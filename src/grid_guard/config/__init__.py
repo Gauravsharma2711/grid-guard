@@ -13,6 +13,7 @@ from grid_guard.config.decision import (
     ProbabilitySource,
     RankingStrategy,
 )
+from grid_guard.config.explainability import ExplainabilitySettings
 from grid_guard.config.financial import BaselineModelSettings, FinancialAssumptions
 from grid_guard.config.imbalance import ImbalanceSettings, ImbalanceStrategyType
 from grid_guard.config.settings import (
@@ -35,6 +36,7 @@ __all__ = [
     "DatasetSettings",
     "DecisionRule",
     "DecisionSettings",
+    "ExplainabilitySettings",
     "FeatureSettings",
     "FinancialAssumptions",
     "ImbalanceSettings",

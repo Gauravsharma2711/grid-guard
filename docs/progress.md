@@ -291,10 +291,55 @@
 
 ---
 
+---
+
+## Phase 8: SHAP Explainability, Temporal Attribution & Tampering Signatures
+
+- **Status**: Completed / Operational
+- **Completed Date**: 2026-10-02
+- **Lead Implementation Engineer**: Antigravity Autonomous Agent
+
+### 1. Completed Items
+- [x] **Tree-SHAP Integration (`grid_guard.explainability.shap_explainer`)**:
+  - Initialized `shap.TreeExplainer` on the Phase 6 champion LightGBM model across 60 input features.
+  - Resolved model output space: native raw margin log-odds ($z_i = \ln[p_i / (1 - p_i)]$), with base expected value $\mathbb{E}[z] = -2.5928$ (6.96% base rate prevalence).
+  - Enforced and validated additive reconstruction: $\max |\mathbb{E}[z] + \sum \phi_{ij} - z_i| < 10^{-14}$ (exact within machine precision).
+- [x] **Semantic Feature Mapping & Registry Integration (`grid_guard.explainability.feature_mapping`)**:
+  - Integrated with Phase 3 `FeatureRegistry` and created human-readable descriptions, units, and baseline references.
+  - Grouped features into 8 functional categories: Historical Baseline, Consumption Collapse, Recent Consumption, Variability & Flatline, Zero Streaks, Data Quality, Calendar, and Other.
+- [x] **Non-Fabricated Temporal Attribution (`grid_guard.explainability.temporal_attribution`)**:
+  - Established deterministic mapping between feature lookback windows and historical calendar dates without inventing intervals.
+  - Produced structured `TemporalEvidence` objects recording start dates, end dates, observed values, baseline references, relative percentage drops, and natural-language interpretations.
+- [x] **Domain-Grounded Tampering Signatures (`grid_guard.explainability.signatures`)**:
+  - Implemented 5 rule-based electrical anomaly signature detectors: Sustained Step-Down, Zero Streak, Flatline (load invariance), Behavioral Regime Shift, and Abnormal Peak-to-Average Load.
+  - Graded severity tiers (High, Moderate, Low) based on numerical duration and magnitude thresholds.
+- [x] **Deterministic Narrative Generation & Regulatory Safety (`grid_guard.explainability.narratives`)**:
+  - Synthesized concise (card-ready, 2-3 sentences) and detailed technical explanation reports combining model scores, top positive drivers, counter-evidence, temporal windows, and financial context (ENV).
+  - Implemented automated language safety auditing (`validate_narrative_safety`), programmatically prohibiting unsupported physical claims ("bypass resistor", "magnet", "customer is stealing") and appending mandatory standard disclaimers.
+- [x] **Enriched Inspection Tickets & Artifacts**:
+  - Enriched top 100 prioritized inspection tickets from Phase 7: `artifacts/explainability/enriched_top_100_tickets.csv` and `.parquet`.
+  - Exported structured JSON explanations for top 10 tickets (`artifacts/explainability/top_10_inspection_explanations.json`) for downstream Phase 9 FastAPI microservice ingestion.
+  - Exported global SHAP feature importance table: `artifacts/explainability/global_shap_importance.csv` and `.json`.
+- [x] **Canonical Case Studies & Diagnostic Visualizations (`grid_guard.evaluation.explainability_plots`)**:
+  - Extracted 4 canonical case studies: True Positive (Top High-Risk, ENV = $32,275.68), True Negative (Normal Stable), False Positive (Unmerited Dispatch), and False Negative (Low-Amplitude Theft).
+  - Generated 7 publication-grade figures in `artifacts/explainability/figures/`:
+    - `global_shap_importance.png`: Top 15 features by mean absolute SHAP value.
+    - `category_attribution_pie_bar.png`: Aggregate attribution by functional feature category.
+    - `local_case_top_high_risk_tp.png`, `local_case_normal_honest_tn.png`, `local_case_false_positive_fp.png`, `local_case_false_negative_fn.png`: Individual waterfall breakdown plots.
+    - `case_study_timeseries.png`: Longitudinal daily consumption series with baseline and highlighted 60-day collapse window.
+  - Generated comprehensive Markdown report: `artifacts/explainability/explainability_report.md`.
+  - Logged parameters, top feature metrics, and artifacts to MLflow experiment `grid-guard-ntl-detection`.
+- [x] **Automated Testing Suite**:
+  - Built comprehensive unit and integration tests across signatures, temporal attribution, narratives, SHAP reconstruction, and full pipeline.
+  - Test suite expanded to **121 passed tests** in 37 seconds.
+
+---
+
 ### 2. Next Phase
 
-- **Phase 8: Explainable AI (XAI) with Tree SHAP & Feature Attribution**
-  - Implement TreeSHAP explainability for individual inspection tickets.
-  - Generate local feature contribution waterfalls and global summary beeswarm plots.
-  - Provide human-auditable explanations for why specific meters were prioritized for physical inspection.
+- **Phase 9: FastAPI Operational Decision & Explainability Microservice**
+  - Package Phase 6 scoring, Phase 7 dynamic decisioning, and Phase 8 SHAP explainability into a high-performance RESTful API.
+  - Build endpoints for batch scoring, ticket generation, local explanations, and health checks.
+  - Implement Pydantic request/response schemas for utility dispatch integrations.
+
 

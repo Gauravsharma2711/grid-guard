@@ -13,6 +13,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from grid_guard.config.cost_sensitive import CostSensitiveSettings
 from grid_guard.config.decision import DecisionSettings
+from grid_guard.config.explainability import ExplainabilitySettings
 from grid_guard.config.financial import BaselineModelSettings, FinancialAssumptions
 from grid_guard.config.imbalance import ImbalanceSettings
 
@@ -111,6 +112,7 @@ class Settings(BaseSettings):
     imbalance: ImbalanceSettings = Field(default_factory=ImbalanceSettings)
     cost_sensitive: CostSensitiveSettings = Field(default_factory=CostSensitiveSettings)
     decision: DecisionSettings = Field(default_factory=DecisionSettings)
+    explainability: ExplainabilitySettings = Field(default_factory=ExplainabilitySettings)
 
     def model_post_init(self, __context: Any) -> None:
         """Resolve and initialize default directory paths relative to project root."""

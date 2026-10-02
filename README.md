@@ -33,7 +33,7 @@ Field inspections are prioritized strictly when $\text{ENV} > 0$ and ranked to m
 - **Phase 5: Class Imbalance & Representation Strategies** — *Completed / Operational*
 - **Phase 6: Cost-Sensitive Custom Objective & Financially Weighted Learning** — *Completed / Operational*
 - **Phase 7: Expected Net Value (ENV) & Dynamic Thresholding** — *Completed / Operational*
-- **Phase 8: Explainable AI (SHAP Tree Explainer & Attribution)** — *Upcoming*
+- **Phase 8: Explainable AI (SHAP Tree Explainer & Attribution)** — *Completed / Operational*
 - **Phase 9: FastAPI Operational Decision Service** — *Upcoming*
 - **Phase 10: Interactive Operational Dashboard** — *Upcoming*
 
@@ -549,11 +549,89 @@ python scripts/run_decision_engine.py scenarios
 
 ---
 
-## 16. Upcoming Phases
+## 16. SHAP Explainability, Temporal Attribution & Tampering Signatures (Phase 8)
 
-- **Phase 8**: Explainable AI (TreeSHAP Feature Attribution, Waterfall Inspection Reports, Watermark Auditing).
-- **Phase 9**: FastAPI Operational Decision Microservice (Real-time Scoring, Dynamic Dispatch Tickets).
+Phase 8 provides an audited, domain-grounded explainability layer for Grid-Guard. The engine decouples black-box gradient boosted trees into exact additive feature contributions, maps statistical features to verified historical calendar intervals, identifies domain-specific electrical tampering signatures, and generates deterministic human-readable inspection narratives for field crews.
+
+### A. Mathematical Tree-SHAP & Additive Reconstruction
+
+Tree-SHAP computes exact Shapley values in the model's native raw margin log-odds space:
+$$z_i = \ln\left( \frac{\hat{p}_i}{1 - \hat{p}_i} \right) = \mathbb{E}[z] + \sum_{j=1}^{60} \phi_{ij}$$
+where $\mathbb{E}[z] = -2.5928$ (6.96% base rate prevalence). Additive reconstruction is exact within machine precision:
+$$\max_{i} \left| \mathbb{E}[z] + \sum_{j=1}^{60} \phi_{ij} - z_i \right| < 10^{-14}$$
+
+### B. Global Feature Importance (Tree-SHAP Hierarchy)
+
+| Rank | Feature Name | Display Name | Functional Category | Mean(\|SHAP\|) | Operational Meaning |
+|---|---|---|---|---|---|
+| **1** | `imputation_ratio` | Imputed Data Ratio | Data Quality | `0.4056` | Verifies data integrity; confirms telemetry is measured rather than imputed |
+| **2** | `missing_ratio` | Data Missingness Ratio | Data Quality | `0.2619` | Distinguishes telecom packet loss from customer-side tampering |
+| **3** | `coverage_ratio` | Smart-Meter Data Coverage | Data Quality | `0.2437` | High coverage (>95%) rules out communication blackouts |
+| **4** | `rolling_std_60d` | 60-Day Historical Volatility | Historical Baseline | `0.1406` | Primary benchmark for normal customer load variance and capacity |
+| **5** | `rolling_std_90d` | 90-Day Seasonal Volatility | Historical Baseline | `0.1262` | Multi-month seasonal volatility benchmark |
+| **6** | `rolling_std_30d` | 30-Day Trailing Volatility | Historical Baseline | `0.0795` | Monthly load dispersion benchmark |
+| **7** | `rolling_min_30d` | Trailing 30-Day Min Load | Rolling | `0.0642` | Baseline non-zero base load |
+| **8** | `ratio_14d_60d` | Recent vs. Historical Ratio | Collapse & Step-Down | `0.0397` | Direct measure of two-week consumption drop vs. long-term baseline |
+| **9** | `sustained_drop_magnitude`| Consumption Collapse Deficit | Collapse & Step-Down | `0.0377` | Estimated absolute deficit (kWh/day) lost due to consumption drop |
+| **10**| `rolling_max_30d` | Trailing 30-Day Peak Load | Rolling | `0.0286` | Historical peak capacity reference |
+
+### C. Domain-Grounded Tampering Signatures
+
+Independent of model feature weights, rule-based electrical signatures evaluate telemetry:
+1. **Sustained Step-Down**: Consumption $< 50\%$ of historical baseline for $\ge 7$ consecutive days (or drop $\ge 50\%$).
+2. **Zero Streak**: $\ge 3$ consecutive active zero days, or $\ge 3$ zero days in trailing week.
+3. **Flatline (Invariance)**: Constant daily consumption for $\ge 7$ consecutive days ($|diff| \le 0.01$ kWh) or rolling CV $< 0.05$.
+4. **Behavioral Regime Shift**: Week-over-week consumption drop $> 50\%$ or 7d/30d ratio $< 0.45$.
+5. **Abnormal Peak Behavior**: Peak-to-Average Ratio collapses to near-unity ($< 1.05$) while baseline exhibited normal peaking.
+
+### D. Enriched Inspection Ticket Example
+
+```
+Ticket ID: TCK-2016-10-30-EF550F26 | Meter: 620E9685A1D2F4C35855EF1A3E0968AB | Priority Rank: #1
+Tampering Probability: 1.000 | Expected Net Value: $32,275.68 | Recoverable Revenue: $32,375.68
+Short Narrative: "High tampering risk (100.0% probability) with positive Expected Net Value ($32,275.68). 
+                 Sudden week-over-week consumption collapse; elevated historical load volatility 
+                 contrasting recent readings. Field inspection recommended to verify physical meter integrity."
+Top Drivers: 60-Day Historical Volatility (+2.49), Data Missingness Ratio (+0.64), 30-Day Volatility (+0.56)
+Primary Time Window: 2016-09-01 to 2016-10-30 | Detected Signatures: Behavior Shift (moderate)
+Regulatory Disclaimer: Model evidence reflects statistical consumption anomalies and requires physical 
+                      field verification; smart-meter data alone does not establish physical tampering.
+```
+
+### E. Canonical Case Studies
+
+* **True Positive (TP)**: Ticket `TCK-2016-10-30-EF550F26` (Meter `620E9685A1D2...`), Label = 1, Prob = 1.000, Log-Odds = +4.970, ENV = $32,275.68.
+* **True Negative (TN)**: Ticket `TN-000395F8` (Meter `000395F84A94...`), Label = 0, Prob = 0.080, Log-Odds = -2.444. Normal residential load profile.
+* **False Positive (FP)**: Ticket `TCK-2016-10-30-25152B5A` (Meter `C5695F151BDE...`), Label = 0, Prob = 0.923, Log-Odds = +4.219. Severe customer vacancy flagged.
+* **False Negative (FN)**: Ticket `FN-FD2D487A` (Meter `FD2D487A68EB...`), Label = 1, Prob = 0.072, Log-Odds = -2.552. Low-amplitude theft masked by load variance.
+
+### F. Running Explainability
+
+```bash
+# Execute end-to-end explainability pipeline: SHAP, signatures, narratives, case studies, plots, MLflow
+python scripts/run_explainability.py all
+
+# Customize global background sample size or top-k tickets
+python scripts/run_explainability.py all --global-samples 500 --top-k 100
+```
+
+### G. Generated Phase 8 Artifacts
+- **Enriched Inspection Tickets CSV**: `artifacts/explainability/enriched_top_100_tickets.csv`
+- **Enriched Inspection Tickets Parquet**: `artifacts/explainability/enriched_top_100_tickets.parquet`
+- **Global SHAP Importance Table**: `artifacts/explainability/global_shap_importance.csv` & `.json`
+- **Top 10 Structured Explanations JSON**: `artifacts/explainability/top_10_inspection_explanations.json`
+- **Comprehensive Markdown Report**: `artifacts/explainability/explainability_report.md`
+- **Documentation**: `docs/explainability.md`, `docs/shap_methodology.md`, `docs/tampering_signatures.md`
+- **7 Publication-Grade Visualizations**: `artifacts/explainability/figures/`
+  (`global_shap_importance.png`, `category_attribution_pie_bar.png`, `local_case_top_high_risk_tp.png`, `local_case_normal_honest_tn.png`, `local_case_false_positive_fp.png`, `local_case_false_negative_fn.png`, `case_study_timeseries.png`)
+
+---
+
+## 17. Upcoming Phases
+
+- **Phase 9**: FastAPI Operational Decision & Explainability Microservice (Real-time Scoring, Dynamic Dispatch Tickets, SHAP Endpoints).
 - **Phase 10**: Interactive Streamlit / Web Operational Dashboard for Field Crew Operations.
+
 
 
 

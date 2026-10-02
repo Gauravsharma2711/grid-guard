@@ -1,0 +1,1458 @@
+[
+  {
+    "ticket_id": "TCK-2016-10-30-EF550F26",
+    "meter_id": "620E9685A1D2F4C35855EF1A3E0968AB",
+    "evaluation_period": "2016-10-30",
+    "model_probability": 0.9931027624625057,
+    "calibrated_probability": 1.0,
+    "raw_score": 4.969713171007259,
+    "base_value": -2.5928222691760694,
+    "expected_net_value": 32275.677734375,
+    "inspection_recommended": true,
+    "priority_rank": 1,
+    "short_explanation": "High tampering risk (100.0% probability) with positive Expected Net Value ($32,275.68). Sudden week-over-week consumption collapse; elevated historical load volatility contrasting recent readings. Field inspection recommended to verify physical meter integrity.",
+    "detailed_explanation": "### Inspection Explanation: Ticket TCK-2016-10-30-EF550F26\n**Target Meter**: `620E9685A1D2F4C35855EF1A3E0968AB` | **Evaluation Period**: 2016-10-30\n**Model Risk Score**: +4.970 log-odds (Base: -2.593) | **Raw Probability**: 0.993 | **Calibrated Probability**: 1.000\n\n#### 1. Operational & Economic Decision\nField inspection is economically justified with an **Expected Net Value (ENV) of $32,275.68** (projected recoverable revenue of $32,375.68 versus dispatch crew cost of $100.00).\n\n#### 2. Primary Contributing Evidence (Positive Model Drivers)\n- **60-Day Historical Consumption Volatility** (`rolling_std_60d` = 832.22 (Baseline: 796.72)): Contributed **+2.485** to risk margin. Trailing 60-day standard deviation reflecting normal customer load variability.\n- **Data Missingness Ratio** (`missing_ratio` = 0.72): Contributed **+0.639** to risk margin. Proportion of missing AMI packets in the historical window.\n- **30-Day Trailing Consumption Volatility** (`rolling_std_30d` = 796.72 (Baseline: 832.22)): Contributed **+0.563** to risk margin. Trailing 30-day standard deviation of daily consumption.\n- **Recent vs. Historical Consumption Ratio (14d / 60d)** (`ratio_14d_60d` = 0.78 (Baseline: 2692.01)): Contributed **+0.515** to risk margin. Ratio of recent 14-day average consumption to 60-day historical baseline.\n\n#### 3. Detected Behavioral Signatures\n- **[MODERATE SEVERITY] Behavior Shift**: Week-over-week consumption contracted by 100.0%.\n\n#### 4. Historical Time Window Attribution\n- **60-Day Historical Consumption Volatility**: Source window `2016-09-01` to `2016-10-30` (observed: 832.22, +4.5% vs baseline). High historical volatility combined with recent collapse signals anomaly\n- **Data Missingness Ratio**: Source window `2016-10-30` to `2016-10-30` (observed: 0.72). Low missingness verifies signal integrity\n- **30-Day Trailing Consumption Volatility**: Source window `2016-10-01` to `2016-10-30` (observed: 796.72). Sharp drop in volatility indicates artificial flatlining or zero usage\n\n#### 5. Counter-Evidence & Mitigating Factors (Negative Model Drivers)\n- **Rolling Cv 30D** (`rolling_cv_30d` = 0.33): Moderated risk score by **-0.029**. Trailing 30-day coefficient of variation (std / safe(mean)).\n- **Month Sin** (`month_sin` = -0.87): Moderated risk score by **-0.026**. Cyclical sine encoding of calendar month.\n\n#### 6. Regulatory & Safety Disclaimer\nModel evidence reflects statistical consumption anomalies and requires physical field verification; smart-meter data alone does not establish physical tampering or unauthorized abstraction.",
+    "top_positive_features": [
+      {
+        "feature_name": "rolling_std_60d",
+        "display_name": "60-Day Historical Consumption Volatility",
+        "category": "Historical Baseline",
+        "feature_value": 832.2230224609375,
+        "baseline_value": 796.724609375,
+        "shap_value": 2.4850731644767543,
+        "contribution_direction": "positive",
+        "rank": 1,
+        "description": "Trailing 60-day standard deviation reflecting normal customer load variability"
+      },
+      {
+        "feature_name": "missing_ratio",
+        "display_name": "Data Missingness Ratio",
+        "category": "Data Quality & Completeness",
+        "feature_value": 0.7166000008583069,
+        "baseline_value": null,
+        "shap_value": 0.6390343992756236,
+        "contribution_direction": "positive",
+        "rank": 2,
+        "description": "Proportion of missing AMI packets in the historical window"
+      },
+      {
+        "feature_name": "rolling_std_30d",
+        "display_name": "30-Day Trailing Consumption Volatility",
+        "category": "Historical Baseline",
+        "feature_value": 796.724609375,
+        "baseline_value": 832.2230224609375,
+        "shap_value": 0.563059553255265,
+        "contribution_direction": "positive",
+        "rank": 3,
+        "description": "Trailing 30-day standard deviation of daily consumption"
+      },
+      {
+        "feature_name": "ratio_14d_60d",
+        "display_name": "Recent vs. Historical Consumption Ratio (14d / 60d)",
+        "category": "Consumption Collapse & Step-Down",
+        "feature_value": 0.7772852778434753,
+        "baseline_value": 2692.0068359375,
+        "shap_value": 0.5146732589201296,
+        "contribution_direction": "positive",
+        "rank": 4,
+        "description": "Ratio of recent 14-day average consumption to 60-day historical baseline"
+      }
+    ],
+    "top_negative_features": [
+      {
+        "feature_name": "rolling_cv_30d",
+        "display_name": "Rolling Cv 30D",
+        "category": "Variability",
+        "feature_value": 0.3261067867279053,
+        "baseline_value": null,
+        "shap_value": -0.02873414977382071,
+        "contribution_direction": "negative",
+        "rank": 1,
+        "description": "Trailing 30-day coefficient of variation (std / safe(mean))"
+      },
+      {
+        "feature_name": "month_sin",
+        "display_name": "Month Sin",
+        "category": "Calendar",
+        "feature_value": -0.8660253882408142,
+        "baseline_value": null,
+        "shap_value": -0.02630400373063868,
+        "contribution_direction": "negative",
+        "rank": 2,
+        "description": "Cyclical sine encoding of calendar month"
+      }
+    ],
+    "detected_signatures": [
+      {
+        "signature_type": "behavior_shift",
+        "detected": true,
+        "magnitude": 471.086,
+        "duration_days": 7,
+        "severity": "moderate",
+        "description": "Week-over-week consumption contracted by 100.0%."
+      }
+    ],
+    "temporal_evidence": [
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-09-01",
+        "source_window_end": "2016-10-30",
+        "feature_name": "rolling_std_60d",
+        "display_name": "60-Day Historical Consumption Volatility",
+        "observed_value": 832.2230224609375,
+        "reference_value": 796.724609375,
+        "relative_difference_pct": 4.5,
+        "shap_contribution": 2.4850731644767543,
+        "interpretation": "High historical volatility combined with recent collapse signals anomaly"
+      },
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-10-30",
+        "source_window_end": "2016-10-30",
+        "feature_name": "missing_ratio",
+        "display_name": "Data Missingness Ratio",
+        "observed_value": 0.7166000008583069,
+        "reference_value": null,
+        "relative_difference_pct": null,
+        "shap_contribution": 0.6390343992756236,
+        "interpretation": "Low missingness verifies signal integrity"
+      },
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-10-01",
+        "source_window_end": "2016-10-30",
+        "feature_name": "rolling_std_30d",
+        "display_name": "30-Day Trailing Consumption Volatility",
+        "observed_value": 796.724609375,
+        "reference_value": null,
+        "relative_difference_pct": null,
+        "shap_contribution": 0.563059553255265,
+        "interpretation": "Sharp drop in volatility indicates artificial flatlining or zero usage"
+      }
+    ],
+    "counter_evidence_summary": "2 counter-evidence features moderated risk margin",
+    "financial_context": {
+      "env": 32275.677734375,
+      "estimated_recoverable_revenue": 32375.677734375,
+      "dispatch_cost": 100.0,
+      "expected_gross_recovery": 32375.677734375,
+      "tau_cost": 0.0030792275012062813,
+      "tau_env": 0.0030887384295224998,
+      "decision_rule": "env"
+    },
+    "model_version": "phase6_cost_sensitive_v1",
+    "feature_version": "phase3_features_v1",
+    "safety_caveat": "Model evidence reflects statistical consumption anomalies and requires physical field verification; smart-meter data alone does not establish physical tampering or unauthorized abstraction."
+  },
+  {
+    "ticket_id": "TCK-2016-10-30-FC6A3494",
+    "meter_id": "38663D8D847562041186378BBBB4F4B4",
+    "evaluation_period": "2016-10-30",
+    "model_probability": 0.9866261109903719,
+    "calibrated_probability": 0.9230769230769231,
+    "raw_score": 4.300986929447937,
+    "base_value": -2.5928222691760694,
+    "expected_net_value": 25377.079927884617,
+    "inspection_recommended": true,
+    "priority_rank": 2,
+    "short_explanation": "High tampering risk (92.3% probability) with positive Expected Net Value ($25,377.08). Elevated historical load volatility contrasting recent readings. Field inspection recommended to verify physical meter integrity.",
+    "detailed_explanation": "### Inspection Explanation: Ticket TCK-2016-10-30-FC6A3494\n**Target Meter**: `38663D8D847562041186378BBBB4F4B4` | **Evaluation Period**: 2016-10-30\n**Model Risk Score**: +4.301 log-odds (Base: -2.593) | **Raw Probability**: 0.987 | **Calibrated Probability**: 0.923\n\n#### 1. Operational & Economic Decision\nField inspection is economically justified with an **Expected Net Value (ENV) of $25,377.08** (projected recoverable revenue of $27,600.17 versus dispatch crew cost of $100.00).\n\n#### 2. Primary Contributing Evidence (Positive Model Drivers)\n- **60-Day Historical Consumption Volatility** (`rolling_std_60d` = 1152.69 (Baseline: 1230.75)): Contributed **+2.788** to risk margin. Trailing 60-day standard deviation reflecting normal customer load variability.\n- **30-Day Trailing Consumption Volatility** (`rolling_std_30d` = 1230.75 (Baseline: 1152.69)): Contributed **+0.579** to risk margin. Trailing 30-day standard deviation of daily consumption.\n- **Data Missingness Ratio** (`missing_ratio` = 0.71): Contributed **+0.533** to risk margin. Proportion of missing AMI packets in the historical window.\n- **Estimated Consumption Collapse Magnitude** (`sustained_drop_magnitude` = 680.38 (Baseline: 3303.40)): Contributed **+0.516** to risk margin. Absolute deficit between 60-day baseline and recent 14-day average.\n\n#### 3. Detected Behavioral Signatures\n- No rule-based heuristic signatures triggered; anomaly identified primarily through multivariate feature interaction.\n\n#### 4. Historical Time Window Attribution\n- **60-Day Historical Consumption Volatility**: Source window `2016-09-01` to `2016-10-30` (observed: 1152.69, -6.3% vs baseline). High historical volatility combined with recent collapse signals anomaly\n- **30-Day Trailing Consumption Volatility**: Source window `2016-10-01` to `2016-10-30` (observed: 1230.75). Sharp drop in volatility indicates artificial flatlining or zero usage\n- **Data Missingness Ratio**: Source window `2016-10-30` to `2016-10-30` (observed: 0.71). Low missingness verifies signal integrity\n\n#### 5. Counter-Evidence & Mitigating Factors (Negative Model Drivers)\n- **Smart-Meter Data Coverage Ratio** (`coverage_ratio` = 0.29): Moderated risk score by **-0.263**. Proportion of valid non-null AMI readings received from this meter.\n- **14-Day Trailing Consumption Average** (`rolling_mean_14d` = 2792.29): Moderated risk score by **-0.010**. Trailing 14-day average daily electricity usage.\n\n#### 6. Regulatory & Safety Disclaimer\nModel evidence reflects statistical consumption anomalies and requires physical field verification; smart-meter data alone does not establish physical tampering or unauthorized abstraction.",
+    "top_positive_features": [
+      {
+        "feature_name": "rolling_std_60d",
+        "display_name": "60-Day Historical Consumption Volatility",
+        "category": "Historical Baseline",
+        "feature_value": 1152.6927490234375,
+        "baseline_value": 1230.7462158203125,
+        "shap_value": 2.7882528823746555,
+        "contribution_direction": "positive",
+        "rank": 1,
+        "description": "Trailing 60-day standard deviation reflecting normal customer load variability"
+      },
+      {
+        "feature_name": "rolling_std_30d",
+        "display_name": "30-Day Trailing Consumption Volatility",
+        "category": "Historical Baseline",
+        "feature_value": 1230.7462158203125,
+        "baseline_value": 1152.6927490234375,
+        "shap_value": 0.5792386065487813,
+        "contribution_direction": "positive",
+        "rank": 2,
+        "description": "Trailing 30-day standard deviation of daily consumption"
+      },
+      {
+        "feature_name": "missing_ratio",
+        "display_name": "Data Missingness Ratio",
+        "category": "Data Quality & Completeness",
+        "feature_value": 0.7059999704360962,
+        "baseline_value": null,
+        "shap_value": 0.5328638079685589,
+        "contribution_direction": "positive",
+        "rank": 3,
+        "description": "Proportion of missing AMI packets in the historical window"
+      },
+      {
+        "feature_name": "sustained_drop_magnitude",
+        "display_name": "Estimated Consumption Collapse Magnitude",
+        "category": "Consumption Collapse & Step-Down",
+        "feature_value": 680.381103515625,
+        "baseline_value": 3303.39990234375,
+        "shap_value": 0.5162183936211406,
+        "contribution_direction": "positive",
+        "rank": 4,
+        "description": "Absolute deficit between 60-day baseline and recent 14-day average"
+      }
+    ],
+    "top_negative_features": [
+      {
+        "feature_name": "coverage_ratio",
+        "display_name": "Smart-Meter Data Coverage Ratio",
+        "category": "Data Quality & Completeness",
+        "feature_value": 0.2939999997615814,
+        "baseline_value": null,
+        "shap_value": -0.2625799175133227,
+        "contribution_direction": "negative",
+        "rank": 1,
+        "description": "Proportion of valid non-null AMI readings received from this meter"
+      },
+      {
+        "feature_name": "rolling_mean_14d",
+        "display_name": "14-Day Trailing Consumption Average",
+        "category": "Recent Consumption",
+        "feature_value": 2792.28564453125,
+        "baseline_value": 3303.39990234375,
+        "shap_value": -0.009895254031610814,
+        "contribution_direction": "negative",
+        "rank": 2,
+        "description": "Trailing 14-day average daily electricity usage"
+      }
+    ],
+    "detected_signatures": [],
+    "temporal_evidence": [
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-09-01",
+        "source_window_end": "2016-10-30",
+        "feature_name": "rolling_std_60d",
+        "display_name": "60-Day Historical Consumption Volatility",
+        "observed_value": 1152.6927490234375,
+        "reference_value": 1230.7462158203125,
+        "relative_difference_pct": -6.3,
+        "shap_contribution": 2.7882528823746555,
+        "interpretation": "High historical volatility combined with recent collapse signals anomaly"
+      },
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-10-01",
+        "source_window_end": "2016-10-30",
+        "feature_name": "rolling_std_30d",
+        "display_name": "30-Day Trailing Consumption Volatility",
+        "observed_value": 1230.7462158203125,
+        "reference_value": null,
+        "relative_difference_pct": null,
+        "shap_contribution": 0.5792386065487813,
+        "interpretation": "Sharp drop in volatility indicates artificial flatlining or zero usage"
+      },
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-10-30",
+        "source_window_end": "2016-10-30",
+        "feature_name": "missing_ratio",
+        "display_name": "Data Missingness Ratio",
+        "observed_value": 0.7059999704360962,
+        "reference_value": null,
+        "relative_difference_pct": null,
+        "shap_contribution": 0.5328638079685589,
+        "interpretation": "Low missingness verifies signal integrity"
+      }
+    ],
+    "counter_evidence_summary": "2 counter-evidence features moderated risk margin",
+    "financial_context": {
+      "env": 25377.079927884617,
+      "estimated_recoverable_revenue": 27600.169921875,
+      "dispatch_cost": 100.0,
+      "expected_gross_recovery": 25477.079927884617,
+      "tau_cost": 0.0036100861576675515,
+      "tau_env": 0.0036231660994501067,
+      "decision_rule": "env"
+    },
+    "model_version": "phase6_cost_sensitive_v1",
+    "feature_version": "phase3_features_v1",
+    "safety_caveat": "Model evidence reflects statistical consumption anomalies and requires physical field verification; smart-meter data alone does not establish physical tampering or unauthorized abstraction."
+  },
+  {
+    "ticket_id": "TCK-2016-10-30-EAC9B29B",
+    "meter_id": "E24AC6F28F330CCDBAEAFCD82E86609B",
+    "evaluation_period": "2016-10-30",
+    "model_probability": 0.9909231622002986,
+    "calibrated_probability": 0.9310344827586207,
+    "raw_score": 4.692911123691816,
+    "base_value": -2.5928222691760694,
+    "expected_net_value": 11487.389682112069,
+    "inspection_recommended": true,
+    "priority_rank": 3,
+    "short_explanation": "High tampering risk (93.1% probability) with positive Expected Net Value ($11,487.39). Sudden week-over-week consumption collapse; elevated historical load volatility contrasting recent readings. Field inspection recommended to verify physical meter integrity.",
+    "detailed_explanation": "### Inspection Explanation: Ticket TCK-2016-10-30-EAC9B29B\n**Target Meter**: `E24AC6F28F330CCDBAEAFCD82E86609B` | **Evaluation Period**: 2016-10-30\n**Model Risk Score**: +4.693 log-odds (Base: -2.593) | **Raw Probability**: 0.991 | **Calibrated Probability**: 0.931\n\n#### 1. Operational & Economic Decision\nField inspection is economically justified with an **Expected Net Value (ENV) of $11,487.39** (projected recoverable revenue of $12,445.71 versus dispatch crew cost of $100.00).\n\n#### 2. Primary Contributing Evidence (Positive Model Drivers)\n- **60-Day Historical Consumption Volatility** (`rolling_std_60d` = 850.95 (Baseline: 813.70)): Contributed **+2.600** to risk margin. Trailing 60-day standard deviation reflecting normal customer load variability.\n- **Smart-Meter Data Coverage Ratio** (`coverage_ratio` = 0.77): Contributed **+0.672** to risk margin. Proportion of valid non-null AMI readings received from this meter.\n- **30-Day Trailing Consumption Volatility** (`rolling_std_30d` = 813.70 (Baseline: 850.95)): Contributed **+0.612** to risk margin. Trailing 30-day standard deviation of daily consumption.\n- **Estimated Consumption Collapse Magnitude** (`sustained_drop_magnitude` = 214.21 (Baseline: 1821.33)): Contributed **+0.513** to risk margin. Absolute deficit between 60-day baseline and recent 14-day average.\n\n#### 3. Detected Behavioral Signatures\n- **[MODERATE SEVERITY] Behavior Shift**: Week-over-week consumption contracted by 100.0%.\n\n#### 4. Historical Time Window Attribution\n- **60-Day Historical Consumption Volatility**: Source window `2016-09-01` to `2016-10-30` (observed: 850.95, +4.6% vs baseline). High historical volatility combined with recent collapse signals anomaly\n- **Smart-Meter Data Coverage Ratio**: Source window `2016-10-30` to `2016-10-30` (observed: 0.77). High coverage (>0.95) confirms anomalies are genuine rather than telecommunication outages\n- **30-Day Trailing Consumption Volatility**: Source window `2016-10-01` to `2016-10-30` (observed: 813.70). Sharp drop in volatility indicates artificial flatlining or zero usage\n\n#### 5. Counter-Evidence & Mitigating Factors (Negative Model Drivers)\n- **14-Day Trailing Consumption Average** (`rolling_mean_14d` = 1590.86): Moderated risk score by **-0.010**. Trailing 14-day average daily electricity usage.\n- **Month Sin** (`month_sin` = -0.87): Moderated risk score by **-0.009**. Cyclical sine encoding of calendar month.\n\n#### 6. Regulatory & Safety Disclaimer\nModel evidence reflects statistical consumption anomalies and requires physical field verification; smart-meter data alone does not establish physical tampering or unauthorized abstraction.",
+    "top_positive_features": [
+      {
+        "feature_name": "rolling_std_60d",
+        "display_name": "60-Day Historical Consumption Volatility",
+        "category": "Historical Baseline",
+        "feature_value": 850.9490356445312,
+        "baseline_value": 813.704345703125,
+        "shap_value": 2.5999984800094653,
+        "contribution_direction": "positive",
+        "rank": 1,
+        "description": "Trailing 60-day standard deviation reflecting normal customer load variability"
+      },
+      {
+        "feature_name": "coverage_ratio",
+        "display_name": "Smart-Meter Data Coverage Ratio",
+        "category": "Data Quality & Completeness",
+        "feature_value": 0.7736999988555908,
+        "baseline_value": null,
+        "shap_value": 0.6717633022545324,
+        "contribution_direction": "positive",
+        "rank": 2,
+        "description": "Proportion of valid non-null AMI readings received from this meter"
+      },
+      {
+        "feature_name": "rolling_std_30d",
+        "display_name": "30-Day Trailing Consumption Volatility",
+        "category": "Historical Baseline",
+        "feature_value": 813.704345703125,
+        "baseline_value": 850.9490356445312,
+        "shap_value": 0.6124054286959272,
+        "contribution_direction": "positive",
+        "rank": 3,
+        "description": "Trailing 30-day standard deviation of daily consumption"
+      },
+      {
+        "feature_name": "sustained_drop_magnitude",
+        "display_name": "Estimated Consumption Collapse Magnitude",
+        "category": "Consumption Collapse & Step-Down",
+        "feature_value": 214.20947265625,
+        "baseline_value": 1821.3333740234375,
+        "shap_value": 0.5132355468903909,
+        "contribution_direction": "positive",
+        "rank": 4,
+        "description": "Absolute deficit between 60-day baseline and recent 14-day average"
+      }
+    ],
+    "top_negative_features": [
+      {
+        "feature_name": "rolling_mean_14d",
+        "display_name": "14-Day Trailing Consumption Average",
+        "category": "Recent Consumption",
+        "feature_value": 1590.857177734375,
+        "baseline_value": 1821.3333740234375,
+        "shap_value": -0.009555409727114267,
+        "contribution_direction": "negative",
+        "rank": 1,
+        "description": "Trailing 14-day average daily electricity usage"
+      },
+      {
+        "feature_name": "month_sin",
+        "display_name": "Month Sin",
+        "category": "Calendar",
+        "feature_value": -0.8660253882408142,
+        "baseline_value": null,
+        "shap_value": -0.008666084539308505,
+        "contribution_direction": "negative",
+        "rank": 2,
+        "description": "Cyclical sine encoding of calendar month"
+      }
+    ],
+    "detected_signatures": [
+      {
+        "signature_type": "behavior_shift",
+        "detected": true,
+        "magnitude": 294.857,
+        "duration_days": 7,
+        "severity": "moderate",
+        "description": "Week-over-week consumption contracted by 100.0%."
+      }
+    ],
+    "temporal_evidence": [
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-09-01",
+        "source_window_end": "2016-10-30",
+        "feature_name": "rolling_std_60d",
+        "display_name": "60-Day Historical Consumption Volatility",
+        "observed_value": 850.9490356445312,
+        "reference_value": 813.704345703125,
+        "relative_difference_pct": 4.6,
+        "shap_contribution": 2.5999984800094653,
+        "interpretation": "High historical volatility combined with recent collapse signals anomaly"
+      },
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-10-30",
+        "source_window_end": "2016-10-30",
+        "feature_name": "coverage_ratio",
+        "display_name": "Smart-Meter Data Coverage Ratio",
+        "observed_value": 0.7736999988555908,
+        "reference_value": null,
+        "relative_difference_pct": null,
+        "shap_contribution": 0.6717633022545324,
+        "interpretation": "High coverage (>0.95) confirms anomalies are genuine rather than telecommunication outages"
+      },
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-10-01",
+        "source_window_end": "2016-10-30",
+        "feature_name": "rolling_std_30d",
+        "display_name": "30-Day Trailing Consumption Volatility",
+        "observed_value": 813.704345703125,
+        "reference_value": null,
+        "relative_difference_pct": null,
+        "shap_contribution": 0.6124054286959272,
+        "interpretation": "Sharp drop in volatility indicates artificial flatlining or zero usage"
+      }
+    ],
+    "counter_evidence_summary": "2 counter-evidence features moderated risk margin",
+    "financial_context": {
+      "env": 11487.389682112069,
+      "estimated_recoverable_revenue": 12445.71484375,
+      "dispatch_cost": 100.0,
+      "expected_gross_recovery": 11587.389682112069,
+      "tau_cost": 0.007970849110269537,
+      "tau_env": 0.008034894038265555,
+      "decision_rule": "env"
+    },
+    "model_version": "phase6_cost_sensitive_v1",
+    "feature_version": "phase3_features_v1",
+    "safety_caveat": "Model evidence reflects statistical consumption anomalies and requires physical field verification; smart-meter data alone does not establish physical tampering or unauthorized abstraction."
+  },
+  {
+    "ticket_id": "TCK-2016-10-30-E7892DA9",
+    "meter_id": "3DB30EA9E430F8F18BF935AA0F507DDA",
+    "evaluation_period": "2016-10-30",
+    "model_probability": 0.9846906114282299,
+    "calibrated_probability": 0.8461538461538461,
+    "raw_score": 4.16386121941445,
+    "base_value": -2.5928222691760694,
+    "expected_net_value": 5869.044396033653,
+    "inspection_recommended": true,
+    "priority_rank": 4,
+    "short_explanation": "High tampering risk (84.6% probability) with positive Expected Net Value ($5,869.04). Sustained consumption drop of 100% below baseline; elevated historical load volatility contrasting recent readings. Field inspection recommended to verify physical meter integrity.",
+    "detailed_explanation": "### Inspection Explanation: Ticket TCK-2016-10-30-E7892DA9\n**Target Meter**: `3DB30EA9E430F8F18BF935AA0F507DDA` | **Evaluation Period**: 2016-10-30\n**Model Risk Score**: +4.164 log-odds (Base: -2.593) | **Raw Probability**: 0.985 | **Calibrated Probability**: 0.846\n\n#### 1. Operational & Economic Decision\nField inspection is economically justified with an **Expected Net Value (ENV) of $5,869.04** (projected recoverable revenue of $7,054.33 versus dispatch crew cost of $100.00).\n\n#### 2. Primary Contributing Evidence (Positive Model Drivers)\n- **60-Day Historical Consumption Volatility** (`rolling_std_60d` = 199.59 (Baseline: 143.72)): Contributed **+2.857** to risk margin. Trailing 60-day standard deviation reflecting normal customer load variability.\n- **Recent vs. Historical Consumption Ratio (14d / 60d)** (`ratio_14d_60d` = 0.00 (Baseline: 130.72)): Contributed **+0.902** to risk margin. Ratio of recent 14-day average consumption to 60-day historical baseline.\n- **30-Day Trailing Consumption Volatility** (`rolling_std_30d` = 143.72 (Baseline: 199.59)): Contributed **+0.544** to risk margin. Trailing 30-day standard deviation of daily consumption.\n- **Estimated Consumption Collapse Magnitude** (`sustained_drop_magnitude` = 221.81 (Baseline: 130.72)): Contributed **+0.524** to risk margin. Absolute deficit between 60-day baseline and recent 14-day average.\n\n#### 3. Detected Behavioral Signatures\n- **[HIGH SEVERITY] Sustained Step Down**: Sustained consumption reduction of 100.0% below historical baseline (221.8 kWh/day deficit) persisting for 21 consecutive days.\n- **[MODERATE SEVERITY] Behavior Shift**: Abrupt transition: trailing 7-day consumption dropped by 99.9% relative to the 30-day baseline.\n\n#### 4. Historical Time Window Attribution\n- **60-Day Historical Consumption Volatility**: Source window `2016-09-01` to `2016-10-30` (observed: 199.59, +38.9% vs baseline). High historical volatility combined with recent collapse signals anomaly\n- **Recent vs. Historical Consumption Ratio (14d / 60d)**: Source window `2016-09-01` to `2016-10-30` (observed: 0.00, -99.9% vs baseline). Recent 14-day average (0.08 kWh/day) is 99.9% below 60-day baseline (130.72 kWh/day) observed between 2016-09-01 and 2016-10-30.\n- **30-Day Trailing Consumption Volatility**: Source window `2016-10-01` to `2016-10-30` (observed: 143.72). Sharp drop in volatility indicates artificial flatlining or zero usage\n\n#### 5. Counter-Evidence & Mitigating Factors (Negative Model Drivers)\n- **Imputed Data Ratio** (`imputation_ratio` = 0.01): Moderated risk score by **-0.071**. Fraction of consumption records restored via bounded-gap imputation.\n- **Smart-Meter Data Coverage Ratio** (`coverage_ratio` = 0.29): Moderated risk score by **-0.036**. Proportion of valid non-null AMI readings received from this meter.\n\n#### 6. Regulatory & Safety Disclaimer\nModel evidence reflects statistical consumption anomalies and requires physical field verification; smart-meter data alone does not establish physical tampering or unauthorized abstraction.",
+    "top_positive_features": [
+      {
+        "feature_name": "rolling_std_60d",
+        "display_name": "60-Day Historical Consumption Volatility",
+        "category": "Historical Baseline",
+        "feature_value": 199.58961486816406,
+        "baseline_value": 143.72280883789062,
+        "shap_value": 2.857296403176187,
+        "contribution_direction": "positive",
+        "rank": 1,
+        "description": "Trailing 60-day standard deviation reflecting normal customer load variability"
+      },
+      {
+        "feature_name": "ratio_14d_60d",
+        "display_name": "Recent vs. Historical Consumption Ratio (14d / 60d)",
+        "category": "Consumption Collapse & Step-Down",
+        "feature_value": 0.0006338593666441739,
+        "baseline_value": 130.71849060058594,
+        "shap_value": 0.901889198699592,
+        "contribution_direction": "positive",
+        "rank": 2,
+        "description": "Ratio of recent 14-day average consumption to 60-day historical baseline"
+      },
+      {
+        "feature_name": "rolling_std_30d",
+        "display_name": "30-Day Trailing Consumption Volatility",
+        "category": "Historical Baseline",
+        "feature_value": 143.72280883789062,
+        "baseline_value": 199.58961486816406,
+        "shap_value": 0.543822630895372,
+        "contribution_direction": "positive",
+        "rank": 3,
+        "description": "Trailing 30-day standard deviation of daily consumption"
+      },
+      {
+        "feature_name": "sustained_drop_magnitude",
+        "display_name": "Estimated Consumption Collapse Magnitude",
+        "category": "Consumption Collapse & Step-Down",
+        "feature_value": 221.80564880371094,
+        "baseline_value": 130.71849060058594,
+        "shap_value": 0.5239080459528845,
+        "contribution_direction": "positive",
+        "rank": 4,
+        "description": "Absolute deficit between 60-day baseline and recent 14-day average"
+      }
+    ],
+    "top_negative_features": [
+      {
+        "feature_name": "imputation_ratio",
+        "display_name": "Imputed Data Ratio",
+        "category": "Data Quality & Completeness",
+        "feature_value": 0.006800000090152025,
+        "baseline_value": null,
+        "shap_value": -0.07112704226091203,
+        "contribution_direction": "negative",
+        "rank": 1,
+        "description": "Fraction of consumption records restored via bounded-gap imputation"
+      },
+      {
+        "feature_name": "coverage_ratio",
+        "display_name": "Smart-Meter Data Coverage Ratio",
+        "category": "Data Quality & Completeness",
+        "feature_value": 0.2939999997615814,
+        "baseline_value": null,
+        "shap_value": -0.03597842829803418,
+        "contribution_direction": "negative",
+        "rank": 2,
+        "description": "Proportion of valid non-null AMI readings received from this meter"
+      }
+    ],
+    "detected_signatures": [
+      {
+        "signature_type": "sustained_step_down",
+        "detected": true,
+        "magnitude": 1.0,
+        "duration_days": 21,
+        "severity": "high",
+        "description": "Sustained consumption reduction of 100.0% below historical baseline (221.8 kWh/day deficit) persisting for 21 consecutive days."
+      },
+      {
+        "signature_type": "behavior_shift",
+        "detected": true,
+        "magnitude": 0.999,
+        "duration_days": 7,
+        "severity": "moderate",
+        "description": "Abrupt transition: trailing 7-day consumption dropped by 99.9% relative to the 30-day baseline."
+      }
+    ],
+    "temporal_evidence": [
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-09-01",
+        "source_window_end": "2016-10-30",
+        "feature_name": "rolling_std_60d",
+        "display_name": "60-Day Historical Consumption Volatility",
+        "observed_value": 199.58961486816406,
+        "reference_value": 143.72280883789062,
+        "relative_difference_pct": 38.9,
+        "shap_contribution": 2.857296403176187,
+        "interpretation": "High historical volatility combined with recent collapse signals anomaly"
+      },
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-09-01",
+        "source_window_end": "2016-10-30",
+        "feature_name": "ratio_14d_60d",
+        "display_name": "Recent vs. Historical Consumption Ratio (14d / 60d)",
+        "observed_value": 0.0006338593666441739,
+        "reference_value": 130.71849060058594,
+        "relative_difference_pct": -99.9,
+        "shap_contribution": 0.901889198699592,
+        "interpretation": "Recent 14-day average (0.08 kWh/day) is 99.9% below 60-day baseline (130.72 kWh/day) observed between 2016-09-01 and 2016-10-30."
+      },
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-10-01",
+        "source_window_end": "2016-10-30",
+        "feature_name": "rolling_std_30d",
+        "display_name": "30-Day Trailing Consumption Volatility",
+        "observed_value": 143.72280883789062,
+        "reference_value": null,
+        "relative_difference_pct": null,
+        "shap_contribution": 0.543822630895372,
+        "interpretation": "Sharp drop in volatility indicates artificial flatlining or zero usage"
+      }
+    ],
+    "counter_evidence_summary": "2 counter-evidence features moderated risk margin",
+    "financial_context": {
+      "env": 5869.044396033653,
+      "estimated_recoverable_revenue": 7054.3251953125,
+      "dispatch_cost": 100.0,
+      "expected_gross_recovery": 5969.044396033653,
+      "tau_cost": 0.013977558647392741,
+      "tau_env": 0.014175700330124927,
+      "decision_rule": "env"
+    },
+    "model_version": "phase6_cost_sensitive_v1",
+    "feature_version": "phase3_features_v1",
+    "safety_caveat": "Model evidence reflects statistical consumption anomalies and requires physical field verification; smart-meter data alone does not establish physical tampering or unauthorized abstraction."
+  },
+  {
+    "ticket_id": "TCK-2016-10-30-CA425B59",
+    "meter_id": "1068572243CD768F5841A4D9F283B82F",
+    "evaluation_period": "2016-10-30",
+    "model_probability": 0.9860708213166635,
+    "calibrated_probability": 0.9230769230769231,
+    "raw_score": 4.25974235314024,
+    "base_value": -2.5928222691760694,
+    "expected_net_value": 5759.162259615385,
+    "inspection_recommended": true,
+    "priority_rank": 5,
+    "short_explanation": "High tampering risk (92.3% probability) with positive Expected Net Value ($5,759.16). Sudden week-over-week consumption collapse; elevated historical load volatility contrasting recent readings. Field inspection recommended to verify physical meter integrity.",
+    "detailed_explanation": "### Inspection Explanation: Ticket TCK-2016-10-30-CA425B59\n**Target Meter**: `1068572243CD768F5841A4D9F283B82F` | **Evaluation Period**: 2016-10-30\n**Model Risk Score**: +4.260 log-odds (Base: -2.593) | **Raw Probability**: 0.986 | **Calibrated Probability**: 0.923\n\n#### 1. Operational & Economic Decision\nField inspection is economically justified with an **Expected Net Value (ENV) of $5,759.16** (projected recoverable revenue of $6,347.43 versus dispatch crew cost of $100.00).\n\n#### 2. Primary Contributing Evidence (Positive Model Drivers)\n- **60-Day Historical Consumption Volatility** (`rolling_std_60d` = 249.69 (Baseline: 266.16)): Contributed **+2.478** to risk margin. Trailing 60-day standard deviation reflecting normal customer load variability.\n- **Smart-Meter Data Coverage Ratio** (`coverage_ratio` = 0.94): Contributed **+0.707** to risk margin. Proportion of valid non-null AMI readings received from this meter.\n- **30-Day Trailing Consumption Volatility** (`rolling_std_30d` = 266.16 (Baseline: 249.69)): Contributed **+0.645** to risk margin. Trailing 30-day standard deviation of daily consumption.\n- **Estimated Consumption Collapse Magnitude** (`sustained_drop_magnitude` = 355.34 (Baseline: 2300.97)): Contributed **+0.535** to risk margin. Absolute deficit between 60-day baseline and recent 14-day average.\n\n#### 3. Detected Behavioral Signatures\n- **[MODERATE SEVERITY] Behavior Shift**: Week-over-week consumption contracted by 100.0%.\n\n#### 4. Historical Time Window Attribution\n- **60-Day Historical Consumption Volatility**: Source window `2016-09-01` to `2016-10-30` (observed: 249.69, -6.2% vs baseline). High historical volatility combined with recent collapse signals anomaly\n- **Smart-Meter Data Coverage Ratio**: Source window `2016-10-30` to `2016-10-30` (observed: 0.94). High coverage (>0.95) confirms anomalies are genuine rather than telecommunication outages\n- **30-Day Trailing Consumption Volatility**: Source window `2016-10-01` to `2016-10-30` (observed: 266.16). Sharp drop in volatility indicates artificial flatlining or zero usage\n\n#### 5. Counter-Evidence & Mitigating Factors (Negative Model Drivers)\n- **14-Day Trailing Consumption Average** (`rolling_mean_14d` = 2183.43): Moderated risk score by **-0.015**. Trailing 14-day average daily electricity usage.\n- **Rolling Cv 30D** (`rolling_cv_30d` = 0.12): Moderated risk score by **-0.010**. Trailing 30-day coefficient of variation (std / safe(mean)).\n\n#### 6. Regulatory & Safety Disclaimer\nModel evidence reflects statistical consumption anomalies and requires physical field verification; smart-meter data alone does not establish physical tampering or unauthorized abstraction.",
+    "top_positive_features": [
+      {
+        "feature_name": "rolling_std_60d",
+        "display_name": "60-Day Historical Consumption Volatility",
+        "category": "Historical Baseline",
+        "feature_value": 249.6901092529297,
+        "baseline_value": 266.1585388183594,
+        "shap_value": 2.4778051736189033,
+        "contribution_direction": "positive",
+        "rank": 1,
+        "description": "Trailing 60-day standard deviation reflecting normal customer load variability"
+      },
+      {
+        "feature_name": "coverage_ratio",
+        "display_name": "Smart-Meter Data Coverage Ratio",
+        "category": "Data Quality & Completeness",
+        "feature_value": 0.9380999803543091,
+        "baseline_value": null,
+        "shap_value": 0.7069766568412087,
+        "contribution_direction": "positive",
+        "rank": 2,
+        "description": "Proportion of valid non-null AMI readings received from this meter"
+      },
+      {
+        "feature_name": "rolling_std_30d",
+        "display_name": "30-Day Trailing Consumption Volatility",
+        "category": "Historical Baseline",
+        "feature_value": 266.1585388183594,
+        "baseline_value": 249.6901092529297,
+        "shap_value": 0.6445338664138216,
+        "contribution_direction": "positive",
+        "rank": 3,
+        "description": "Trailing 30-day standard deviation of daily consumption"
+      },
+      {
+        "feature_name": "sustained_drop_magnitude",
+        "display_name": "Estimated Consumption Collapse Magnitude",
+        "category": "Consumption Collapse & Step-Down",
+        "feature_value": 355.344970703125,
+        "baseline_value": 2300.973388671875,
+        "shap_value": 0.535101877825448,
+        "contribution_direction": "positive",
+        "rank": 4,
+        "description": "Absolute deficit between 60-day baseline and recent 14-day average"
+      }
+    ],
+    "top_negative_features": [
+      {
+        "feature_name": "rolling_mean_14d",
+        "display_name": "14-Day Trailing Consumption Average",
+        "category": "Recent Consumption",
+        "feature_value": 2183.428466796875,
+        "baseline_value": 2300.973388671875,
+        "shap_value": -0.01526813467937947,
+        "contribution_direction": "negative",
+        "rank": 1,
+        "description": "Trailing 14-day average daily electricity usage"
+      },
+      {
+        "feature_name": "rolling_cv_30d",
+        "display_name": "Rolling Cv 30D",
+        "category": "Variability",
+        "feature_value": 0.11970288306474686,
+        "baseline_value": null,
+        "shap_value": -0.010421223980918097,
+        "contribution_direction": "negative",
+        "rank": 2,
+        "description": "Trailing 30-day coefficient of variation (std / safe(mean))"
+      }
+    ],
+    "detected_signatures": [
+      {
+        "signature_type": "behavior_shift",
+        "detected": true,
+        "magnitude": 14.743,
+        "duration_days": 7,
+        "severity": "moderate",
+        "description": "Week-over-week consumption contracted by 100.0%."
+      }
+    ],
+    "temporal_evidence": [
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-09-01",
+        "source_window_end": "2016-10-30",
+        "feature_name": "rolling_std_60d",
+        "display_name": "60-Day Historical Consumption Volatility",
+        "observed_value": 249.6901092529297,
+        "reference_value": 266.1585388183594,
+        "relative_difference_pct": -6.2,
+        "shap_contribution": 2.4778051736189033,
+        "interpretation": "High historical volatility combined with recent collapse signals anomaly"
+      },
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-10-30",
+        "source_window_end": "2016-10-30",
+        "feature_name": "coverage_ratio",
+        "display_name": "Smart-Meter Data Coverage Ratio",
+        "observed_value": 0.9380999803543091,
+        "reference_value": null,
+        "relative_difference_pct": null,
+        "shap_contribution": 0.7069766568412087,
+        "interpretation": "High coverage (>0.95) confirms anomalies are genuine rather than telecommunication outages"
+      },
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-10-01",
+        "source_window_end": "2016-10-30",
+        "feature_name": "rolling_std_30d",
+        "display_name": "30-Day Trailing Consumption Volatility",
+        "observed_value": 266.1585388183594,
+        "reference_value": null,
+        "relative_difference_pct": null,
+        "shap_contribution": 0.6445338664138216,
+        "interpretation": "Sharp drop in volatility indicates artificial flatlining or zero usage"
+      }
+    ],
+    "counter_evidence_summary": "2 counter-evidence features moderated risk margin",
+    "financial_context": {
+      "env": 5759.162259615385,
+      "estimated_recoverable_revenue": 6347.42578125,
+      "dispatch_cost": 100.0,
+      "expected_gross_recovery": 5859.162259615385,
+      "tau_cost": 0.015510066093480865,
+      "tau_env": 0.01575441816041321,
+      "decision_rule": "env"
+    },
+    "model_version": "phase6_cost_sensitive_v1",
+    "feature_version": "phase3_features_v1",
+    "safety_caveat": "Model evidence reflects statistical consumption anomalies and requires physical field verification; smart-meter data alone does not establish physical tampering or unauthorized abstraction."
+  },
+  {
+    "ticket_id": "TCK-2016-10-30-25152B5A",
+    "meter_id": "C5695F151BDEFDA583E9042B754E751C",
+    "evaluation_period": "2016-10-30",
+    "model_probability": 0.9855063809476224,
+    "calibrated_probability": 0.9230769230769231,
+    "raw_score": 4.219447114188419,
+    "base_value": -2.5928222691760694,
+    "expected_net_value": 5664.9921875,
+    "inspection_recommended": true,
+    "priority_rank": 6,
+    "short_explanation": "High tampering risk (92.3% probability) with positive Expected Net Value ($5,664.99). Sudden week-over-week consumption collapse; elevated historical load volatility contrasting recent readings. Field inspection recommended to verify physical meter integrity.",
+    "detailed_explanation": "### Inspection Explanation: Ticket TCK-2016-10-30-25152B5A\n**Target Meter**: `C5695F151BDEFDA583E9042B754E751C` | **Evaluation Period**: 2016-10-30\n**Model Risk Score**: +4.219 log-odds (Base: -2.593) | **Raw Probability**: 0.986 | **Calibrated Probability**: 0.923\n\n#### 1. Operational & Economic Decision\nField inspection is economically justified with an **Expected Net Value (ENV) of $5,664.99** (projected recoverable revenue of $6,245.41 versus dispatch crew cost of $100.00).\n\n#### 2. Primary Contributing Evidence (Positive Model Drivers)\n- **60-Day Historical Consumption Volatility** (`rolling_std_60d` = 172.74 (Baseline: 145.12)): Contributed **+2.712** to risk margin. Trailing 60-day standard deviation reflecting normal customer load variability.\n- **30-Day Trailing Consumption Volatility** (`rolling_std_30d` = 145.12 (Baseline: 172.74)): Contributed **+0.618** to risk margin. Trailing 30-day standard deviation of daily consumption.\n- **Estimated Consumption Collapse Magnitude** (`sustained_drop_magnitude` = 225.75 (Baseline: 833.39)): Contributed **+0.538** to risk margin. Absolute deficit between 60-day baseline and recent 14-day average.\n- **Data Missingness Ratio** (`missing_ratio` = 0.71): Contributed **+0.519** to risk margin. Proportion of missing AMI packets in the historical window.\n\n#### 3. Detected Behavioral Signatures\n- **[MODERATE SEVERITY] Behavior Shift**: Week-over-week consumption contracted by 100.0%.\n\n#### 4. Historical Time Window Attribution\n- **60-Day Historical Consumption Volatility**: Source window `2016-09-01` to `2016-10-30` (observed: 172.74, +19.0% vs baseline). High historical volatility combined with recent collapse signals anomaly\n- **30-Day Trailing Consumption Volatility**: Source window `2016-10-01` to `2016-10-30` (observed: 145.12). Sharp drop in volatility indicates artificial flatlining or zero usage\n- **Estimated Consumption Collapse Magnitude**: Source window `2016-09-01` to `2016-10-30` (observed: 225.75, -13.9% vs baseline). Recent 14-day average (717.74 kWh/day) is 13.9% below 60-day baseline (833.39 kWh/day) observed between 2016-09-01 and 2016-10-30.\n\n#### 5. Counter-Evidence & Mitigating Factors (Negative Model Drivers)\n- **Smart-Meter Data Coverage Ratio** (`coverage_ratio` = 0.29): Moderated risk score by **-0.144**. Proportion of valid non-null AMI readings received from this meter.\n- **Day Of Week** (`day_of_week` = 7.00): Moderated risk score by **-0.021**. Day of week (1=Monday, 7=Sunday).\n\n#### 6. Regulatory & Safety Disclaimer\nModel evidence reflects statistical consumption anomalies and requires physical field verification; smart-meter data alone does not establish physical tampering or unauthorized abstraction.",
+    "top_positive_features": [
+      {
+        "feature_name": "rolling_std_60d",
+        "display_name": "60-Day Historical Consumption Volatility",
+        "category": "Historical Baseline",
+        "feature_value": 172.74232482910156,
+        "baseline_value": 145.12493896484375,
+        "shap_value": 2.711581800108013,
+        "contribution_direction": "positive",
+        "rank": 1,
+        "description": "Trailing 60-day standard deviation reflecting normal customer load variability"
+      },
+      {
+        "feature_name": "rolling_std_30d",
+        "display_name": "30-Day Trailing Consumption Volatility",
+        "category": "Historical Baseline",
+        "feature_value": 145.12493896484375,
+        "baseline_value": 172.74232482910156,
+        "shap_value": 0.6176827099464209,
+        "contribution_direction": "positive",
+        "rank": 2,
+        "description": "Trailing 30-day standard deviation of daily consumption"
+      },
+      {
+        "feature_name": "sustained_drop_magnitude",
+        "display_name": "Estimated Consumption Collapse Magnitude",
+        "category": "Consumption Collapse & Step-Down",
+        "feature_value": 225.75323486328125,
+        "baseline_value": 833.3949584960938,
+        "shap_value": 0.5381757347223153,
+        "contribution_direction": "positive",
+        "rank": 3,
+        "description": "Absolute deficit between 60-day baseline and recent 14-day average"
+      },
+      {
+        "feature_name": "missing_ratio",
+        "display_name": "Data Missingness Ratio",
+        "category": "Data Quality & Completeness",
+        "feature_value": 0.7059999704360962,
+        "baseline_value": null,
+        "shap_value": 0.5187531692682877,
+        "contribution_direction": "positive",
+        "rank": 4,
+        "description": "Proportion of missing AMI packets in the historical window"
+      }
+    ],
+    "top_negative_features": [
+      {
+        "feature_name": "coverage_ratio",
+        "display_name": "Smart-Meter Data Coverage Ratio",
+        "category": "Data Quality & Completeness",
+        "feature_value": 0.2939999997615814,
+        "baseline_value": null,
+        "shap_value": -0.1442329225312938,
+        "contribution_direction": "negative",
+        "rank": 1,
+        "description": "Proportion of valid non-null AMI readings received from this meter"
+      },
+      {
+        "feature_name": "day_of_week",
+        "display_name": "Day Of Week",
+        "category": "Calendar",
+        "feature_value": 7.0,
+        "baseline_value": null,
+        "shap_value": -0.020657890097835765,
+        "contribution_direction": "negative",
+        "rank": 2,
+        "description": "Day of week (1=Monday, 7=Sunday)"
+      }
+    ],
+    "detected_signatures": [
+      {
+        "signature_type": "behavior_shift",
+        "detected": true,
+        "magnitude": 76.693,
+        "duration_days": 7,
+        "severity": "moderate",
+        "description": "Week-over-week consumption contracted by 100.0%."
+      }
+    ],
+    "temporal_evidence": [
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-09-01",
+        "source_window_end": "2016-10-30",
+        "feature_name": "rolling_std_60d",
+        "display_name": "60-Day Historical Consumption Volatility",
+        "observed_value": 172.74232482910156,
+        "reference_value": 145.12493896484375,
+        "relative_difference_pct": 19.0,
+        "shap_contribution": 2.711581800108013,
+        "interpretation": "High historical volatility combined with recent collapse signals anomaly"
+      },
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-10-01",
+        "source_window_end": "2016-10-30",
+        "feature_name": "rolling_std_30d",
+        "display_name": "30-Day Trailing Consumption Volatility",
+        "observed_value": 145.12493896484375,
+        "reference_value": null,
+        "relative_difference_pct": null,
+        "shap_contribution": 0.6176827099464209,
+        "interpretation": "Sharp drop in volatility indicates artificial flatlining or zero usage"
+      },
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-09-01",
+        "source_window_end": "2016-10-30",
+        "feature_name": "sustained_drop_magnitude",
+        "display_name": "Estimated Consumption Collapse Magnitude",
+        "observed_value": 225.75323486328125,
+        "reference_value": 833.3949584960938,
+        "relative_difference_pct": -13.9,
+        "shap_contribution": 0.5381757347223153,
+        "interpretation": "Recent 14-day average (717.74 kWh/day) is 13.9% below 60-day baseline (833.39 kWh/day) observed between 2016-09-01 and 2016-10-30."
+      }
+    ],
+    "counter_evidence_summary": "2 counter-evidence features moderated risk margin",
+    "financial_context": {
+      "env": 5664.9921875,
+      "estimated_recoverable_revenue": 6245.408203125,
+      "dispatch_cost": 100.0,
+      "expected_gross_recovery": 5764.9921875,
+      "tau_cost": 0.0157594274156786,
+      "tau_env": 0.016011763642601172,
+      "decision_rule": "env"
+    },
+    "model_version": "phase6_cost_sensitive_v1",
+    "feature_version": "phase3_features_v1",
+    "safety_caveat": "Model evidence reflects statistical consumption anomalies and requires physical field verification; smart-meter data alone does not establish physical tampering or unauthorized abstraction."
+  },
+  {
+    "ticket_id": "TCK-2016-10-30-477A9F64",
+    "meter_id": "61EAE6AC216EA223C5D18B5302610DC4",
+    "evaluation_period": "2016-10-30",
+    "model_probability": 0.9817921997485,
+    "calibrated_probability": 0.8166264495459254,
+    "raw_score": 3.9875295892310834,
+    "base_value": -2.5928222691760694,
+    "expected_net_value": 5655.159750926334,
+    "inspection_recommended": true,
+    "priority_rank": 7,
+    "short_explanation": "High tampering risk (81.7% probability) with positive Expected Net Value ($5,655.16). Elevated historical load volatility contrasting recent readings. Field inspection recommended to verify physical meter integrity.",
+    "detailed_explanation": "### Inspection Explanation: Ticket TCK-2016-10-30-477A9F64\n**Target Meter**: `61EAE6AC216EA223C5D18B5302610DC4` | **Evaluation Period**: 2016-10-30\n**Model Risk Score**: +3.988 log-odds (Base: -2.593) | **Raw Probability**: 0.982 | **Calibrated Probability**: 0.817\n\n#### 1. Operational & Economic Decision\nField inspection is economically justified with an **Expected Net Value (ENV) of $5,655.16** (projected recoverable revenue of $7,047.48 versus dispatch crew cost of $100.00).\n\n#### 2. Primary Contributing Evidence (Positive Model Drivers)\n- **60-Day Historical Consumption Volatility** (`rolling_std_60d` = 166.99 (Baseline: 78.57)): Contributed **+2.741** to risk margin. Trailing 60-day standard deviation reflecting normal customer load variability.\n- **Data Missingness Ratio** (`missing_ratio` = 0.66): Contributed **+0.656** to risk margin. Proportion of missing AMI packets in the historical window.\n- **Recent vs. Historical Consumption Ratio (14d / 60d)** (`ratio_14d_60d` = 0.64 (Baseline: 366.21)): Contributed **+0.561** to risk margin. Ratio of recent 14-day average consumption to 60-day historical baseline.\n- **30-Day Trailing Consumption Volatility** (`rolling_std_30d` = 78.57 (Baseline: 166.99)): Contributed **+0.552** to risk margin. Trailing 30-day standard deviation of daily consumption.\n\n#### 3. Detected Behavioral Signatures\n- No rule-based heuristic signatures triggered; anomaly identified primarily through multivariate feature interaction.\n\n#### 4. Historical Time Window Attribution\n- **60-Day Historical Consumption Volatility**: Source window `2016-09-01` to `2016-10-30` (observed: 166.99, +112.6% vs baseline). High historical volatility combined with recent collapse signals anomaly\n- **Data Missingness Ratio**: Source window `2016-10-30` to `2016-10-30` (observed: 0.66). Low missingness verifies signal integrity\n- **Recent vs. Historical Consumption Ratio (14d / 60d)**: Source window `2016-09-01` to `2016-10-30` (observed: 0.64, -35.6% vs baseline). Recent 14-day average (235.70 kWh/day) is 35.6% below 60-day baseline (366.21 kWh/day) observed between 2016-09-01 and 2016-10-30.\n\n#### 5. Counter-Evidence & Mitigating Factors (Negative Model Drivers)\n- **Imputed Data Ratio** (`imputation_ratio` = 0.00): Moderated risk score by **-0.102**. Fraction of consumption records restored via bounded-gap imputation.\n- **Rolling Min 7D** (`rolling_min_7d` = 153.15): Moderated risk score by **-0.043**. Trailing 7-day minimum consumption reading.\n\n#### 6. Regulatory & Safety Disclaimer\nModel evidence reflects statistical consumption anomalies and requires physical field verification; smart-meter data alone does not establish physical tampering or unauthorized abstraction.",
+    "top_positive_features": [
+      {
+        "feature_name": "rolling_std_60d",
+        "display_name": "60-Day Historical Consumption Volatility",
+        "category": "Historical Baseline",
+        "feature_value": 166.99256896972656,
+        "baseline_value": 78.5655288696289,
+        "shap_value": 2.7412314903541493,
+        "contribution_direction": "positive",
+        "rank": 1,
+        "description": "Trailing 60-day standard deviation reflecting normal customer load variability"
+      },
+      {
+        "feature_name": "missing_ratio",
+        "display_name": "Data Missingness Ratio",
+        "category": "Data Quality & Completeness",
+        "feature_value": 0.6575999855995178,
+        "baseline_value": null,
+        "shap_value": 0.6558434282310285,
+        "contribution_direction": "positive",
+        "rank": 2,
+        "description": "Proportion of missing AMI packets in the historical window"
+      },
+      {
+        "feature_name": "ratio_14d_60d",
+        "display_name": "Recent vs. Historical Consumption Ratio (14d / 60d)",
+        "category": "Consumption Collapse & Step-Down",
+        "feature_value": 0.6436251997947693,
+        "baseline_value": 366.2124938964844,
+        "shap_value": 0.5609359408813663,
+        "contribution_direction": "positive",
+        "rank": 3,
+        "description": "Ratio of recent 14-day average consumption to 60-day historical baseline"
+      },
+      {
+        "feature_name": "rolling_std_30d",
+        "display_name": "30-Day Trailing Consumption Volatility",
+        "category": "Historical Baseline",
+        "feature_value": 78.5655288696289,
+        "baseline_value": 166.99256896972656,
+        "shap_value": 0.5515824970330291,
+        "contribution_direction": "positive",
+        "rank": 4,
+        "description": "Trailing 30-day standard deviation of daily consumption"
+      }
+    ],
+    "top_negative_features": [
+      {
+        "feature_name": "imputation_ratio",
+        "display_name": "Imputed Data Ratio",
+        "category": "Data Quality & Completeness",
+        "feature_value": 0.0,
+        "baseline_value": null,
+        "shap_value": -0.10224095736273853,
+        "contribution_direction": "negative",
+        "rank": 1,
+        "description": "Fraction of consumption records restored via bounded-gap imputation"
+      },
+      {
+        "feature_name": "rolling_min_7d",
+        "display_name": "Rolling Min 7D",
+        "category": "Rolling",
+        "feature_value": 153.14999389648438,
+        "baseline_value": null,
+        "shap_value": -0.04299567153791302,
+        "contribution_direction": "negative",
+        "rank": 2,
+        "description": "Trailing 7-day minimum consumption reading"
+      }
+    ],
+    "detected_signatures": [],
+    "temporal_evidence": [
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-09-01",
+        "source_window_end": "2016-10-30",
+        "feature_name": "rolling_std_60d",
+        "display_name": "60-Day Historical Consumption Volatility",
+        "observed_value": 166.99256896972656,
+        "reference_value": 78.5655288696289,
+        "relative_difference_pct": 112.6,
+        "shap_contribution": 2.7412314903541493,
+        "interpretation": "High historical volatility combined with recent collapse signals anomaly"
+      },
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-10-30",
+        "source_window_end": "2016-10-30",
+        "feature_name": "missing_ratio",
+        "display_name": "Data Missingness Ratio",
+        "observed_value": 0.6575999855995178,
+        "reference_value": null,
+        "relative_difference_pct": null,
+        "shap_contribution": 0.6558434282310285,
+        "interpretation": "Low missingness verifies signal integrity"
+      },
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-09-01",
+        "source_window_end": "2016-10-30",
+        "feature_name": "ratio_14d_60d",
+        "display_name": "Recent vs. Historical Consumption Ratio (14d / 60d)",
+        "observed_value": 0.6436251997947693,
+        "reference_value": 366.2124938964844,
+        "relative_difference_pct": -35.6,
+        "shap_contribution": 0.5609359408813663,
+        "interpretation": "Recent 14-day average (235.70 kWh/day) is 35.6% below 60-day baseline (366.21 kWh/day) observed between 2016-09-01 and 2016-10-30."
+      }
+    ],
+    "counter_evidence_summary": "2 counter-evidence features moderated risk margin",
+    "financial_context": {
+      "env": 5655.159750926334,
+      "estimated_recoverable_revenue": 7047.4814453125,
+      "dispatch_cost": 100.0,
+      "expected_gross_recovery": 5755.159750926334,
+      "tau_cost": 0.013990942231208245,
+      "tau_env": 0.014189466233573856,
+      "decision_rule": "env"
+    },
+    "model_version": "phase6_cost_sensitive_v1",
+    "feature_version": "phase3_features_v1",
+    "safety_caveat": "Model evidence reflects statistical consumption anomalies and requires physical field verification; smart-meter data alone does not establish physical tampering or unauthorized abstraction."
+  },
+  {
+    "ticket_id": "TCK-2016-10-30-2038A852",
+    "meter_id": "6BD04DCABC15FF9CAA40252547984C43",
+    "evaluation_period": "2016-10-30",
+    "model_probability": 0.9645274357069853,
+    "calibrated_probability": 0.6989247311827957,
+    "raw_score": 3.302878716591715,
+    "base_value": -2.5928222691760694,
+    "expected_net_value": 5497.121660786291,
+    "inspection_recommended": true,
+    "priority_rank": 8,
+    "short_explanation": "High tampering risk (69.9% probability) with positive Expected Net Value ($5,497.12). Abnormal flatline load profile with negligible variance; elevated historical load volatility contrasting recent readings. Field inspection recommended to verify physical meter integrity.",
+    "detailed_explanation": "### Inspection Explanation: Ticket TCK-2016-10-30-2038A852\n**Target Meter**: `6BD04DCABC15FF9CAA40252547984C43` | **Evaluation Period**: 2016-10-30\n**Model Risk Score**: +3.303 log-odds (Base: -2.593) | **Raw Probability**: 0.965 | **Calibrated Probability**: 0.699\n\n#### 1. Operational & Economic Decision\nField inspection is economically justified with an **Expected Net Value (ENV) of $5,497.12** (projected recoverable revenue of $8,008.19 versus dispatch crew cost of $100.00).\n\n#### 2. Primary Contributing Evidence (Positive Model Drivers)\n- **60-Day Historical Consumption Volatility** (`rolling_std_60d` = 718.23 (Baseline: 453.53)): Contributed **+2.380** to risk margin. Trailing 60-day standard deviation reflecting normal customer load variability.\n- **Estimated Consumption Collapse Magnitude** (`sustained_drop_magnitude` = 107.70 (Baseline: 6343.30)): Contributed **+0.533** to risk margin. Absolute deficit between 60-day baseline and recent 14-day average.\n- **Data Missingness Ratio** (`missing_ratio` = 0.71): Contributed **+0.527** to risk margin. Proportion of missing AMI packets in the historical window.\n- **30-Day Trailing Consumption Volatility** (`rolling_std_30d` = 453.53 (Baseline: 718.23)): Contributed **+0.461** to risk margin. Trailing 30-day standard deviation of daily consumption.\n\n#### 3. Detected Behavioral Signatures\n- **[MODERATE SEVERITY] Flatline**: Unusually low coefficient of variation (0.017) over past 7 days, indicating unnatural load constancy.\n- **[MODERATE SEVERITY] Behavior Shift**: Week-over-week consumption contracted by 100.0%.\n\n#### 4. Historical Time Window Attribution\n- **60-Day Historical Consumption Volatility**: Source window `2016-09-01` to `2016-10-30` (observed: 718.23, +58.4% vs baseline). High historical volatility combined with recent collapse signals anomaly\n- **Estimated Consumption Collapse Magnitude**: Source window `2016-09-01` to `2016-10-30` (observed: 107.70, -2.3% vs baseline). Recent 14-day average (6195.00 kWh/day) is 2.3% below 60-day baseline (6343.30 kWh/day) observed between 2016-09-01 and 2016-10-30.\n- **Data Missingness Ratio**: Source window `2016-10-30` to `2016-10-30` (observed: 0.71). Low missingness verifies signal integrity\n\n#### 5. Counter-Evidence & Mitigating Factors (Negative Model Drivers)\n- **Smart-Meter Data Coverage Ratio** (`coverage_ratio` = 0.29): Moderated risk score by **-0.167**. Proportion of valid non-null AMI readings received from this meter.\n- **Recent vs. Historical Consumption Ratio (14d / 60d)** (`ratio_14d_60d` = 0.98): Moderated risk score by **-0.100**. Ratio of recent 14-day average consumption to 60-day historical baseline.\n\n#### 6. Regulatory & Safety Disclaimer\nModel evidence reflects statistical consumption anomalies and requires physical field verification; smart-meter data alone does not establish physical tampering or unauthorized abstraction.",
+    "top_positive_features": [
+      {
+        "feature_name": "rolling_std_60d",
+        "display_name": "60-Day Historical Consumption Volatility",
+        "category": "Historical Baseline",
+        "feature_value": 718.2341918945312,
+        "baseline_value": 453.5305480957031,
+        "shap_value": 2.380370557784951,
+        "contribution_direction": "positive",
+        "rank": 1,
+        "description": "Trailing 60-day standard deviation reflecting normal customer load variability"
+      },
+      {
+        "feature_name": "sustained_drop_magnitude",
+        "display_name": "Estimated Consumption Collapse Magnitude",
+        "category": "Consumption Collapse & Step-Down",
+        "feature_value": 107.7001953125,
+        "baseline_value": 6343.2998046875,
+        "shap_value": 0.5331987534200986,
+        "contribution_direction": "positive",
+        "rank": 2,
+        "description": "Absolute deficit between 60-day baseline and recent 14-day average"
+      },
+      {
+        "feature_name": "missing_ratio",
+        "display_name": "Data Missingness Ratio",
+        "category": "Data Quality & Completeness",
+        "feature_value": 0.7059999704360962,
+        "baseline_value": null,
+        "shap_value": 0.526866831523258,
+        "contribution_direction": "positive",
+        "rank": 3,
+        "description": "Proportion of missing AMI packets in the historical window"
+      },
+      {
+        "feature_name": "rolling_std_30d",
+        "display_name": "30-Day Trailing Consumption Volatility",
+        "category": "Historical Baseline",
+        "feature_value": 453.5305480957031,
+        "baseline_value": 718.2341918945312,
+        "shap_value": 0.46069447629051763,
+        "contribution_direction": "positive",
+        "rank": 4,
+        "description": "Trailing 30-day standard deviation of daily consumption"
+      }
+    ],
+    "top_negative_features": [
+      {
+        "feature_name": "coverage_ratio",
+        "display_name": "Smart-Meter Data Coverage Ratio",
+        "category": "Data Quality & Completeness",
+        "feature_value": 0.2939999997615814,
+        "baseline_value": null,
+        "shap_value": -0.16739197597984143,
+        "contribution_direction": "negative",
+        "rank": 1,
+        "description": "Proportion of valid non-null AMI readings received from this meter"
+      },
+      {
+        "feature_name": "ratio_14d_60d",
+        "display_name": "Recent vs. Historical Consumption Ratio (14d / 60d)",
+        "category": "Consumption Collapse & Step-Down",
+        "feature_value": 0.9766210317611694,
+        "baseline_value": 6343.2998046875,
+        "shap_value": -0.09998008093555301,
+        "contribution_direction": "negative",
+        "rank": 2,
+        "description": "Ratio of recent 14-day average consumption to 60-day historical baseline"
+      }
+    ],
+    "detected_signatures": [
+      {
+        "signature_type": "flatline",
+        "detected": true,
+        "magnitude": 0.0168,
+        "duration_days": 7,
+        "severity": "moderate",
+        "description": "Unusually low coefficient of variation (0.017) over past 7 days, indicating unnatural load constancy."
+      },
+      {
+        "signature_type": "behavior_shift",
+        "detected": true,
+        "magnitude": 698.571,
+        "duration_days": 7,
+        "severity": "moderate",
+        "description": "Week-over-week consumption contracted by 100.0%."
+      }
+    ],
+    "temporal_evidence": [
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-09-01",
+        "source_window_end": "2016-10-30",
+        "feature_name": "rolling_std_60d",
+        "display_name": "60-Day Historical Consumption Volatility",
+        "observed_value": 718.2341918945312,
+        "reference_value": 453.5305480957031,
+        "relative_difference_pct": 58.4,
+        "shap_contribution": 2.380370557784951,
+        "interpretation": "High historical volatility combined with recent collapse signals anomaly"
+      },
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-09-01",
+        "source_window_end": "2016-10-30",
+        "feature_name": "sustained_drop_magnitude",
+        "display_name": "Estimated Consumption Collapse Magnitude",
+        "observed_value": 107.7001953125,
+        "reference_value": 6343.2998046875,
+        "relative_difference_pct": -2.3,
+        "shap_contribution": 0.5331987534200986,
+        "interpretation": "Recent 14-day average (6195.00 kWh/day) is 2.3% below 60-day baseline (6343.30 kWh/day) observed between 2016-09-01 and 2016-10-30."
+      },
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-10-30",
+        "source_window_end": "2016-10-30",
+        "feature_name": "missing_ratio",
+        "display_name": "Data Missingness Ratio",
+        "observed_value": 0.7059999704360962,
+        "reference_value": null,
+        "relative_difference_pct": null,
+        "shap_contribution": 0.526866831523258,
+        "interpretation": "Low missingness verifies signal integrity"
+      }
+    ],
+    "counter_evidence_summary": "2 counter-evidence features moderated risk margin",
+    "financial_context": {
+      "env": 5497.121660786291,
+      "estimated_recoverable_revenue": 8008.189453125,
+      "dispatch_cost": 100.0,
+      "expected_gross_recovery": 5597.121660786291,
+      "tau_cost": 0.012333209599765669,
+      "tau_env": 0.01248721706514791,
+      "decision_rule": "env"
+    },
+    "model_version": "phase6_cost_sensitive_v1",
+    "feature_version": "phase3_features_v1",
+    "safety_caveat": "Model evidence reflects statistical consumption anomalies and requires physical field verification; smart-meter data alone does not establish physical tampering or unauthorized abstraction."
+  },
+  {
+    "ticket_id": "TCK-2016-10-30-B9E8846E",
+    "meter_id": "2952491E940C9040B188B3C9095910D6",
+    "evaluation_period": "2016-10-30",
+    "model_probability": 0.9208523588845653,
+    "calibrated_probability": 0.5703703703703704,
+    "raw_score": 2.453984735004528,
+    "base_value": -2.5928222691760694,
+    "expected_net_value": 4289.657819733797,
+    "inspection_recommended": true,
+    "priority_rank": 9,
+    "short_explanation": "High tampering risk (57.0% probability) with positive Expected Net Value ($4,289.66). Sudden week-over-week consumption collapse; elevated historical load volatility contrasting recent readings. Field inspection recommended to verify physical meter integrity.",
+    "detailed_explanation": "### Inspection Explanation: Ticket TCK-2016-10-30-B9E8846E\n**Target Meter**: `2952491E940C9040B188B3C9095910D6` | **Evaluation Period**: 2016-10-30\n**Model Risk Score**: +2.454 log-odds (Base: -2.593) | **Raw Probability**: 0.921 | **Calibrated Probability**: 0.570\n\n#### 1. Operational & Economic Decision\nField inspection is economically justified with an **Expected Net Value (ENV) of $4,289.66** (projected recoverable revenue of $7,696.15 versus dispatch crew cost of $100.00).\n\n#### 2. Primary Contributing Evidence (Positive Model Drivers)\n- **60-Day Historical Consumption Volatility** (`rolling_std_60d` = 233.07 (Baseline: 261.49)): Contributed **+2.487** to risk margin. Trailing 60-day standard deviation reflecting normal customer load variability.\n- **30-Day Trailing Consumption Volatility** (`rolling_std_30d` = 261.49 (Baseline: 233.07)): Contributed **+0.593** to risk margin. Trailing 30-day standard deviation of daily consumption.\n- **Estimated Consumption Collapse Magnitude** (`sustained_drop_magnitude` = 239.36 (Baseline: 1996.65)): Contributed **+0.491** to risk margin. Absolute deficit between 60-day baseline and recent 14-day average.\n- **60-Day Historical Baseline Average** (`rolling_mean_60d` = 1996.65): Contributed **+0.444** to risk margin. Trailing 60-day average daily electricity usage.\n\n#### 3. Detected Behavioral Signatures\n- **[MODERATE SEVERITY] Behavior Shift**: Week-over-week consumption contracted by 100.0%.\n\n#### 4. Historical Time Window Attribution\n- **60-Day Historical Consumption Volatility**: Source window `2016-09-01` to `2016-10-30` (observed: 233.07, -10.9% vs baseline). High historical volatility combined with recent collapse signals anomaly\n- **30-Day Trailing Consumption Volatility**: Source window `2016-10-01` to `2016-10-30` (observed: 261.49). Sharp drop in volatility indicates artificial flatlining or zero usage\n- **Estimated Consumption Collapse Magnitude**: Source window `2016-09-01` to `2016-10-30` (observed: 239.36, -7.1% vs baseline). Recent 14-day average (1854.13 kWh/day) is 7.1% below 60-day baseline (1996.65 kWh/day) observed between 2016-09-01 and 2016-10-30.\n\n#### 5. Counter-Evidence & Mitigating Factors (Negative Model Drivers)\n- **Imputed Data Ratio** (`imputation_ratio` = 0.00): Moderated risk score by **-0.434**. Fraction of consumption records restored via bounded-gap imputation.\n- **Rolling Max 30D** (`rolling_max_30d` = 2296.80): Moderated risk score by **-0.048**. Trailing 30-day maximum (peak) consumption reading.\n\n#### 6. Regulatory & Safety Disclaimer\nModel evidence reflects statistical consumption anomalies and requires physical field verification; smart-meter data alone does not establish physical tampering or unauthorized abstraction.",
+    "top_positive_features": [
+      {
+        "feature_name": "rolling_std_60d",
+        "display_name": "60-Day Historical Consumption Volatility",
+        "category": "Historical Baseline",
+        "feature_value": 233.07286071777344,
+        "baseline_value": 261.4899597167969,
+        "shap_value": 2.4872325922928606,
+        "contribution_direction": "positive",
+        "rank": 1,
+        "description": "Trailing 60-day standard deviation reflecting normal customer load variability"
+      },
+      {
+        "feature_name": "rolling_std_30d",
+        "display_name": "30-Day Trailing Consumption Volatility",
+        "category": "Historical Baseline",
+        "feature_value": 261.4899597167969,
+        "baseline_value": 233.07286071777344,
+        "shap_value": 0.5925475089561855,
+        "contribution_direction": "positive",
+        "rank": 2,
+        "description": "Trailing 30-day standard deviation of daily consumption"
+      },
+      {
+        "feature_name": "sustained_drop_magnitude",
+        "display_name": "Estimated Consumption Collapse Magnitude",
+        "category": "Consumption Collapse & Step-Down",
+        "feature_value": 239.361328125,
+        "baseline_value": 1996.6500244140625,
+        "shap_value": 0.4907887532076867,
+        "contribution_direction": "positive",
+        "rank": 3,
+        "description": "Absolute deficit between 60-day baseline and recent 14-day average"
+      },
+      {
+        "feature_name": "rolling_mean_60d",
+        "display_name": "60-Day Historical Baseline Average",
+        "category": "Historical Baseline",
+        "feature_value": 1996.6500244140625,
+        "baseline_value": null,
+        "shap_value": 0.44383271582217887,
+        "contribution_direction": "positive",
+        "rank": 4,
+        "description": "Trailing 60-day average daily electricity usage"
+      }
+    ],
+    "top_negative_features": [
+      {
+        "feature_name": "imputation_ratio",
+        "display_name": "Imputed Data Ratio",
+        "category": "Data Quality & Completeness",
+        "feature_value": 0.0,
+        "baseline_value": null,
+        "shap_value": -0.433791398579503,
+        "contribution_direction": "negative",
+        "rank": 1,
+        "description": "Fraction of consumption records restored via bounded-gap imputation"
+      },
+      {
+        "feature_name": "rolling_max_30d",
+        "display_name": "Rolling Max 30D",
+        "category": "Rolling",
+        "feature_value": 2296.800048828125,
+        "baseline_value": null,
+        "shap_value": -0.04793759369662178,
+        "contribution_direction": "negative",
+        "rank": 2,
+        "description": "Trailing 30-day maximum (peak) consumption reading"
+      }
+    ],
+    "detected_signatures": [
+      {
+        "signature_type": "behavior_shift",
+        "detected": true,
+        "magnitude": 153.343,
+        "duration_days": 7,
+        "severity": "moderate",
+        "description": "Week-over-week consumption contracted by 100.0%."
+      }
+    ],
+    "temporal_evidence": [
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-09-01",
+        "source_window_end": "2016-10-30",
+        "feature_name": "rolling_std_60d",
+        "display_name": "60-Day Historical Consumption Volatility",
+        "observed_value": 233.07286071777344,
+        "reference_value": 261.4899597167969,
+        "relative_difference_pct": -10.9,
+        "shap_contribution": 2.4872325922928606,
+        "interpretation": "High historical volatility combined with recent collapse signals anomaly"
+      },
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-10-01",
+        "source_window_end": "2016-10-30",
+        "feature_name": "rolling_std_30d",
+        "display_name": "30-Day Trailing Consumption Volatility",
+        "observed_value": 261.4899597167969,
+        "reference_value": null,
+        "relative_difference_pct": null,
+        "shap_contribution": 0.5925475089561855,
+        "interpretation": "Sharp drop in volatility indicates artificial flatlining or zero usage"
+      },
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-09-01",
+        "source_window_end": "2016-10-30",
+        "feature_name": "sustained_drop_magnitude",
+        "display_name": "Estimated Consumption Collapse Magnitude",
+        "observed_value": 239.361328125,
+        "reference_value": 1996.6500244140625,
+        "relative_difference_pct": -7.1,
+        "shap_contribution": 0.4907887532076867,
+        "interpretation": "Recent 14-day average (1854.13 kWh/day) is 7.1% below 60-day baseline (1996.65 kWh/day) observed between 2016-09-01 and 2016-10-30."
+      }
+    ],
+    "counter_evidence_summary": "2 counter-evidence features moderated risk margin",
+    "financial_context": {
+      "env": 4289.657819733797,
+      "estimated_recoverable_revenue": 7696.1533203125,
+      "dispatch_cost": 100.0,
+      "expected_gross_recovery": 4389.657819733797,
+      "tau_cost": 0.012826838556324289,
+      "tau_env": 0.012993504136159743,
+      "decision_rule": "env"
+    },
+    "model_version": "phase6_cost_sensitive_v1",
+    "feature_version": "phase3_features_v1",
+    "safety_caveat": "Model evidence reflects statistical consumption anomalies and requires physical field verification; smart-meter data alone does not establish physical tampering or unauthorized abstraction."
+  },
+  {
+    "ticket_id": "TCK-2016-10-30-87354E38",
+    "meter_id": "5495D3AB84C1B5181B05E4EE0C595C14",
+    "evaluation_period": "2016-10-30",
+    "model_probability": 0.972032411974591,
+    "calibrated_probability": 0.6989247311827957,
+    "raw_score": 3.548342880405501,
+    "base_value": -2.5928222691760694,
+    "expected_net_value": 3612.628108198925,
+    "inspection_recommended": true,
+    "priority_rank": 10,
+    "short_explanation": "High tampering risk (69.9% probability) with positive Expected Net Value ($3,612.63). Sustained consumption drop of 53% below baseline; elevated historical load volatility contrasting recent readings. Field inspection recommended to verify physical meter integrity.",
+    "detailed_explanation": "### Inspection Explanation: Ticket TCK-2016-10-30-87354E38\n**Target Meter**: `5495D3AB84C1B5181B05E4EE0C595C14` | **Evaluation Period**: 2016-10-30\n**Model Risk Score**: +3.548 log-odds (Base: -2.593) | **Raw Probability**: 0.972 | **Calibrated Probability**: 0.699\n\n#### 1. Operational & Economic Decision\nField inspection is economically justified with an **Expected Net Value (ENV) of $3,612.63** (projected recoverable revenue of $5,311.91 versus dispatch crew cost of $100.00).\n\n#### 2. Primary Contributing Evidence (Positive Model Drivers)\n- **60-Day Historical Consumption Volatility** (`rolling_std_60d` = 115.73 (Baseline: 74.71)): Contributed **+2.695** to risk margin. Trailing 60-day standard deviation reflecting normal customer load variability.\n- **Recent vs. Historical Consumption Ratio (14d / 60d)** (`ratio_14d_60d` = 0.59 (Baseline: 240.31)): Contributed **+0.693** to risk margin. Ratio of recent 14-day average consumption to 60-day historical baseline.\n- **30-Day Trailing Consumption Volatility** (`rolling_std_30d` = 74.71 (Baseline: 115.73)): Contributed **+0.651** to risk margin. Trailing 30-day standard deviation of daily consumption.\n- **Estimated Consumption Collapse Magnitude** (`sustained_drop_magnitude` = 158.96 (Baseline: 240.31)): Contributed **+0.471** to risk margin. Absolute deficit between 60-day baseline and recent 14-day average.\n\n#### 3. Detected Behavioral Signatures\n- **[MODERATE SEVERITY] Sustained Step Down**: Sustained consumption reduction of 52.8% below historical baseline (159.0 kWh/day deficit) persisting for 2 consecutive days.\n- **[MODERATE SEVERITY] Behavior Shift**: Week-over-week consumption contracted by 100.0%.\n\n#### 4. Historical Time Window Attribution\n- **60-Day Historical Consumption Volatility**: Source window `2016-09-01` to `2016-10-30` (observed: 115.73, +54.9% vs baseline). High historical volatility combined with recent collapse signals anomaly\n- **Recent vs. Historical Consumption Ratio (14d / 60d)**: Source window `2016-09-01` to `2016-10-30` (observed: 0.59, -40.9% vs baseline). Recent 14-day average (141.94 kWh/day) is 40.9% below 60-day baseline (240.31 kWh/day) observed between 2016-09-01 and 2016-10-30.\n- **30-Day Trailing Consumption Volatility**: Source window `2016-10-01` to `2016-10-30` (observed: 74.71). Sharp drop in volatility indicates artificial flatlining or zero usage\n\n#### 5. Counter-Evidence & Mitigating Factors (Negative Model Drivers)\n- **Imputed Data Ratio** (`imputation_ratio` = 0.01): Moderated risk score by **-0.454**. Fraction of consumption records restored via bounded-gap imputation.\n- **Data Missingness Ratio** (`missing_ratio` = 0.01): Moderated risk score by **-0.079**. Proportion of missing AMI packets in the historical window.\n\n#### 6. Regulatory & Safety Disclaimer\nModel evidence reflects statistical consumption anomalies and requires physical field verification; smart-meter data alone does not establish physical tampering or unauthorized abstraction.",
+    "top_positive_features": [
+      {
+        "feature_name": "rolling_std_60d",
+        "display_name": "60-Day Historical Consumption Volatility",
+        "category": "Historical Baseline",
+        "feature_value": 115.72618103027344,
+        "baseline_value": 74.71039581298828,
+        "shap_value": 2.694530465756742,
+        "contribution_direction": "positive",
+        "rank": 1,
+        "description": "Trailing 60-day standard deviation reflecting normal customer load variability"
+      },
+      {
+        "feature_name": "ratio_14d_60d",
+        "display_name": "Recent vs. Historical Consumption Ratio (14d / 60d)",
+        "category": "Consumption Collapse & Step-Down",
+        "feature_value": 0.5906543135643005,
+        "baseline_value": 240.30734252929688,
+        "shap_value": 0.6933804990238271,
+        "contribution_direction": "positive",
+        "rank": 2,
+        "description": "Ratio of recent 14-day average consumption to 60-day historical baseline"
+      },
+      {
+        "feature_name": "rolling_std_30d",
+        "display_name": "30-Day Trailing Consumption Volatility",
+        "category": "Historical Baseline",
+        "feature_value": 74.71039581298828,
+        "baseline_value": 115.72618103027344,
+        "shap_value": 0.6506174781956708,
+        "contribution_direction": "positive",
+        "rank": 3,
+        "description": "Trailing 30-day standard deviation of daily consumption"
+      },
+      {
+        "feature_name": "sustained_drop_magnitude",
+        "display_name": "Estimated Consumption Collapse Magnitude",
+        "category": "Consumption Collapse & Step-Down",
+        "feature_value": 158.95993041992188,
+        "baseline_value": 240.30734252929688,
+        "shap_value": 0.4707945750067483,
+        "contribution_direction": "positive",
+        "rank": 4,
+        "description": "Absolute deficit between 60-day baseline and recent 14-day average"
+      }
+    ],
+    "top_negative_features": [
+      {
+        "feature_name": "imputation_ratio",
+        "display_name": "Imputed Data Ratio",
+        "category": "Data Quality & Completeness",
+        "feature_value": 0.014499999582767487,
+        "baseline_value": null,
+        "shap_value": -0.4541742667454937,
+        "contribution_direction": "negative",
+        "rank": 1,
+        "description": "Fraction of consumption records restored via bounded-gap imputation"
+      },
+      {
+        "feature_name": "missing_ratio",
+        "display_name": "Data Missingness Ratio",
+        "category": "Data Quality & Completeness",
+        "feature_value": 0.006800000090152025,
+        "baseline_value": null,
+        "shap_value": -0.07927728812263841,
+        "contribution_direction": "negative",
+        "rank": 2,
+        "description": "Proportion of missing AMI packets in the historical window"
+      }
+    ],
+    "detected_signatures": [
+      {
+        "signature_type": "sustained_step_down",
+        "detected": true,
+        "magnitude": 0.528,
+        "duration_days": 2,
+        "severity": "moderate",
+        "description": "Sustained consumption reduction of 52.8% below historical baseline (159.0 kWh/day deficit) persisting for 2 consecutive days."
+      },
+      {
+        "signature_type": "behavior_shift",
+        "detected": true,
+        "magnitude": 19.749,
+        "duration_days": 7,
+        "severity": "moderate",
+        "description": "Week-over-week consumption contracted by 100.0%."
+      }
+    ],
+    "temporal_evidence": [
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-09-01",
+        "source_window_end": "2016-10-30",
+        "feature_name": "rolling_std_60d",
+        "display_name": "60-Day Historical Consumption Volatility",
+        "observed_value": 115.72618103027344,
+        "reference_value": 74.71039581298828,
+        "relative_difference_pct": 54.9,
+        "shap_contribution": 2.694530465756742,
+        "interpretation": "High historical volatility combined with recent collapse signals anomaly"
+      },
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-09-01",
+        "source_window_end": "2016-10-30",
+        "feature_name": "ratio_14d_60d",
+        "display_name": "Recent vs. Historical Consumption Ratio (14d / 60d)",
+        "observed_value": 0.5906543135643005,
+        "reference_value": 240.30734252929688,
+        "relative_difference_pct": -40.9,
+        "shap_contribution": 0.6933804990238271,
+        "interpretation": "Recent 14-day average (141.94 kWh/day) is 40.9% below 60-day baseline (240.31 kWh/day) observed between 2016-09-01 and 2016-10-30."
+      },
+      {
+        "anchor_date": "2016-10-30",
+        "source_window_start": "2016-10-01",
+        "source_window_end": "2016-10-30",
+        "feature_name": "rolling_std_30d",
+        "display_name": "30-Day Trailing Consumption Volatility",
+        "observed_value": 74.71039581298828,
+        "reference_value": null,
+        "relative_difference_pct": null,
+        "shap_contribution": 0.6506174781956708,
+        "interpretation": "Sharp drop in volatility indicates artificial flatlining or zero usage"
+      }
+    ],
+    "counter_evidence_summary": "2 counter-evidence features moderated risk margin",
+    "financial_context": {
+      "env": 3612.628108198925,
+      "estimated_recoverable_revenue": 5311.9140625,
+      "dispatch_cost": 100.0,
+      "expected_gross_recovery": 3712.628108198925,
+      "tau_cost": 0.01847775091125627,
+      "tau_env": 0.018825605765341764,
+      "decision_rule": "env"
+    },
+    "model_version": "phase6_cost_sensitive_v1",
+    "feature_version": "phase3_features_v1",
+    "safety_caveat": "Model evidence reflects statistical consumption anomalies and requires physical field verification; smart-meter data alone does not establish physical tampering or unauthorized abstraction."
+  }
+]

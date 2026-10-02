@@ -46,11 +46,16 @@ artifacts/imbalance/*.txt
 artifacts/cost_sensitive/*.txt
 artifacts/decision/*.csv
 !artifacts/decision/top_100_inspection_tickets.csv
+artifacts/explainability/*.parquet
+!artifacts/explainability/enriched_top_100_tickets.csv
+!artifacts/explainability/global_shap_importance.csv
 
 # MLflow tracking artifacts & runs
 mlruns/
 .mlruns/
 mlartifacts/
+*.db
+mlflow.db
 
 # OS / Editor files
 .DS_Store

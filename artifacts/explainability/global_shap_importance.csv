@@ -1,0 +1,61 @@
+rank,feature_name,display_name,category,mean_abs_shap,mean_signed_shap,description
+1,imputation_ratio,Imputed Data Ratio,Data Quality & Completeness,0.4055714773848363,-0.019890734210999843,Fraction of consumption records restored via bounded-gap imputation
+2,missing_ratio,Data Missingness Ratio,Data Quality & Completeness,0.26191036686289676,0.07852591203201034,Proportion of missing AMI packets in the historical window
+3,coverage_ratio,Smart-Meter Data Coverage Ratio,Data Quality & Completeness,0.24367456502537377,0.055542724457605545,Proportion of valid non-null AMI readings received from this meter
+4,rolling_std_60d,60-Day Historical Consumption Volatility,Historical Baseline,0.1405887066739253,0.06200760832768468,Trailing 60-day standard deviation reflecting normal customer load variability
+5,rolling_std_90d,90-Day Seasonal Consumption Volatility,Historical Baseline,0.12615887309834403,0.00487051739236376,Long-term 90-day standard deviation of daily consumption
+6,rolling_std_30d,30-Day Trailing Consumption Volatility,Historical Baseline,0.07946085709705496,-0.008165768939417865,Trailing 30-day standard deviation of daily consumption
+7,rolling_min_30d,Rolling Min 30D,Rolling,0.06420613938237726,0.00720228415541985,Trailing 30-day minimum consumption reading
+8,ratio_14d_60d,Recent vs. Historical Consumption Ratio (14d / 60d),Consumption Collapse & Step-Down,0.03966394684562209,0.00010008615905434582,Ratio of recent 14-day average consumption to 60-day historical baseline
+9,sustained_drop_magnitude,Estimated Consumption Collapse Magnitude,Consumption Collapse & Step-Down,0.03765093254003737,0.009545051253497945,Absolute deficit between 60-day baseline and recent 14-day average
+10,rolling_max_30d,Rolling Max 30D,Rolling,0.028628452393625454,-0.004715096175841235,Trailing 30-day maximum (peak) consumption reading
+11,daily_diff_abs_7d_mean,7-Day Mean Day-to-Day Absolute Change,Variability & Flatline,0.026109880795331476,-0.004181646332421058,Average magnitude of day-to-day consumption changes over trailing week
+12,rolling_min_7d,Rolling Min 7D,Rolling,0.025121957933021723,-0.0015245886305567783,Trailing 7-day minimum consumption reading
+13,consumption_kwh_lag_30d,Consumption 30 Days Prior,Historical Baseline,0.023350340373935713,0.02103055792895937,Observed consumption exactly one billing month prior
+14,rolling_median_30d,Rolling Median 30D,Rolling,0.020336163757918642,0.0033511240402271125,Trailing 30-day median (50th percentile) consumption
+15,consumption_kwh_lag_14d,Consumption Kwh Lag 14D,Lag,0.018272626620890787,-0.0035916600104789276,Backward historical consumption reading shifted by 14 days
+16,rolling_mean_60d,60-Day Historical Baseline Average,Historical Baseline,0.01740508291248472,0.0060988650458347095,Trailing 60-day average daily electricity usage
+17,consumption_kwh_lag_2d,Consumption Kwh Lag 2D,Lag,0.016772130216436736,0.016696810590955374,Backward historical consumption reading shifted by 2 days
+18,rolling_mean_90d,Rolling Mean 90D,Rolling,0.013177025152606719,0.0024338839327294956,Trailing 90-day rolling mean consumption
+19,rolling_std_14d,Rolling Std 14D,Rolling,0.011026909867219555,-0.0026293161219493443,Trailing 14-day rolling standard deviation of consumption
+20,baseline_deviation_ratio,Baseline Deviation Ratio,Consumption Collapse & Step-Down,0.009674551218826405,0.0017921037988045704,Ratio of recent 14-day consumption to pre-period 60-day historical baseline
+21,current_zero_streak,Current Consecutive Zero Days,Zero Consumption & Streaks,0.009174659649648646,-0.0041978710039775186,Consecutive active days recording zero electricity consumption
+22,rolling_cv_7d,7-Day Coefficient of Variation,Variability & Flatline,0.0089812335278678,-0.0014641539738157456,Relative volatility of daily consumption over past 7 days (std / mean)
+23,ratio_30d_90d,Monthly vs. Seasonal Ratio (30d / 90d),Consumption Collapse & Step-Down,0.008261804556938965,-0.0015714295950290057,Ratio of 30-day average usage to 90-day seasonal baseline
+24,weekly_autocorr_30d,Weekly Autocorr 30D,Autocorrelation,0.008215257837471882,0.004065436152222032,Trailing 30-day autocorrelation with 7-day backward lag
+25,day_of_month,Day Of Month,Calendar,0.008010014319498588,0.003943086507443212,Day of month (1-31)
+26,rolling_mean_14d,14-Day Trailing Consumption Average,Recent Consumption,0.0077757889453821455,-0.00526644104090135,Trailing 14-day average daily electricity usage
+27,flatline_streak,Current Near-Constant Consumption Streak,Variability & Flatline,0.007313612056685792,-0.003941430481415732,Consecutive days with identical or near-identical consumption
+28,par_30d,Par 30D,Peak,0.005852565534371098,0.001868248001462006,Peak-to-Average Ratio over trailing 30 days (max_30d / mean_30d)
+29,rolling_cv_30d,Rolling Cv 30D,Variability,0.005604236878308939,0.0008653898156179364,Trailing 30-day coefficient of variation (std / safe(mean))
+30,zero_count_30d,Zero-Consumption Days in Past Month,Zero Consumption & Streaks,0.005562215186443422,0.0014342900160304506,Count of days with zero or near-zero consumption over trailing 30 days
+31,month_sin,Month Sin,Calendar,0.004588669418648991,-0.003360207380853483,Cyclical sine encoding of calendar month
+32,rolling_median_7d,Rolling Median 7D,Rolling,0.004195372396246672,0.0011202668105284115,Trailing 7-day median (50th percentile) consumption
+33,consumption_kwh,Current Day Observed Consumption,Recent Consumption,0.0034087773837661877,0.002599807479358806,Raw metered electrical consumption on evaluation date
+34,rolling_mean_30d,30-Day Trailing Consumption Average,Historical Baseline,0.0033252352397980687,0.0011561391825651724,Trailing 30-day average daily electricity usage
+35,month,Month,Calendar,0.0032476189198697805,-0.0018859647781454309,Calendar month (1-12)
+36,zero_ratio_30d,Zero Ratio 30D,Zero Streak,0.003189877603269929,0.001804838381989089,Proportion of zero or near-zero days in trailing 30 days
+37,day_of_week,Day Of Week,Calendar,0.0030823577373602696,0.002138814267982535,"Day of week (1=Monday, 7=Sunday)"
+38,ratio_7d_30d,Short-Term vs. Monthly Ratio (7d / 30d),Consumption Collapse & Step-Down,0.002659980230636726,0.0003940166046341677,Ratio of trailing 7-day usage to trailing 30-day usage
+39,sustained_drop_duration,Sustained Low-Usage Streak,Consumption Collapse & Step-Down,0.002614472121132485,-0.0002145162811372577,Consecutive days where consumption remains <50% of historical baseline
+40,wow_consumption_change,Wow Consumption Change,Behavior Shift,0.002610372604033516,0.0012791636952664697,Absolute week-over-week difference in 7-day rolling mean
+41,dow_profile_ratio,Dow Profile Ratio,Autocorrelation,0.002209178703490006,0.0007041973983241928,Ratio of current reading to average of past 4 same-weekday readings
+42,consumption_kwh_lag_1d,Consumption Kwh Lag 1D,Lag,0.002195739769789097,0.000559332735310396,Backward historical consumption reading shifted by 1 days
+43,dow_profile_deviation,Dow Profile Deviation,Autocorrelation,0.0021951213795321687,0.001740385425842634,Difference between current reading and average of past 4 same-weekday readings
+44,rolling_mean_7d,7-Day Trailing Consumption Average,Recent Consumption,0.0019174931919564984,-0.001078015713219393,Trailing 7-day average daily electricity usage
+45,rolling_std_7d,Rolling Std 7D,Rolling,0.0018876275253018992,-0.001647080861005901,Trailing 7-day rolling standard deviation of consumption
+46,sustained_drop_ratio,Fractional Consumption Deficit,Consumption Collapse & Step-Down,0.001783143666099154,0.0012263397946888665,"Percentage decline from historical baseline: max(0, 1 - recent/baseline)"
+47,par_7d,Par 7D,Peak,0.001746385443521097,0.0003981811036054367,Peak-to-Average Ratio over trailing 7 days (max_7d / mean_7d)
+48,zero_count_7d,Zero-Consumption Days in Past Week,Zero Consumption & Streaks,0.0010151532506173621,0.0004964545408783268,Count of days with zero or near-zero consumption over trailing 7 days
+49,consumption_kwh_lag_7d,Consumption Kwh Lag 7D,Lag,0.0009100785659799226,-0.00006448064231078355,Backward historical consumption reading shifted by 7 days
+50,month_cos,Month Cos,Calendar,0.0008246608144899238,-0.0001923357002601841,Cyclical cosine encoding of calendar month
+51,zero_ratio_7d,Zero Ratio 7D,Zero Streak,0.000736101643282631,0.00034274541978163706,Proportion of zero or near-zero days in trailing 7 days
+52,rolling_max_7d,Rolling Max 7D,Rolling,0.000644503065769493,-0.00011072258848320835,Trailing 7-day maximum (peak) consumption reading
+53,quarter,Quarter,Calendar,0.0004351926267385857,-0.00012347687259194447,Calendar quarter (1-4)
+54,consumption_kwh_lag_3d,Consumption Kwh Lag 3D,Lag,0.0003482015750235088,-0.0000779037009405096,Backward historical consumption reading shifted by 3 days
+55,dow_sin,Dow Sin,Calendar,0.00011303579338874742,-0.00005983356237481266,Cyclical sine encoding of day of week
+56,wow_consumption_ratio,Wow Consumption Ratio,Behavior Shift,0.00003273684170356141,0.000013087742095285023,Ratio of current 7-day mean to preceding 7-day mean (lagged by 7d)
+57,dow_cos,Dow Cos,Calendar,5.177798651054583e-6,-3.388452078843022e-7,Cyclical cosine encoding of day of week
+58,missing_ratio_30d,Missing Ratio 30D,Data Quality,0.0,0.0,Trailing 30-day proportion of null / missing readings for this meter
+59,missing_count_30d,Missing Count 30D,Data Quality,0.0,0.0,Trailing 30-day count of null / missing readings for this meter
+60,is_weekend,Is Weekend,Calendar,0.0,0.0,"Binary indicator for Saturday or Sunday (1=Weekend, 0=Weekday)"

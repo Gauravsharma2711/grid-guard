@@ -113,4 +113,18 @@ decision:
   top_k_values: [10, 25, 50, 100, 250, 500, 1000, 2000]
   random_seed: 42
 
+explainability:
+  global_sample_size: 500
+  top_k_tickets: 100
+  max_positive_features: 4
+  max_negative_features: 2
+  step_down_ratio_threshold: 0.50
+  step_down_min_days: 7
+  zero_streak_min_days: 3
+  zero_consumption_threshold: 0.001
+  flatline_max_cv: 0.05
+  flatline_min_days: 7
+  random_seed: 42
+
+
 

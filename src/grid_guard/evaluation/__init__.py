@@ -5,6 +5,7 @@ from grid_guard.evaluation.cost_analysis import (
     FinancialWeightBuilder,
 )
 from grid_guard.evaluation.decision_metrics import DecisionEvaluator
+from grid_guard.evaluation.explainability_plots import ExplainabilityVisualizer
 from grid_guard.evaluation.financial import (
     DataSourceType,
     FinancialAuditRecord,
@@ -30,6 +31,7 @@ __all__ = [
     "DataSourceType",
     "DecisionEvaluator",
     "DecisionVisualizer",
+    "ExplainabilityVisualizer",
     "FinancialAuditRecord",
     "FinancialCostEvaluator",
     "FinancialDiagnosticEvaluator",
