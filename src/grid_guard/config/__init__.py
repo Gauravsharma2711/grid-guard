@@ -1,5 +1,6 @@
 """Configuration package for Grid-Guard."""
 
+from grid_guard.config.api import APISettings
 from grid_guard.config.cost_sensitive import (
     CostNormalizationType,
     CostSensitiveSettings,
@@ -27,6 +28,7 @@ from grid_guard.config.settings import (
 )
 
 __all__ = [
+    "APISettings",
     "AggregationPeriod",
     "BaselineModelSettings",
     "CapacityPolicy",

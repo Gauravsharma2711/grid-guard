@@ -627,10 +627,62 @@ python scripts/run_explainability.py all --global-samples 500 --top-k 100
 
 ---
 
-## 17. Upcoming Phases
+## 17. FastAPI Inference Backend & Production-Style API Layer (Phase 9)
 
-- **Phase 9**: FastAPI Operational Decision & Explainability Microservice (Real-time Scoring, Dynamic Dispatch Tickets, SHAP Endpoints).
-- **Phase 10**: Interactive Streamlit / Web Operational Dashboard for Field Crew Operations.
+Phase 9 exposes the complete Grid-Guard ML inference, financial decisioning, and Tree-SHAP explainability pipeline as a high-performance RESTful API service. It features single-load model lifecycle management, non-blocking asynchronous request processing, strict Pydantic validation, and comprehensive Swagger/ReDoc interactive documentation.
+
+### A. Core Endpoints & Capabilities
+
+| Endpoint | Method | Input | Output | Operational Role |
+| :--- | :---: | :--- | :--- | :--- |
+| `/health` | `GET` | None | `HealthResponse` | Liveness probe confirming process vitality |
+| `/ready` | `GET` | None | `ReadyResponse` | Readiness probe verifying LightGBM booster & Tree-SHAP in RAM |
+| `/api/v1/metadata/model` | `GET` | None | `ModelMetadataResponse` | Safe model introspection (version, 60 features, base log-odds) |
+| `/api/v1/metadata/config` | `GET` | None | Public configuration | Supported policies, input bounds, financial defaults |
+| `/api/v1/predict` | `POST` | `SingleMeterPredictionRequest` | `SingleMeterPredictionResponse` | Real-time risk probability, financial ENV, and Tree-SHAP narrative |
+| `/api/v1/predict/batch` | `POST` | `BatchPredictionRequest` | `BatchPredictionResponse` | Bounded multi-meter batch evaluation with item-level error reporting |
+| `/api/v1/inspection/ticket` | `POST` | `SingleMeterPredictionRequest` | `InspectionTicketResponse` | Compiles field work order with deterministic ticket ID and signatures |
+| `/api/v1/inspection/queue` | `POST` | `InspectionQueueRequest` | `InspectionQueueResponse` | Ranked inspection queue ordered by Expected Net Value (ENV) |
+
+### B. Launching the API Server
+
+```bash
+# Launch via preconfigured runner script
+uv run python scripts/run_api.py --host 0.0.0.0 --port 8000
+
+# Or launch directly with uvicorn
+uv run uvicorn grid_guard.api.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+Once running, interactive documentation is available at:
+- **Swagger UI**: `http://localhost:8000/docs`
+- **ReDoc UI**: `http://localhost:8000/redoc`
+- **OpenAPI Schema**: `http://localhost:8000/openapi.json`
+
+### C. Performance & Latency Benchmarks
+
+Measured on local test environment with 90-day daily meter histories (`scripts/benchmark_api.py`):
+
+| Operation / Endpoint | Latency Metric | Operational Benchmark Target | Status |
+| :--- | :---: | :---: | :---: |
+| **Cold Startup Time** | **0.265 s** | < 2.0 s | Passed |
+| **Prediction (Bare Model Inference)** | **21.87 ms** (P95: 27.24 ms) | < 50.0 ms | Passed |
+| **Prediction (Full Tree-SHAP + Narratives)** | **29.14 ms** (P95: 30.83 ms) | < 80.0 ms | Passed |
+| **Batch Throughput (10 meters)** | **250.12 ms** (25.0 ms / meter) | < 500.0 ms | Passed |
+| **Inspection Ticket Work Order** | **34.25 ms** | < 100.0 ms | Passed |
+| **Inspection Queue Query (Top 50)** | **14.75 ms** | < 50.0 ms | Passed |
+
+### D. Generated Phase 9 Artifacts
+- **OpenAPI Specification**: `artifacts/api/openapi.json`
+- **Sample Request Payloads**: `artifacts/api/sample_requests.json`
+- **API Performance Report**: `artifacts/api/api_performance_report.md`
+- **Detailed Documentation**: `docs/api.md`, `docs/api_architecture.md`
+
+---
+
+## 18. Upcoming Phases
+
+- **Phase 10**: Interactive Streamlit / Web Operational Dashboard for Field Crew Operations & Executive Analytics.
 
 
 

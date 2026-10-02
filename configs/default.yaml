@@ -126,5 +126,20 @@ explainability:
   flatline_min_days: 7
   random_seed: 42
 
+api:
+  host: "0.0.0.0"
+  port: 8000
+  reload: false
+  model_path: "artifacts/cost_sensitive/champion_model.txt"
+  min_readings_per_meter: 14
+  max_readings_per_meter: 730
+  recommended_readings_per_meter: 90
+  max_batch_size: 50
+  default_tariff: 6.0
+  default_dispatch_cost: 500.0
+  currency: "INR"
+  include_explanation_default: true
+
+
 
 

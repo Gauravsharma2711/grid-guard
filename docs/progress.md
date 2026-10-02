@@ -335,11 +335,50 @@
 
 ---
 
+---
+
+## Phase 9: FastAPI Inference Backend & Production-Style API Layer
+
+- **Status**: Completed / Operational
+- **Completed Date**: 2026-10-02
+- **Lead Implementation Engineer**: Antigravity Autonomous Agent
+
+### 1. Completed Items
+- [x] **FastAPI Service Architecture (`grid_guard.api`)**:
+  - Implemented modular, layered web architecture: routing (`routes/`), schemas (`schemas/`), application services (`services/`), and cross-cutting middleware (`middleware.py`).
+  - Configured `@asynccontextmanager` lifespan handler ensuring expensive LightGBM booster weights and TreeExplainer instances load once at startup, completely eliminating per-request disk reloading.
+  - Configured correlation request ID tracking (`X-Request-ID`), structured latency recording (`X-Response-Time-Ms`), and centralized custom exception handlers for uniform error formatting.
+- [x] **Singleton Inference Service Layer (`grid_guard.api.services.inference`)**:
+  - Encapsulated feature generation (`FeaturePipeline`), LightGBM champion booster inference, financial leakage calculation (`LeakageEstimator`), dynamic thresholding (`compute_bayes_cost_threshold`, `compute_env_threshold`), and Tree-SHAP local attribution (`ShapExplainer`, `NarrativeGenerator`).
+  - Implemented automatic data-quality profiling calculating coverage ratio, missingness, and history duration warnings.
+- [x] **Comprehensive Endpoint Suite**:
+  - `GET /health`: Lightweight process vitality probe.
+  - `GET /ready`: Readiness probe verifying champion booster and Tree-SHAP explainer initialization in RAM.
+  - `GET /api/v1/metadata/model`: Safe model introspection exposing checkpoint version, 60-feature schema, base log-odds, and objective type.
+  - `GET /api/v1/metadata/config`: Public configuration exposing supported decision policies, batch limits, and operational defaults.
+  - `POST /api/v1/predict`: Single-meter inference returning risk probability, financial exposure, dynamic thresholds, ENV, and local Tree-SHAP narrative.
+  - `POST /api/v1/predict/batch`: Bounded multi-meter batch prediction supporting partial success and item-level error reporting.
+  - `POST /api/v1/inspection/ticket`: Field inspection work order generation enriched with deterministic ticket IDs and electrical tampering signatures.
+  - `POST /api/v1/inspection/queue`: Ranked inspection queue query with dynamic capacity limits and ENV filtering.
+- [x] **Pydantic Validation & Security Constraints (`grid_guard.api.schemas`)**:
+  - Strictly enforced non-negative consumption constraints, rejection of non-finite numbers (`NaN`, `$\pm\infty$`), duplicate timestamp detection, and bounded batch sizes ($\le 50$ meters).
+  - Sanitized operational logging to ensure smart-meter time series and customer details are excluded from text logs.
+- [x] **Performance Benchmarking & Latency Targets**:
+  - Verified cold startup time of **0.265 seconds** (including model and explainer construction).
+  - Bare model inference latency of **21.87 ms** (P95: 27.24 ms).
+  - Full Tree-SHAP explanation & narrative generation latency of **29.14 ms** (P95: 30.83 ms).
+  - Bounded batch throughput of **25.01 ms / meter**.
+  - Generated `artifacts/api/api_performance_report.md` and exported complete `artifacts/api/openapi.json` specification.
+- [x] **Testing & Quality Assurance**:
+  - Added 29 unit and integration tests covering Pydantic schema validation, inference service orchestration, HTTP routes, partial batch failures, and unready service simulation.
+  - Test suite expanded to **150 passed tests** in 37 seconds across all phases.
+
+---
+
 ### 2. Next Phase
 
-- **Phase 9: FastAPI Operational Decision & Explainability Microservice**
-  - Package Phase 6 scoring, Phase 7 dynamic decisioning, and Phase 8 SHAP explainability into a high-performance RESTful API.
-  - Build endpoints for batch scoring, ticket generation, local explanations, and health checks.
-  - Implement Pydantic request/response schemas for utility dispatch integrations.
+- **Phase 10: Interactive Streamlit / Next.js Operations Dashboard & Field Dispatch Portal**
+  - Connect user interface directly to Phase 9 FastAPI backend.
+  - Build executive financial overview, interactive inspection queue, meter deep-dive with annotated timeseries, and field dispatch export.
 
 

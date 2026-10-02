@@ -145,10 +145,12 @@ class ShapExplainer:
         for rank, (idx, s_val) in enumerate(pos_items[:max_positive], 1):
             fname = self.feature_names[idx]
             meta = self.feature_mapper.resolve(fname)
-            f_val = float(row_dict.get(fname, 0.0))
+            raw_val = row_dict.get(fname)
+            f_val = float(raw_val) if raw_val is not None else 0.0
+            ref_col = meta.reference_feature
             base_ref = (
-                float(row_dict[meta.reference_feature])
-                if meta.reference_feature and meta.reference_feature in row_dict
+                float(row_dict[ref_col])
+                if ref_col and ref_col in row_dict and row_dict[ref_col] is not None
                 else None
             )
             pos_contributions.append(
@@ -170,10 +172,12 @@ class ShapExplainer:
         for rank, (idx, s_val) in enumerate(neg_items[:max_negative], 1):
             fname = self.feature_names[idx]
             meta = self.feature_mapper.resolve(fname)
-            f_val = float(row_dict.get(fname, 0.0))
+            raw_val = row_dict.get(fname)
+            f_val = float(raw_val) if raw_val is not None else 0.0
+            ref_col = meta.reference_feature
             base_ref = (
-                float(row_dict[meta.reference_feature])
-                if meta.reference_feature and meta.reference_feature in row_dict
+                float(row_dict[ref_col])
+                if ref_col and ref_col in row_dict and row_dict[ref_col] is not None
                 else None
             )
             neg_contributions.append(

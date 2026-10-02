@@ -1,0 +1,1449 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Grid-Guard NTL Detection API",
+    "description": "Production-grade REST API for smart-meter non-technical loss (NTL) detection, cost-sensitive economic decisioning, and SHAP explainability.",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "System Health & Readiness"
+        ],
+        "summary": "Process Liveness Probe",
+        "description": "Returns HTTP 200 to confirm that the FastAPI application process is alive and responding.",
+        "operationId": "health_check_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ready": {
+      "get": {
+        "tags": [
+          "System Health & Readiness"
+        ],
+        "summary": "Service Readiness Probe",
+        "description": "Verifies that the LightGBM champion booster and Tree-SHAP explainer are loaded in memory and ready to serve inference.",
+        "operationId": "readiness_check_ready_get",
+        "responses": {
+          "200": {
+            "description": "Service is fully initialized and operational",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadyResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service is unready (model or explainer missing)"
+          }
+        }
+      }
+    },
+    "/api/v1/metadata/model": {
+      "get": {
+        "tags": [
+          "Metadata & Introspection"
+        ],
+        "summary": "Model Checkpoint Introspection",
+        "description": "Returns verified metadata for the currently loaded LightGBM model, feature schema, base expected values, and objective type.",
+        "operationId": "get_model_metadata_api_v1_metadata_model_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelMetadataResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/metadata/config": {
+      "get": {
+        "tags": [
+          "Metadata & Introspection"
+        ],
+        "summary": "Public Configuration Introspection",
+        "description": "Returns safe, non-sensitive operational configuration limits, supported decision policies, and input constraints.",
+        "operationId": "get_public_config_api_v1_metadata_config_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Get Public Config Api V1 Metadata Config Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/predict": {
+      "post": {
+        "tags": [
+          "Inference & Prediction"
+        ],
+        "summary": "Evaluate Single Smart Meter",
+        "description": "Ingests a raw daily smart-meter time series, calculates 60 canonical temporal features, scores the meter with the cost-sensitive LightGBM champion booster, evaluates financial exposure and Expected Net Value (ENV), and optionally computes Tree-SHAP local attributions and domain tampering narratives.",
+        "operationId": "predict_single_meter_api_v1_predict_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SingleMeterPredictionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful inference and decision response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SingleMeterPredictionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Insufficient history or malformed input readings"
+          },
+          "422": {
+            "description": "Pydantic validation failure"
+          },
+          "503": {
+            "description": "Model service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/predict/batch": {
+      "post": {
+        "tags": [
+          "Inference & Prediction"
+        ],
+        "summary": "Evaluate Batch of Smart Meters",
+        "description": "Synchronously processes a bounded batch of smart-meter requests (up to configured maximum, e.g. 50 meters). Supports partial success: valid meters return predictions while malformed meters return structured per-item error records.",
+        "operationId": "predict_batch_meters_api_v1_predict_batch_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BatchPredictionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Batch processing completed with item-level results and errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchPredictionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Batch size exceeds configured maximum"
+          },
+          "422": {
+            "description": "Batch schema validation failure"
+          },
+          "503": {
+            "description": "Model service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/inspection/ticket": {
+      "post": {
+        "tags": [
+          "Inspection & Field Dispatch"
+        ],
+        "summary": "Generate Field Inspection Work Order Ticket",
+        "description": "Evaluates the target meter and compiles a complete, actionable field inspection ticket. Includes deterministic ticket ID, probability risk, estimated recoverable revenue, dispatch cost, Expected Net Value (ENV), active threshold, detected electrical tampering signatures, and audited human-readable narratives.",
+        "operationId": "generate_inspection_ticket_api_v1_inspection_ticket_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SingleMeterPredictionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Inspection ticket generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionTicketResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Insufficient history or invalid meter payload"
+          },
+          "422": {
+            "description": "Pydantic validation failure"
+          },
+          "503": {
+            "description": "Model service unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/inspection/queue": {
+      "post": {
+        "tags": [
+          "Inspection & Field Dispatch"
+        ],
+        "summary": "Generate Prioritized Field Inspection Queue",
+        "description": "Retrieves and filters candidate inspection tickets ranked strictly by Expected Net Value (ENV) descending. Allows dynamic filtering by minimum ENV threshold, minimum probability cutoff, and maximum crew capacity limit.",
+        "operationId": "get_inspection_queue_api_v1_inspection_queue_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InspectionQueueRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Ranked inspection queue returned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectionQueueResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Precomputed evaluation artifacts not found"
+          },
+          "503": {
+            "description": "Model service unavailable"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BatchItemError": {
+        "properties": {
+          "meter_id": {
+            "type": "string",
+            "title": "Meter Id"
+          },
+          "error": {
+            "type": "string",
+            "title": "Error"
+          },
+          "error_type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "meter_id",
+          "error",
+          "error_type"
+        ],
+        "title": "BatchItemError",
+        "description": "Error record for an individual item failure in a batch request."
+      },
+      "BatchPredictionRequest": {
+        "properties": {
+          "meters": {
+            "items": {
+              "$ref": "#/components/schemas/SingleMeterPredictionRequest"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Meters",
+            "description": "List of single meter prediction requests"
+          },
+          "batch_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Batch Id",
+            "description": "Optional client-provided batch correlation identifier"
+          },
+          "include_explanation": {
+            "type": "boolean",
+            "title": "Include Explanation",
+            "description": "Default to False for batch to maximize throughput",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "meters"
+        ],
+        "title": "BatchPredictionRequest",
+        "description": "Request payload for bounded multi-meter batch evaluation."
+      },
+      "BatchPredictionResponse": {
+        "properties": {
+          "batch_id": {
+            "type": "string",
+            "title": "Batch Id"
+          },
+          "total_items": {
+            "type": "integer",
+            "title": "Total Items"
+          },
+          "successful_items": {
+            "type": "integer",
+            "title": "Successful Items"
+          },
+          "failed_items": {
+            "type": "integer",
+            "title": "Failed Items"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/SingleMeterPredictionResponse"
+            },
+            "type": "array",
+            "title": "Results"
+          },
+          "errors": {
+            "items": {
+              "$ref": "#/components/schemas/BatchItemError"
+            },
+            "type": "array",
+            "title": "Errors"
+          },
+          "processing_time_ms": {
+            "type": "number",
+            "title": "Processing Time Ms"
+          }
+        },
+        "type": "object",
+        "required": [
+          "batch_id",
+          "total_items",
+          "successful_items",
+          "failed_items",
+          "processing_time_ms"
+        ],
+        "title": "BatchPredictionResponse",
+        "description": "Response payload for multi-meter batch requests supporting partial success."
+      },
+      "DataQualitySummary": {
+        "properties": {
+          "coverage_ratio": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Coverage Ratio",
+            "description": "Observed days / total calendar span"
+          },
+          "missing_ratio": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Missing Ratio",
+            "description": "Missing reading fraction"
+          },
+          "imputation_ratio": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Imputation Ratio",
+            "description": "Synthetically filled fraction"
+          },
+          "total_readings": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Total Readings",
+            "description": "Count of non-null daily readings supplied"
+          },
+          "history_days": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "History Days",
+            "description": "Calendar days between earliest and latest reading"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "'good', 'adequate', or 'insufficient_history'"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings",
+            "description": "Quality or history deficiency warnings"
+          }
+        },
+        "type": "object",
+        "required": [
+          "coverage_ratio",
+          "missing_ratio",
+          "imputation_ratio",
+          "total_readings",
+          "history_days",
+          "status"
+        ],
+        "title": "DataQualitySummary",
+        "description": "Summary of data completeness, coverage, and telemetry quality for a meter."
+      },
+      "DecisionOutput": {
+        "properties": {
+          "decision_rule": {
+            "type": "string",
+            "title": "Decision Rule",
+            "description": "Active decision policy applied ('env', 'cost_threshold', 'fixed')"
+          },
+          "active_threshold": {
+            "type": "number",
+            "title": "Active Threshold",
+            "description": "Operational probability threshold tau applied for recommendation"
+          },
+          "tau_cost": {
+            "type": "number",
+            "title": "Tau Cost",
+            "description": "Bayes cost-optimal threshold C_dispatch / (C_dispatch + C_FN)"
+          },
+          "tau_env": {
+            "type": "number",
+            "title": "Tau Env",
+            "description": "Breakeven threshold for positive net return C_dispatch / R"
+          },
+          "inspection_recommended": {
+            "type": "boolean",
+            "title": "Inspection Recommended",
+            "description": "Whether physical meter inspection is recommended"
+          },
+          "priority_context": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Priority Context",
+            "description": "Actionable operational summary context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "decision_rule",
+          "active_threshold",
+          "tau_cost",
+          "tau_env",
+          "inspection_recommended"
+        ],
+        "title": "DecisionOutput",
+        "description": "Economic and operational inspection decision metrics."
+      },
+      "ExplanationOutput": {
+        "properties": {
+          "summary": {
+            "type": "string",
+            "title": "Summary",
+            "description": "Concise card-ready summary for field technicians"
+          },
+          "detailed_explanation": {
+            "type": "string",
+            "title": "Detailed Explanation",
+            "description": "In-depth audit narrative detailing feature and financial evidence"
+          },
+          "top_positive_contributors": {
+            "items": {
+              "$ref": "#/components/schemas/FeatureContributionSchema"
+            },
+            "type": "array",
+            "title": "Top Positive Contributors"
+          },
+          "top_negative_contributors": {
+            "items": {
+              "$ref": "#/components/schemas/FeatureContributionSchema"
+            },
+            "type": "array",
+            "title": "Top Negative Contributors"
+          },
+          "detected_signatures": {
+            "items": {
+              "$ref": "#/components/schemas/TamperingSignatureSchema"
+            },
+            "type": "array",
+            "title": "Detected Signatures"
+          },
+          "temporal_evidence": {
+            "items": {
+              "$ref": "#/components/schemas/TemporalEvidenceSchema"
+            },
+            "type": "array",
+            "title": "Temporal Evidence"
+          },
+          "counter_evidence_summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Counter Evidence Summary"
+          },
+          "safety_caveat": {
+            "type": "string",
+            "title": "Safety Caveat",
+            "description": "Standard legal/regulatory safety disclaimer",
+            "default": "Model evidence indicates an anomalous consumption pattern and requires physical on-site inspection."
+          }
+        },
+        "type": "object",
+        "required": [
+          "summary",
+          "detailed_explanation"
+        ],
+        "title": "ExplanationOutput",
+        "description": "Comprehensive explainability record with SHAP attributions, signatures, and narratives."
+      },
+      "FeatureContributionSchema": {
+        "properties": {
+          "feature_name": {
+            "type": "string",
+            "title": "Feature Name"
+          },
+          "display_name": {
+            "type": "string",
+            "title": "Display Name"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "feature_value": {
+            "type": "number",
+            "title": "Feature Value"
+          },
+          "baseline_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Baseline Value"
+          },
+          "shap_value": {
+            "type": "number",
+            "title": "Shap Value"
+          },
+          "contribution_direction": {
+            "type": "string",
+            "title": "Contribution Direction"
+          },
+          "rank": {
+            "type": "integer",
+            "title": "Rank"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "feature_name",
+          "display_name",
+          "category",
+          "feature_value",
+          "shap_value",
+          "contribution_direction",
+          "rank",
+          "description"
+        ],
+        "title": "FeatureContributionSchema",
+        "description": "Feature attribution record derived from Tree-SHAP."
+      },
+      "FinancialOutput": {
+        "properties": {
+          "estimated_leakage_kwh": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Estimated Leakage Kwh",
+            "description": "Estimated unmetered energy loss volume (kWh)"
+          },
+          "estimated_recoverable_revenue": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Estimated Recoverable Revenue",
+            "description": "Projected recoverable revenue R ($)"
+          },
+          "expected_gross_recovery": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Expected Gross Recovery",
+            "description": "Probability-weighted recovery E[R] = p * R ($)"
+          },
+          "dispatch_cost": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Dispatch Cost",
+            "description": "Physical crew inspection dispatch cost C_FP ($)"
+          },
+          "expected_net_value": {
+            "type": "number",
+            "title": "Expected Net Value",
+            "description": "Expected Net Value (ENV) = p * R - C_dispatch ($)"
+          },
+          "tariff": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Tariff",
+            "description": "Effective tariff applied per kWh"
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency",
+            "description": "Operational currency unit",
+            "default": "INR"
+          }
+        },
+        "type": "object",
+        "required": [
+          "estimated_leakage_kwh",
+          "estimated_recoverable_revenue",
+          "expected_gross_recovery",
+          "dispatch_cost",
+          "expected_net_value",
+          "tariff"
+        ],
+        "title": "FinancialOutput",
+        "description": "Financial exposure, expected recovery, and cost estimations."
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "Service process status",
+            "default": "ok"
+          },
+          "service": {
+            "type": "string",
+            "title": "Service",
+            "description": "Service identifier",
+            "default": "grid-guard-api"
+          },
+          "api_version": {
+            "type": "string",
+            "title": "Api Version",
+            "description": "Semantic API version",
+            "default": "0.1.0"
+          }
+        },
+        "type": "object",
+        "title": "HealthResponse",
+        "description": "Liveness probe response."
+      },
+      "InspectionQueueRequest": {
+        "properties": {
+          "max_inspections": {
+            "type": "integer",
+            "maximum": 500.0,
+            "minimum": 1.0,
+            "title": "Max Inspections",
+            "description": "Maximum number of prioritized tickets to return",
+            "default": 50
+          },
+          "decision_rule": {
+            "type": "string",
+            "title": "Decision Rule",
+            "description": "Decision policy: 'env', 'cost_threshold', or 'fixed_threshold'",
+            "default": "env"
+          },
+          "min_env": {
+            "type": "number",
+            "title": "Min Env",
+            "description": "Minimum Expected Net Value cutoff",
+            "default": 0.0
+          },
+          "min_probability": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Min Probability",
+            "description": "Minimum probability cutoff",
+            "default": 0.5
+          },
+          "include_explanations": {
+            "type": "boolean",
+            "title": "Include Explanations",
+            "description": "Whether to include full SHAP narratives for queued tickets",
+            "default": true
+          }
+        },
+        "type": "object",
+        "title": "InspectionQueueRequest",
+        "description": "Request parameters for querying or ranking inspection candidates into a prioritized queue."
+      },
+      "InspectionQueueResponse": {
+        "properties": {
+          "queue_size": {
+            "type": "integer",
+            "title": "Queue Size",
+            "description": "Number of tickets in the returned inspection queue"
+          },
+          "total_expected_recovery": {
+            "type": "number",
+            "title": "Total Expected Recovery",
+            "description": "Sum of expected gross recovery across all tickets ($)"
+          },
+          "total_dispatch_cost": {
+            "type": "number",
+            "title": "Total Dispatch Cost",
+            "description": "Total crew dispatch cost for the queue ($)"
+          },
+          "total_net_value": {
+            "type": "number",
+            "title": "Total Net Value",
+            "description": "Cumulative Expected Net Value (total recovery - total cost) ($)"
+          },
+          "decision_rule": {
+            "type": "string",
+            "title": "Decision Rule",
+            "description": "Decision policy applied"
+          },
+          "tickets": {
+            "items": {
+              "$ref": "#/components/schemas/InspectionTicketResponse"
+            },
+            "type": "array",
+            "title": "Tickets",
+            "description": "Ranked inspection work orders"
+          },
+          "processing_time_ms": {
+            "type": "number",
+            "title": "Processing Time Ms",
+            "description": "Processing time in milliseconds"
+          }
+        },
+        "type": "object",
+        "required": [
+          "queue_size",
+          "total_expected_recovery",
+          "total_dispatch_cost",
+          "total_net_value",
+          "decision_rule",
+          "processing_time_ms"
+        ],
+        "title": "InspectionQueueResponse",
+        "description": "Response payload containing a ranked inspection queue."
+      },
+      "InspectionTicketResponse": {
+        "properties": {
+          "ticket_id": {
+            "type": "string",
+            "title": "Ticket Id",
+            "description": "Deterministic ticket identifier (e.g. 'TCK-2016-10-30-EF550F26')"
+          },
+          "meter_id": {
+            "type": "string",
+            "title": "Meter Id",
+            "description": "Target smart meter account identifier"
+          },
+          "evaluation_period": {
+            "type": "string",
+            "title": "Evaluation Period",
+            "description": "Evaluation snapshot period"
+          },
+          "tamper_probability": {
+            "type": "number",
+            "title": "Tamper Probability",
+            "description": "Predicted uncalibrated tampering probability"
+          },
+          "calibrated_probability": {
+            "type": "number",
+            "title": "Calibrated Probability",
+            "description": "Calibrated posterior probability p_i"
+          },
+          "estimated_leakage_kwh": {
+            "type": "number",
+            "title": "Estimated Leakage Kwh",
+            "description": "Estimated volume of unmetered electricity in kWh"
+          },
+          "estimated_recoverable_revenue": {
+            "type": "number",
+            "title": "Estimated Recoverable Revenue",
+            "description": "Projected recoverable revenue R ($)"
+          },
+          "dispatch_cost": {
+            "type": "number",
+            "title": "Dispatch Cost",
+            "description": "Field inspection dispatch cost C_FP ($)"
+          },
+          "expected_gross_recovery": {
+            "type": "number",
+            "title": "Expected Gross Recovery",
+            "description": "Expected gross recovery E[R] = p * R ($)"
+          },
+          "env": {
+            "type": "number",
+            "title": "Env",
+            "description": "Expected Net Value (ENV) = p * R - C_dispatch ($)"
+          },
+          "tau_cost": {
+            "type": "number",
+            "title": "Tau Cost",
+            "description": "Bayes cost-optimal threshold C_dispatch / (C_dispatch + C_FN)"
+          },
+          "tau_env": {
+            "type": "number",
+            "title": "Tau Env",
+            "description": "Economic breakeven threshold C_dispatch / R"
+          },
+          "active_threshold": {
+            "type": "number",
+            "title": "Active Threshold",
+            "description": "Active probability threshold applied"
+          },
+          "decision_rule": {
+            "type": "string",
+            "title": "Decision Rule",
+            "description": "Decision policy applied ('env', 'cost_threshold', 'fixed')"
+          },
+          "inspection_recommended": {
+            "type": "boolean",
+            "title": "Inspection Recommended",
+            "description": "Whether inspection is economically justified"
+          },
+          "priority_rank": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Priority Rank",
+            "description": "Queue rank ordered by ENV descending"
+          },
+          "customer_type": {
+            "type": "string",
+            "title": "Customer Type",
+            "description": "Customer classification",
+            "default": "standard"
+          },
+          "feeder_id": {
+            "type": "string",
+            "title": "Feeder Id",
+            "description": "Feeder network identifier",
+            "default": "unknown"
+          },
+          "data_quality_status": {
+            "type": "string",
+            "title": "Data Quality Status",
+            "description": "Quality assessment",
+            "default": "good"
+          },
+          "signatures_summary": {
+            "type": "string",
+            "title": "Signatures Summary",
+            "description": "Summary of electrical tampering signatures",
+            "default": "Multivariate Feature Anomaly"
+          },
+          "explanation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ExplanationOutput"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Detailed explainability record"
+          },
+          "safety_caveat": {
+            "type": "string",
+            "title": "Safety Caveat",
+            "description": "Standard legal/regulatory disclaimer",
+            "default": "Model evidence indicates an anomalous consumption pattern and requires physical on-site inspection."
+          }
+        },
+        "type": "object",
+        "required": [
+          "ticket_id",
+          "meter_id",
+          "evaluation_period",
+          "tamper_probability",
+          "calibrated_probability",
+          "estimated_leakage_kwh",
+          "estimated_recoverable_revenue",
+          "dispatch_cost",
+          "expected_gross_recovery",
+          "env",
+          "tau_cost",
+          "tau_env",
+          "active_threshold",
+          "decision_rule",
+          "inspection_recommended"
+        ],
+        "title": "InspectionTicketResponse",
+        "description": "Enriched field inspection ticket work order."
+      },
+      "MeterReading": {
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "title": "Timestamp",
+            "description": "Calendar date or ISO timestamp (e.g. '2016-10-30')"
+          },
+          "consumption_kwh": {
+            "type": "number",
+            "title": "Consumption Kwh",
+            "description": "Measured daily electricity consumption in kilowatt-hours (kWh)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "timestamp",
+          "consumption_kwh"
+        ],
+        "title": "MeterReading",
+        "description": "Individual daily smart meter consumption reading."
+      },
+      "ModelMetadataResponse": {
+        "properties": {
+          "model_name": {
+            "type": "string",
+            "title": "Model Name",
+            "description": "Model identifier",
+            "default": "cost_sensitive_champion_lgb"
+          },
+          "model_version": {
+            "type": "string",
+            "title": "Model Version",
+            "description": "Model checkpoint version",
+            "default": "phase6_cost_sensitive_v1"
+          },
+          "model_type": {
+            "type": "string",
+            "title": "Model Type",
+            "description": "Underlying architecture",
+            "default": "LightGBM Booster"
+          },
+          "objective_type": {
+            "type": "string",
+            "title": "Objective Type",
+            "description": "Optimization objective",
+            "default": "financially_weighted_logistic"
+          },
+          "feature_version": {
+            "type": "string",
+            "title": "Feature Version",
+            "description": "Feature schema version",
+            "default": "phase3_temporal_features_v1"
+          },
+          "feature_count": {
+            "type": "integer",
+            "title": "Feature Count",
+            "description": "Total engineered features consumed by model",
+            "default": 60
+          },
+          "base_log_odds": {
+            "type": "number",
+            "title": "Base Log Odds",
+            "description": "Expected value E[z] in margin space"
+          },
+          "base_probability": {
+            "type": "number",
+            "title": "Base Probability",
+            "description": "Prevalence probability sigmoid(E[z])"
+          },
+          "calibration_method": {
+            "type": "string",
+            "title": "Calibration Method",
+            "description": "Probability calibration post-processing",
+            "default": "isotonic_or_sigmoid"
+          },
+          "api_version": {
+            "type": "string",
+            "title": "Api Version",
+            "description": "API version",
+            "default": "0.1.0"
+          }
+        },
+        "type": "object",
+        "required": [
+          "base_log_odds",
+          "base_probability"
+        ],
+        "title": "ModelMetadataResponse",
+        "description": "Safe model metadata payload for introspection."
+      },
+      "PredictionOutput": {
+        "properties": {
+          "raw_score": {
+            "type": "number",
+            "title": "Raw Score",
+            "description": "Raw margin score z in log-odds space"
+          },
+          "tamper_probability": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Tamper Probability",
+            "description": "Uncalibrated sigmoid probability sigma(z)"
+          },
+          "calibrated_probability": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Calibrated Probability",
+            "description": "Calibrated tampering risk probability"
+          },
+          "prediction_label": {
+            "type": "integer",
+            "title": "Prediction Label",
+            "description": "Binary classification (1=tampering, 0=normal)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "raw_score",
+          "tamper_probability",
+          "calibrated_probability",
+          "prediction_label"
+        ],
+        "title": "PredictionOutput",
+        "description": "Statistical prediction values produced by the model."
+      },
+      "ReadyResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "'ready' or 'unready'",
+            "default": "ready"
+          },
+          "model_loaded": {
+            "type": "boolean",
+            "title": "Model Loaded",
+            "description": "Whether LightGBM champion booster is loaded in memory"
+          },
+          "explainer_loaded": {
+            "type": "boolean",
+            "title": "Explainer Loaded",
+            "description": "Whether Tree-SHAP explainer is initialized"
+          },
+          "features_configured": {
+            "type": "boolean",
+            "title": "Features Configured",
+            "description": "Whether feature pipeline is operational"
+          },
+          "model_version": {
+            "type": "string",
+            "title": "Model Version",
+            "description": "Loaded model checkpoint version"
+          },
+          "feature_count": {
+            "type": "integer",
+            "title": "Feature Count",
+            "description": "Number of expected features"
+          },
+          "api_version": {
+            "type": "string",
+            "title": "Api Version",
+            "description": "API version",
+            "default": "0.1.0"
+          }
+        },
+        "type": "object",
+        "required": [
+          "model_loaded",
+          "explainer_loaded",
+          "features_configured",
+          "model_version",
+          "feature_count"
+        ],
+        "title": "ReadyResponse",
+        "description": "Readiness probe response indicating model and artifact initialization status."
+      },
+      "SingleMeterPredictionRequest": {
+        "properties": {
+          "meter_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Meter Id",
+            "description": "Unique electricity meter or account identifier"
+          },
+          "readings": {
+            "items": {
+              "$ref": "#/components/schemas/MeterReading"
+            },
+            "type": "array",
+            "title": "Readings",
+            "description": "Chronological series of daily meter consumption readings"
+          },
+          "evaluation_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Evaluation Date",
+            "description": "Target evaluation date (defaults to latest timestamp in readings)"
+          },
+          "tariff": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tariff",
+            "description": "Optional tariff rate override (currency/kWh)"
+          },
+          "customer_type": {
+            "type": "string",
+            "title": "Customer Type",
+            "description": "Customer classification (e.g. residential, commercial, industrial)",
+            "default": "standard"
+          },
+          "feeder_id": {
+            "type": "string",
+            "title": "Feeder Id",
+            "description": "Distribution substation feeder identifier",
+            "default": "unknown"
+          },
+          "dispatch_cost": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dispatch Cost",
+            "description": "Field inspection dispatch cost override"
+          },
+          "decision_rule": {
+            "type": "string",
+            "title": "Decision Rule",
+            "description": "Decision policy: 'env', 'cost_threshold', or 'fixed_threshold'",
+            "default": "env"
+          },
+          "fixed_threshold": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Fixed Threshold",
+            "description": "Probability cutoff if fixed_threshold rule is active",
+            "default": 0.5
+          },
+          "include_explanation": {
+            "type": "boolean",
+            "title": "Include Explanation",
+            "description": "Whether to compute Tree-SHAP attributions and narratives",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "meter_id",
+          "readings"
+        ],
+        "title": "SingleMeterPredictionRequest",
+        "description": "Request payload for evaluating an individual smart meter time series."
+      },
+      "SingleMeterPredictionResponse": {
+        "properties": {
+          "meter_id": {
+            "type": "string",
+            "title": "Meter Id"
+          },
+          "evaluation_timestamp": {
+            "type": "string",
+            "title": "Evaluation Timestamp"
+          },
+          "model": {
+            "$ref": "#/components/schemas/ModelMetadataResponse"
+          },
+          "data_quality": {
+            "$ref": "#/components/schemas/DataQualitySummary"
+          },
+          "prediction": {
+            "$ref": "#/components/schemas/PredictionOutput"
+          },
+          "financial": {
+            "$ref": "#/components/schemas/FinancialOutput"
+          },
+          "decision": {
+            "$ref": "#/components/schemas/DecisionOutput"
+          },
+          "explanation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ExplanationOutput"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "processing_time_ms": {
+            "type": "number",
+            "title": "Processing Time Ms",
+            "description": "Total server processing latency in milliseconds"
+          }
+        },
+        "type": "object",
+        "required": [
+          "meter_id",
+          "evaluation_timestamp",
+          "model",
+          "data_quality",
+          "prediction",
+          "financial",
+          "decision",
+          "processing_time_ms"
+        ],
+        "title": "SingleMeterPredictionResponse",
+        "description": "Full canonical response object for a single meter prediction request."
+      },
+      "TamperingSignatureSchema": {
+        "properties": {
+          "signature_type": {
+            "type": "string",
+            "title": "Signature Type"
+          },
+          "detected": {
+            "type": "boolean",
+            "title": "Detected"
+          },
+          "magnitude": {
+            "type": "number",
+            "title": "Magnitude"
+          },
+          "duration_days": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration Days"
+          },
+          "severity": {
+            "type": "string",
+            "title": "Severity"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "signature_type",
+          "detected",
+          "magnitude",
+          "severity",
+          "description"
+        ],
+        "title": "TamperingSignatureSchema",
+        "description": "Rule-based consumption anomaly signature."
+      },
+      "TemporalEvidenceSchema": {
+        "properties": {
+          "anchor_date": {
+            "type": "string",
+            "title": "Anchor Date"
+          },
+          "source_window_start": {
+            "type": "string",
+            "title": "Source Window Start"
+          },
+          "source_window_end": {
+            "type": "string",
+            "title": "Source Window End"
+          },
+          "feature_name": {
+            "type": "string",
+            "title": "Feature Name"
+          },
+          "display_name": {
+            "type": "string",
+            "title": "Display Name"
+          },
+          "observed_value": {
+            "type": "number",
+            "title": "Observed Value"
+          },
+          "reference_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reference Value"
+          },
+          "relative_difference_pct": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Relative Difference Pct"
+          },
+          "shap_contribution": {
+            "type": "number",
+            "title": "Shap Contribution"
+          },
+          "interpretation": {
+            "type": "string",
+            "title": "Interpretation"
+          }
+        },
+        "type": "object",
+        "required": [
+          "anchor_date",
+          "source_window_start",
+          "source_window_end",
+          "feature_name",
+          "display_name",
+          "observed_value",
+          "shap_contribution",
+          "interpretation"
+        ],
+        "title": "TemporalEvidenceSchema",
+        "description": "Temporal source attribution interval."
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

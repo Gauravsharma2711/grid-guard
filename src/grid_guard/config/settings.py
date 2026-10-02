@@ -11,6 +11,7 @@ import yaml
 from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from grid_guard.config.api import APISettings
 from grid_guard.config.cost_sensitive import CostSensitiveSettings
 from grid_guard.config.decision import DecisionSettings
 from grid_guard.config.explainability import ExplainabilitySettings
@@ -113,6 +114,7 @@ class Settings(BaseSettings):
     cost_sensitive: CostSensitiveSettings = Field(default_factory=CostSensitiveSettings)
     decision: DecisionSettings = Field(default_factory=DecisionSettings)
     explainability: ExplainabilitySettings = Field(default_factory=ExplainabilitySettings)
+    api: APISettings = Field(default_factory=APISettings)
 
     def model_post_init(self, __context: Any) -> None:
         """Resolve and initialize default directory paths relative to project root."""
