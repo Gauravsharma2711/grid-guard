@@ -166,6 +166,7 @@ We confirm that:
   - 20.9 FastAPI Production Backend Implementation
   - 20.10 Streamlit Dashboard Implementation
   - 20.11 Deployment Containerization Implementation
+  - 20.12 System Execution & Operational Workflow (Frontend, Backend & Local Serving)
 - **21. CODE**
   - 21.1 Selected Substantive Code Excerpts (15 Core Architectural Modules)
 - **22. TESTING APPROACH**
@@ -1716,6 +1717,54 @@ To ensure frictionless deployment across diverse utility cloud and on-premise en
 - `Dockerfile.api`: Multi-stage Python 3.11 container running Uvicorn on port 5678.
 - `Dockerfile.dashboard`: Containerized Streamlit application running on port 1456.
 - `docker-compose.yml`: Defines service dependencies, network bridges, volume mounts for persistent data and models, and automatic health checks.
+
+### 20.12 System Execution & Operational Workflow (Frontend, Backend & Local Serving)
+Grid-Guard is architected for frictionless developer onboarding, automated regression testing, and reproducible local execution. The operational runtime decomposes into three execution modes:
+
+#### 1. Development Installation & Environment Synchronization
+The project utilizes `uv` as the primary environment manager, with complete backward compatibility for standard Python virtual environments (`venv`):
+- **Fast Installation (uv)**:
+  ```bash
+  git clone https://github.com/Gauravsharma2711/grid-guard.git
+  cd grid-guard
+  uv sync
+  ```
+- **Standard Installation (pip)**:
+  ```bash
+  python -m venv .venv
+  source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+  pip install --upgrade pip
+  pip install -e .
+  ```
+
+#### 2. Independent Backend Service Execution (FastAPI)
+The backend inference engine can be executed independently via CLI runners or directly through ASGI servers:
+```bash
+# Recommended runner script:
+uv run python scripts/run_api.py --port 5678 --host 0.0.0.0 --reload
+
+# Or directly via Uvicorn:
+uv run uvicorn src.grid_guard.api.main:app --host 0.0.0.0 --port 5678 --reload
+```
+Upon startup, the ASGI lifespan handler preloads the champion LightGBM booster (`cost_sensitive_lgbm.joblib`) and Tree-SHAP background trees into RAM, exposing interactive OpenAPI documentation at `http://localhost:5678/docs` and readiness health checks at `http://localhost:5678/health`.
+
+#### 3. Independent Frontend Dashboard Execution (Streamlit)
+The operational presentation tier connects to the active backend service over HTTP REST channels:
+```bash
+# Recommended runner script:
+uv run python scripts/run_dashboard.py --port 1456
+
+# Or directly via Streamlit:
+uv run streamlit run src/grid_guard/dashboard/app.py --server.port 1456
+```
+The browser interface launches on `http://localhost:1456`, presenting the Fleet Overview, Candidate Work-Order Queue, Single-Meter Drilldown with Plotly load curves, and 5 interactive synthetic tampering archetypes.
+
+#### 4. Integrated Concurrent Execution (One-Command Runner)
+For unified demonstration and local development, a dedicated orchestrator launches both services concurrently:
+```bash
+uv run python scripts/run_services.py
+```
+This utility boots the FastAPI service, monitors lifespan health readiness, spawns the Streamlit UI, and intercepts OS interrupt signals (`SIGINT` / `Ctrl+C`) to terminate both sub-processes cleanly.
 
 ---
 

@@ -136,30 +136,178 @@ grid-guard/
 
 ---
 
-## 7. Quickstart Guide
+## 7. Installation and Execution Guide
 
-### 7.1 Installation
+### 7.1 Prerequisites & System Requirements
+- **Operating System**: Windows 10/11, Linux (Ubuntu 20.04+), or macOS (Intel / Apple Silicon)
+- **Python Runtime**: Version `3.11` (or `3.12`)
+- **Package Manager**: [`uv`](https://docs.astral.sh/uv/) (recommended for 10x faster installation) or standard `pip`
+- **Git**: Installed and configured on your system PATH
+- **Docker & Docker Compose** *(Optional, for containerized execution)*
+
+---
+
+### 7.2 Installation Guide
+
+#### Option A: Fast Installation with `uv` (Recommended)
+`uv` automatically handles Python virtual environment creation, resolution, and dependency locking:
+
 ```bash
-# Clone the repository
+# 1. Clone the repository
 git clone https://github.com/Gauravsharma2711/grid-guard.git
 cd grid-guard
 
-# Synchronize dependencies with uv
+# 2. Install uv if not already present
+# On Windows (PowerShell):
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+# On Linux / macOS:
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# 3. Synchronize all project dependencies into an isolated virtual environment
 uv sync
 ```
 
-### 7.2 Launching Integrated Application (API + UI)
-Launch both the FastAPI service and the Streamlit dashboard in a single command:
+#### Option B: Standard Installation with `pip` & `venv`
+If you prefer standard Python virtual environments:
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/Gauravsharma2711/grid-guard.git
+cd grid-guard
+
+# 2. Create and activate a Python 3.11 virtual environment
+# On Windows (PowerShell / Command Prompt):
+python -m venv .venv
+.venv\Scripts\activate
+
+# On Linux / macOS:
+python3 -m venv .venv
+source .venv/bin/activate
+
+# 3. Upgrade pip and install package in editable development mode
+pip install --upgrade pip
+pip install -e .
+```
+
+---
+
+### 7.3 Running the Backend (FastAPI Inference Service)
+
+The backend exposes the core machine learning inference pipeline, Tree-SHAP explainer, dynamic threshold engine, and inspection work-order generator.
+
+#### Method 1: Using the Backend Runner Script (Recommended)
+```bash
+# Launch on default port (8000)
+uv run python scripts/run_api.py
+
+# Or specify custom host, port, or live-reload:
+uv run python scripts/run_api.py --port 5678 --host 0.0.0.0 --reload
+```
+
+#### Method 2: Running Directly with Uvicorn
+```bash
+# Using uv:
+uv run uvicorn grid_guard.api.main:app --host 0.0.0.0 --port 8000 --reload
+
+# Or with activated virtual environment:
+uvicorn grid_guard.api.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+#### Backend Endpoints & Verification:
+- **Interactive Swagger UI**: [http://localhost:8000/docs](http://localhost:8000/docs) (or [http://localhost:5678/docs](http://localhost:5678/docs))
+- **ReDoc Documentation**: [http://localhost:8000/redoc](http://localhost:8000/redoc)
+- **Health & Readiness Probe**: [http://localhost:8000/health](http://localhost:8000/health)
+- **Quick Curl Test**:
+  ```bash
+  curl http://localhost:8000/health
+  # Expected Response: {"status":"healthy","model_loaded":true,"version":"1.0.0"}
+  ```
+
+---
+
+### 7.4 Running the Frontend (Streamlit Operational Dashboard)
+
+The frontend provides an interactive, reactive web dashboard for utility revenue analysts, dispatch supervisors, and field technicians.
+
+#### Method 1: Using the Dashboard Runner Script (Recommended)
+```bash
+# Launch on default port (8501)
+uv run python scripts/run_dashboard.py
+
+# Or specify custom port (e.g., 1456)
+uv run python scripts/run_dashboard.py --port 1456
+```
+
+#### Method 2: Running Directly with Streamlit CLI
+```bash
+# Using uv:
+uv run streamlit run src/grid_guard/dashboard/app.py --server.port 8501
+
+# Or with activated virtual environment:
+streamlit run src/grid_guard/dashboard/app.py --server.port 8501
+```
+
+#### Dashboard Features & Navigation:
+- **Web UI URL**: [http://localhost:8501](http://localhost:8501) (or `http://localhost:1456`)
+- **Fleet Overview**: Executive KPI cards, Expected Net Value distributions, and prioritized candidate tables.
+- **Meter Drilldown**: 180-day interactive Plotly consumption time series with changepoints and Tree-SHAP waterfall attributions.
+- **Interactive Demonstrations**: 5 pre-configured synthetic tampering archetypes (Abrupt Bypassing, Partial Resistance Shunting, Seasonal Peak Divergence, Rural Lifeline Consumer, and Honest Volatile User).
+- **Backend Connection**: The dashboard communicates with the backend via HTTP. It automatically connects to the active API instance (configured in `configs/default.yaml` or via the `API_BASE_URL` environment variable).
+
+---
+
+### 7.5 Running Both Services Concurrently (One-Command Launcher)
+
+To launch both the FastAPI backend and Streamlit dashboard in a single terminal session:
+
 ```bash
 uv run python scripts/run_services.py
 ```
+
+This single command:
+1. Starts the FastAPI inference backend.
+2. Waits 3 seconds for the Lifespan model booster to preload into RAM.
+3. Spawns the Streamlit operational dashboard.
+4. Manages process lifecycles cleanly—pressing `Ctrl+C` terminates both services gracefully.
+
+---
+
+### 7.6 Running with Docker & Docker Compose
+
+For a zero-dependency, containerized deployment:
+
+```bash
+# 1. Build and start all services in detached mode
+docker compose up --build -d
+
+# 2. View real-time container logs
+docker compose logs -f
+
+# 3. Check container health status
+docker compose ps
+
+# 4. Stop all services
+docker compose down
+```
+
 - **Dashboard Interface**: [http://localhost:8501](http://localhost:8501)
 - **FastAPI OpenAPI Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)
-- **Health Probe**: [http://localhost:8000/health](http://localhost:8000/health)
 
-### 7.3 Docker Deployment
+---
+
+### 7.7 Running Automated Tests & Code Quality
+
+Validate system correctness, leakage prevention, and mathematical formulations across all 162 unit and integration tests:
+
 ```bash
-docker compose up --build -d
+# Run complete test suite (162 tests)
+uv run pytest
+
+# Run with verbose output and short traceback
+uv run pytest -v --tb=short
+
+# Run code style and linter check (Ruff)
+uv run ruff check .
 ```
 
 ---
