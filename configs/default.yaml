@@ -64,3 +64,16 @@ baseline:
   test_end: "2016-10-31"
   top_k_values: [10, 50, 100, 500, 1000, 2000]
 
+imbalance:
+  strategy: "class_weight"
+  class_weight_multiplier: 1.0
+  target_pos_ratio: 0.20
+  selection_metric: "pr_auc"
+  threshold: 0.5
+  random_seed: 42
+  weight_multipliers: [1.0, 2.0, 3.0, 5.0, 10.72]
+  oversample_ratios: [0.15, 0.25, 0.50]
+  undersample_ratios: [0.20, 0.33, 0.50]
+  smote_k_neighbors: 5
+  smote_sample_size_cap: 50000
+

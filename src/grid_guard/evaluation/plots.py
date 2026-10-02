@@ -288,3 +288,263 @@ class BaselineVisualizer:
         fig.savefig(out_path, dpi=200)
         plt.close(fig)
         return out_path
+
+
+class ImbalanceVisualizer:
+    """Generates comparative visualizations between unweighted baseline and imbalance strategies."""
+
+    def __init__(self, output_dir: Path | str = "artifacts/imbalance/figures") -> None:
+        self.output_dir = Path(output_dir)
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+        plt.rcParams.update(
+            {
+                "figure.autolayout": True,
+                "axes.titlesize": 12,
+                "axes.labelsize": 10,
+                "xtick.labelsize": 9,
+                "ytick.labelsize": 9,
+                "legend.fontsize": 9,
+                "lines.linewidth": 1.8,
+            }
+        )
+
+    def plot_pr_curves_comparison(
+        self,
+        strategy_curves: dict[str, tuple[np.ndarray, np.ndarray, float]],
+        output_filename: str = "pr_curves_comparison.png",
+    ) -> Path:
+        """Plot multiple Precision-Recall curves on a single figure.
+
+        Args:
+            strategy_curves: Dict mapping strategy_name to (y_true, y_prob, pr_auc).
+            output_filename: Target filename.
+        """
+        fig, ax = plt.subplots(figsize=(8, 6))
+        colors = ["#2B6CB0", "#E53E3E", "#38A169", "#D69E2E", "#805AD5", "#319795"]
+
+        first_yt = None
+        for i, (name, (yt, yp, pr_auc)) in enumerate(strategy_curves.items()):
+            if first_yt is None:
+                first_yt = yt
+            prec, rec, _ = precision_recall_curve(yt, yp)
+            color = colors[i % len(colors)]
+            ax.plot(rec, prec, label=f"{name} (PR-AUC = {pr_auc:.4f})", color=color)
+
+        if first_yt is not None and len(first_yt) > 0:
+            prevalence = float(first_yt.sum() / len(first_yt))
+            ax.axhline(
+                prevalence,
+                color="#718096",
+                linestyle="--",
+                label=f"Random Chance ({prevalence:.1%})",
+            )
+
+        ax.set_xlabel("Recall (Theft Capture Rate)")
+        ax.set_ylabel("Precision (Positive Predictive Value)")
+        ax.set_title("Precision-Recall Trade-off: Baseline vs. Imbalance Mitigation")
+        ax.set_xlim([0.0, 1.0])
+        ax.set_ylim([0.0, 1.05])
+        ax.legend(loc="upper right")
+        ax.grid(True, linestyle="--", alpha=0.5)
+
+        out_path = self.output_dir / output_filename
+        fig.savefig(out_path, dpi=200)
+        plt.close(fig)
+        return out_path
+
+    def plot_roc_curves_comparison(
+        self,
+        strategy_curves: dict[str, tuple[np.ndarray, np.ndarray, float]],
+        output_filename: str = "roc_curves_comparison.png",
+    ) -> Path:
+        """Plot multiple ROC curves on a single figure.
+
+        Args:
+            strategy_curves: Dict mapping strategy_name to (y_true, y_prob, roc_auc).
+            output_filename: Target filename.
+        """
+        fig, ax = plt.subplots(figsize=(8, 6))
+        colors = ["#2B6CB0", "#E53E3E", "#38A169", "#D69E2E", "#805AD5", "#319795"]
+
+        for i, (name, (yt, yp, roc_auc)) in enumerate(strategy_curves.items()):
+            fpr, tpr, _ = roc_curve(yt, yp)
+            color = colors[i % len(colors)]
+            ax.plot(fpr, tpr, label=f"{name} (ROC-AUC = {roc_auc:.4f})", color=color)
+
+        ax.plot([0, 1], [0, 1], color="#718096", linestyle="--", label="Random Classifier (0.5)")
+        ax.set_xlabel("False Positive Rate (FPR)")
+        ax.set_ylabel("True Positive Rate (Recall / TPR)")
+        ax.set_title("ROC Curves: Baseline vs. Imbalance Mitigation Strategies")
+        ax.set_xlim([0.0, 1.0])
+        ax.set_ylim([0.0, 1.05])
+        ax.legend(loc="lower right")
+        ax.grid(True, linestyle="--", alpha=0.5)
+
+        out_path = self.output_dir / output_filename
+        fig.savefig(out_path, dpi=200)
+        plt.close(fig)
+        return out_path
+
+    def plot_calibration_curves(
+        self,
+        strategy_probs: dict[str, tuple[np.ndarray, np.ndarray, float]],
+        output_filename: str = "calibration_curves.png",
+    ) -> Path:
+        """Plot reliability curves showing probability calibration across strategies.
+
+        Args:
+            strategy_probs: Dict mapping strategy_name to (prob_true, prob_pred, brier_score).
+            output_filename: Target filename.
+        """
+        fig, ax = plt.subplots(figsize=(8, 6))
+        colors = ["#2B6CB0", "#E53E3E", "#38A169", "#D69E2E", "#805AD5"]
+
+        ax.plot([0, 1], [0, 1], "k--", label="Perfect Calibration")
+
+        for i, (name, (prob_true, prob_pred, brier)) in enumerate(strategy_probs.items()):
+            color = colors[i % len(colors)]
+            ax.plot(
+                prob_pred,
+                prob_true,
+                marker="s",
+                label=f"{name} (Brier = {brier:.4f})",
+                color=color,
+            )
+
+        ax.set_xlabel("Mean Predicted Probability")
+        ax.set_ylabel("Fraction of True Tampering Positives")
+        ax.set_title("Reliability Diagram: Calibration Distortion Assessment")
+        ax.set_xlim([0.0, 1.0])
+        ax.set_ylim([0.0, 1.0])
+        ax.legend(loc="upper left")
+        ax.grid(True, linestyle="--", alpha=0.5)
+
+        out_path = self.output_dir / output_filename
+        fig.savefig(out_path, dpi=200)
+        plt.close(fig)
+        return out_path
+
+    def plot_probability_distributions_comparison(
+        self,
+        baseline_data: tuple[np.ndarray, np.ndarray],
+        champion_data: tuple[np.ndarray, np.ndarray],
+        champion_name: str = "Imbalance Champion",
+        output_filename: str = "probability_distributions_comparison.png",
+    ) -> Path:
+        """Compare predicted probability distributions of baseline vs champion strategy."""
+        fig, axes = plt.subplots(1, 2, figsize=(13, 5), sharey=True)
+
+        base_yt, base_yp = baseline_data
+        champ_yt, champ_yp = champion_data
+
+        # Subplot 1: Baseline
+        axes[0].hist(
+            base_yp[base_yt == 0],
+            bins=50,
+            density=True,
+            alpha=0.6,
+            color="#3182CE",
+            label="Normal (0)",
+        )
+        axes[0].hist(
+            base_yp[base_yt == 1],
+            bins=50,
+            density=True,
+            alpha=0.6,
+            color="#E53E3E",
+            label="Theft (1)",
+        )
+        axes[0].axvline(0.5, color="#2D3748", linestyle="--", label="0.5 Threshold")
+        axes[0].set_title("Phase 4: Unweighted Baseline")
+        axes[0].set_xlabel("Predicted Probability")
+        axes[0].set_ylabel("Density")
+        axes[0].legend(loc="upper right")
+        axes[0].grid(True, linestyle="--", alpha=0.5)
+
+        # Subplot 2: Champion
+        axes[1].hist(
+            champ_yp[champ_yt == 0],
+            bins=50,
+            density=True,
+            alpha=0.6,
+            color="#3182CE",
+            label="Normal (0)",
+        )
+        axes[1].hist(
+            champ_yp[champ_yt == 1],
+            bins=50,
+            density=True,
+            alpha=0.6,
+            color="#E53E3E",
+            label="Theft (1)",
+        )
+        axes[1].axvline(0.5, color="#2D3748", linestyle="--", label="0.5 Threshold")
+        axes[1].set_title(f"Phase 5: {champion_name}")
+        axes[1].set_xlabel("Predicted Probability")
+        axes[1].legend(loc="upper right")
+        axes[1].grid(True, linestyle="--", alpha=0.5)
+
+        out_path = self.output_dir / output_filename
+        fig.savefig(out_path, dpi=200)
+        plt.close(fig)
+        return out_path
+
+    def plot_precision_at_k_comparison(
+        self,
+        strategies_topk: dict[str, dict[str, dict[str, Any]]],
+        output_filename: str = "precision_at_k_comparison.png",
+    ) -> Path:
+        """Plot Precision@K curves comparing multiple strategies."""
+        fig, ax = plt.subplots(figsize=(8, 5))
+        colors = ["#2B6CB0", "#E53E3E", "#38A169", "#D69E2E", "#805AD5"]
+
+        for i, (name, topk_dict) in enumerate(strategies_topk.items()):
+            ks = [int(k) for k in topk_dict.keys()]
+            precs = [topk_dict[str(k)]["precision_at_k"] for k in ks]
+            color = colors[i % len(colors)]
+            ax.plot(ks, precs, marker="o", label=name, color=color, linewidth=2.0)
+
+        ax.set_xlabel("Inspection Capacity (Top-K Ranked Meters)")
+        ax.set_ylabel("Precision@K (Capture Accuracy)")
+        ax.set_title("Operational Inspection Precision vs. Crew Capacity (Top-K)")
+        ax.set_ylim([0.0, 1.05])
+        ax.legend(loc="upper right")
+        ax.grid(True, linestyle="--", alpha=0.5)
+
+        out_path = self.output_dir / output_filename
+        fig.savefig(out_path, dpi=200)
+        plt.close(fig)
+        return out_path
+
+    def plot_financial_loss_comparison(
+        self,
+        comparison_dict: dict[str, dict[str, float]],
+        currency: str = "USD",
+        output_filename: str = "financial_loss_comparison.png",
+    ) -> Path:
+        """Grouped bar chart comparing financial losses across strategies."""
+        fig, ax = plt.subplots(figsize=(9, 5))
+
+        strategies = list(comparison_dict.keys())
+        x = np.arange(len(strategies))
+        width = 0.25
+
+        fp_costs = [comparison_dict[s].get("fp_cost", 0.0) for s in strategies]
+        fn_costs = [comparison_dict[s].get("fn_cost", 0.0) for s in strategies]
+        total_losses = [comparison_dict[s].get("total_loss", 0.0) for s in strategies]
+
+        ax.bar(x - width, fp_costs, width, label="Wasted FP Dispatch", color="#DD6B20")
+        ax.bar(x, fn_costs, width, label="Undetected FN Leakage", color="#E53E3E")
+        ax.bar(x + width, total_losses, width, label="Total Operational Loss", color="#742A2A")
+
+        ax.set_ylabel(f"Amount ({currency})")
+        ax.set_title("Financial Operational Impact: Phase 4 Baseline vs. Phase 5 Strategies")
+        ax.set_xticks(x)
+        ax.set_xticklabels(strategies)
+        ax.legend(loc="upper right")
+        ax.grid(True, linestyle="--", alpha=0.5, axis="y")
+
+        out_path = self.output_dir / output_filename
+        fig.savefig(out_path, dpi=200)
+        plt.close(fig)
+        return out_path

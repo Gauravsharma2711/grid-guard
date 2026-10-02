@@ -12,6 +12,7 @@ from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from grid_guard.config.financial import BaselineModelSettings, FinancialAssumptions
+from grid_guard.config.imbalance import ImbalanceSettings
 
 
 def find_project_root() -> Path:
@@ -105,6 +106,7 @@ class Settings(BaseSettings):
     features: FeatureSettings = Field(default_factory=FeatureSettings)
     financial: FinancialAssumptions = Field(default_factory=FinancialAssumptions)
     baseline: BaselineModelSettings = Field(default_factory=BaselineModelSettings)
+    imbalance: ImbalanceSettings = Field(default_factory=ImbalanceSettings)
 
     def model_post_init(self, __context: Any) -> None:
         """Resolve and initialize default directory paths relative to project root."""

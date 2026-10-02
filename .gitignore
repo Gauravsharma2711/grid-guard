@@ -42,6 +42,7 @@ data/external/*
 *.tar.gz
 *.tar
 artifacts/baseline/*.txt
+artifacts/imbalance/*.txt
 
 # MLflow tracking artifacts & runs
 mlruns/

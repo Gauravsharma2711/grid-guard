@@ -1,5 +1,4 @@
-"""Evaluation, metrics, financial cost models, and ranking modules for Grid-Guard."""
-
+from grid_guard.evaluation.calibration import CalibrationEvaluator
 from grid_guard.evaluation.financial import (
     DataSourceType,
     FinancialAuditRecord,
@@ -10,14 +9,16 @@ from grid_guard.evaluation.metrics import (
     ClassificationMetricsEvaluator,
     RankingEvaluator,
 )
-from grid_guard.evaluation.plots import BaselineVisualizer
+from grid_guard.evaluation.plots import BaselineVisualizer, ImbalanceVisualizer
 
 __all__ = [
     "BaselineVisualizer",
+    "CalibrationEvaluator",
     "ClassificationMetricsEvaluator",
     "DataSourceType",
     "FinancialAuditRecord",
     "FinancialCostEvaluator",
+    "ImbalanceVisualizer",
     "LeakageEstimator",
     "RankingEvaluator",
 ]

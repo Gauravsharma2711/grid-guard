@@ -365,10 +365,61 @@ mlflow ui --backend-store-uri sqlite:///mlruns/mlflow.db
 
 ---
 
-## 13. Upcoming Phases
+## 13. Class Imbalance Strategy & Rare-Tampering Learning (Phase 5)
 
-- **Phase 5**: Class Imbalance & Representation Strategies (balanced sub-sampling, SMOTE, focal loss).
-- **Phase 6**: Cost-Sensitive Optimization & Custom Loss Functions ($C_{\text{dispatch}}$ vs. $C_{\text{FN}}$).
+Grid-Guard addresses the severe real-world class imbalance (8.53% positive prevalence, 10.72:1 imbalance ratio) by evaluating candidate imbalance handling strategies strictly on the chronological validation partition (`2016-01-01` to `2016-05-31`). The selected champion strategy—**Controlled Minority Oversampling (`controlled_oversample_0.20`)**—was evaluated once on the untouched held-out test partition (`2016-06-01` to `2016-10-31`), directly mitigating the acute false-negative deficiency of the unweighted baseline.
+
+### A. Head-to-Head Performance (Held-Out Test Set)
+
+| Metric | Phase 4 (Unweighted Baseline) | Phase 5 Champion (`controlled_oversample_0.20`) | Absolute Difference | Operational Takeaway |
+|---|---|---|---|---|
+| **PR-AUC** | `0.2959` | **`0.3132`** | **`+0.0173`** | Primary rare-class ranking metric |
+| **ROC-AUC** | `0.7711` | `0.7693` | `-0.0018` | Preserved global separability |
+| **Recall (Theft Capture)** | `14.57%` | **`23.84%`** | **`+9.27%`** | **+63.6% relative jump in theft detection** |
+| **Precision** | `46.89%` | `45.10%` | `-1.79%` | Minor precision trade-off at 0.5 cutoff |
+| **F1-Score** | `0.2224` | **`0.3119`** | **`+0.0895`** | +40.2% improvement in harmonic balance |
+| **True Positives ($TP$)** | `3,161` | **`5,170`** | **`+2,009`** | **2,009 additional fraudulent meters detected** |
+| **False Negatives ($FN$)** | `18,529` | **`16,520`** | **`-2,009`** | **2,009 fewer undetected theft losses** |
+| **False Positives ($FP$)** | `3,580` | `6,293` | `+2,713` | Additional inspections dispatched |
+| **Brier Score (Calibration)** | `0.0706` | `0.0811` | `+0.0105` | Predictable probability elevation |
+| **Total Operational Loss** | `$1,123,766.00` | **`$1,120,098.88`** | **`-$3,667.12`** | Immediate net dollar savings |
+
+### B. Field Inspection Priority: Precision@K
+
+| Capacity ($K$) | Baseline Precision@K | Champion Precision@K | Baseline TP Caught | Champion TP Caught |
+|---|---|---|---|---|
+| **Top 10** | `80.0%` | **`100.0%`** | 8 | **10** (100% precision) |
+| **Top 50** | **`84.0%`** | `82.0%` | **42** | 41 |
+| **Top 100** | `82.0%` | **`84.0%`** | 82 | **84** |
+| **Top 500** | `63.2%` | **`76.6%`** | 316 | **383 (+13.4% precision)** |
+| **Top 1,000** | `57.0%` | **`69.3%`** | 570 | **693 (+12.3% precision)** |
+| **Top 2,000** | `51.4%` | **`61.8%`** | 1,029 | **1,235 (+10.4% precision)** |
+
+### C. Running Imbalance Experiments
+
+```bash
+# Run complete Phase 5 pipeline: candidate training, validation selection, test evaluation, plots, MLflow
+python scripts/run_imbalance.py all
+
+# Customize validation metric or stride
+python scripts/run_imbalance.py all --metric pr_auc --stride 30
+```
+
+### D. Generated Phase 5 Artifacts
+- **Model Booster**: `artifacts/imbalance/champion_model.txt`
+- **Test Predictions Parquet**: `artifacts/imbalance/champion_predictions.parquet`
+- **Comparison JSON**: `artifacts/imbalance/imbalance_comparison.json`
+- **Markdown Report**: `artifacts/imbalance/imbalance_comparison_report.md`
+- **Detailed Documentation**: `docs/class_imbalance_strategies.md`
+- **7 Publication-Grade Plots**: `artifacts/imbalance/figures/`
+  (`pr_curves_comparison.png`, `roc_curves_comparison.png`, `precision_at_k_comparison.png`, `calibration_curves.png`, `probability_distributions_comparison.png`, `financial_loss_comparison.png`, `confusion_matrix_champion.png`)
+
+---
+
+## 14. Upcoming Phases
+
+- **Phase 6**: Cost-Sensitive Optimization & Utility Objective Loss ($C_{\text{dispatch}}$ vs. $C_{\text{FN}}$).
 - **Phase 7**: Expected Net Value (ENV) & Dynamic Per-Meter Inspection Thresholding.
 - **Phase 8**: Explainable AI (SHAP Tree Explainer) & FastAPI Operational Decision Dashboard.
+
 

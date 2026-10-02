@@ -1,0 +1,2106 @@
+{
+  "execution_time_seconds": 128.07,
+  "training_prevalence": {
+    "total": 932184,
+    "positives": 79530,
+    "negatives": 852654,
+    "positive_ratio": 0.085316,
+    "imbalance_ratio": 10.7212
+  },
+  "selection_criterion": {
+    "metric": "pr_auc",
+    "champion_strategy": "controlled_oversample_0.20",
+    "champion_validation_score": 0.3131
+  },
+  "validation_experiments": {
+    "unweighted_baseline": {
+      "config": {
+        "name": "unweighted_baseline",
+        "strategy": "unweighted",
+        "scale_pos_weight": 1.0,
+        "resample": false
+      },
+      "sample_audit": null,
+      "statistical": {
+        "total_samples": 254232,
+        "actual_positives": 21690,
+        "actual_negatives": 232542,
+        "prevalence": 0.0853,
+        "confusion_matrix": {
+          "tp": 2667,
+          "fp": 2612,
+          "tn": 229930,
+          "fn": 19023
+        },
+        "precision": 0.5052,
+        "recall": 0.123,
+        "f1_score": 0.1978,
+        "pr_auc": 0.3035,
+        "roc_auc": 0.7739,
+        "false_positive_rate": 0.0112,
+        "positive_prediction_rate": 0.0208
+      },
+      "ranking": {
+        "10": {
+          "k": 10,
+          "true_positives": 9,
+          "false_positives": 1,
+          "precision_at_k": 0.9,
+          "recall_at_k": 0.0004
+        },
+        "50": {
+          "k": 50,
+          "true_positives": 41,
+          "false_positives": 9,
+          "precision_at_k": 0.82,
+          "recall_at_k": 0.0019
+        },
+        "100": {
+          "k": 100,
+          "true_positives": 78,
+          "false_positives": 22,
+          "precision_at_k": 0.78,
+          "recall_at_k": 0.0036
+        },
+        "500": {
+          "k": 500,
+          "true_positives": 331,
+          "false_positives": 169,
+          "precision_at_k": 0.662,
+          "recall_at_k": 0.0153
+        },
+        "1000": {
+          "k": 1000,
+          "true_positives": 588,
+          "false_positives": 412,
+          "precision_at_k": 0.588,
+          "recall_at_k": 0.0271
+        },
+        "2000": {
+          "k": 2000,
+          "true_positives": 1082,
+          "false_positives": 918,
+          "precision_at_k": 0.541,
+          "recall_at_k": 0.0499
+        }
+      },
+      "calibration": {
+        "brier_score": 0.0693,
+        "expected_calibration_error": 0.0239,
+        "n_bins": 10,
+        "binned_calibration": [
+          {
+            "bin_index": 0,
+            "bin_count": 164554,
+            "mean_predicted_prob": 0.0515,
+            "fraction_of_positives": 0.0381,
+            "calibration_gap": 0.0134
+          },
+          {
+            "bin_index": 1,
+            "bin_count": 58825,
+            "mean_predicted_prob": 0.1419,
+            "fraction_of_positives": 0.1005,
+            "calibration_gap": 0.0414
+          },
+          {
+            "bin_index": 2,
+            "bin_count": 16291,
+            "mean_predicted_prob": 0.239,
+            "fraction_of_positives": 0.1985,
+            "calibration_gap": 0.0406
+          },
+          {
+            "bin_index": 3,
+            "bin_count": 5860,
+            "mean_predicted_prob": 0.3455,
+            "fraction_of_positives": 0.3509,
+            "calibration_gap": 0.0054
+          },
+          {
+            "bin_index": 4,
+            "bin_count": 3423,
+            "mean_predicted_prob": 0.4464,
+            "fraction_of_positives": 0.4537,
+            "calibration_gap": 0.0073
+          },
+          {
+            "bin_index": 5,
+            "bin_count": 2128,
+            "mean_predicted_prob": 0.548,
+            "fraction_of_positives": 0.4742,
+            "calibration_gap": 0.0738
+          },
+          {
+            "bin_index": 6,
+            "bin_count": 1788,
+            "mean_predicted_prob": 0.6491,
+            "fraction_of_positives": 0.4911,
+            "calibration_gap": 0.1581
+          },
+          {
+            "bin_index": 7,
+            "bin_count": 1028,
+            "mean_predicted_prob": 0.7441,
+            "fraction_of_positives": 0.5321,
+            "calibration_gap": 0.212
+          },
+          {
+            "bin_index": 8,
+            "bin_count": 320,
+            "mean_predicted_prob": 0.8319,
+            "fraction_of_positives": 0.6844,
+            "calibration_gap": 0.1475
+          },
+          {
+            "bin_index": 9,
+            "bin_count": 15,
+            "mean_predicted_prob": 0.9116,
+            "fraction_of_positives": 0.9333,
+            "calibration_gap": 0.0217
+          }
+        ],
+        "prob_true": [
+          0.0381,
+          0.1005,
+          0.1985,
+          0.3509,
+          0.4537,
+          0.4742,
+          0.4911,
+          0.5321,
+          0.6844,
+          0.9333
+        ],
+        "prob_pred": [
+          0.0515,
+          0.1419,
+          0.239,
+          0.3455,
+          0.4464,
+          0.548,
+          0.6491,
+          0.7441,
+          0.8319,
+          0.9116
+        ]
+      },
+      "financial": {
+        "currency": "USD",
+        "dispatch_cost_per_inspection": 100.0,
+        "counts": {
+          "tp": 2667,
+          "fp": 2612,
+          "tn": 229930,
+          "fn": 19023,
+          "total_inspections": 5279
+        },
+        "financial_breakdown": {
+          "total_fp_dispatch_cost": 261200.0,
+          "total_fn_leakage_cost": 470050.53,
+          "total_baseline_operational_loss": 731250.53,
+          "total_tp_inspection_cost": 266700.0,
+          "estimated_gross_recovery": 936595.31,
+          "estimated_net_recovery": 408695.31
+        },
+        "audit_trail": [
+          {
+            "parameter_name": "currency",
+            "value": "USD",
+            "unit": "ISO code",
+            "source_type": "assumed",
+            "description": "Monetary currency unit for evaluation"
+          },
+          {
+            "parameter_name": "dispatch_cost",
+            "value": 100.0,
+            "unit": "USD",
+            "source_type": "assumed",
+            "description": "Operational cost to dispatch a physical field inspection crew"
+          },
+          {
+            "parameter_name": "tariff_rate",
+            "value": 0.15,
+            "unit": "USD/kWh",
+            "source_type": "assumed",
+            "description": "Configured regional benchmark tariff fallback"
+          },
+          {
+            "parameter_name": "undetected_billing_cycles",
+            "value": 12,
+            "unit": "months",
+            "source_type": "assumed",
+            "description": "Estimated horizon undetected tampering continues before discovery"
+          },
+          {
+            "parameter_name": "estimated_leakage_cost",
+            "value": "Deficit kWh x Tariff x Horizon",
+            "unit": "USD",
+            "source_type": "derived",
+            "description": "Derived financial impact of unmetered electricity theft"
+          }
+        ]
+      }
+    },
+    "class_weight_2x": {
+      "config": {
+        "name": "class_weight_2x",
+        "strategy": "class_weight",
+        "scale_pos_weight": 2.0,
+        "resample": false
+      },
+      "sample_audit": null,
+      "statistical": {
+        "total_samples": 254232,
+        "actual_positives": 21690,
+        "actual_negatives": 232542,
+        "prevalence": 0.0853,
+        "confusion_matrix": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 232542,
+          "fn": 21690
+        },
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "pr_auc": 0.2262,
+        "roc_auc": 0.7155,
+        "false_positive_rate": 0.0,
+        "positive_prediction_rate": 0.0
+      },
+      "ranking": {
+        "10": {
+          "k": 10,
+          "true_positives": 10,
+          "false_positives": 0,
+          "precision_at_k": 1.0,
+          "recall_at_k": 0.0005
+        },
+        "50": {
+          "k": 50,
+          "true_positives": 44,
+          "false_positives": 6,
+          "precision_at_k": 0.88,
+          "recall_at_k": 0.002
+        },
+        "100": {
+          "k": 100,
+          "true_positives": 78,
+          "false_positives": 22,
+          "precision_at_k": 0.78,
+          "recall_at_k": 0.0036
+        },
+        "500": {
+          "k": 500,
+          "true_positives": 276,
+          "false_positives": 224,
+          "precision_at_k": 0.552,
+          "recall_at_k": 0.0127
+        },
+        "1000": {
+          "k": 1000,
+          "true_positives": 543,
+          "false_positives": 457,
+          "precision_at_k": 0.543,
+          "recall_at_k": 0.025
+        },
+        "2000": {
+          "k": 2000,
+          "true_positives": 1041,
+          "false_positives": 959,
+          "precision_at_k": 0.5205,
+          "recall_at_k": 0.048
+        }
+      },
+      "calibration": {
+        "brier_score": 0.0754,
+        "expected_calibration_error": 0.0492,
+        "n_bins": 10,
+        "binned_calibration": [
+          {
+            "bin_index": 0,
+            "bin_count": 87531,
+            "mean_predicted_prob": 0.08,
+            "fraction_of_positives": 0.0284,
+            "calibration_gap": 0.0516
+          },
+          {
+            "bin_index": 1,
+            "bin_count": 145211,
+            "mean_predicted_prob": 0.1421,
+            "fraction_of_positives": 0.0912,
+            "calibration_gap": 0.0509
+          },
+          {
+            "bin_index": 2,
+            "bin_count": 18347,
+            "mean_predicted_prob": 0.2331,
+            "fraction_of_positives": 0.2428,
+            "calibration_gap": 0.0097
+          },
+          {
+            "bin_index": 3,
+            "bin_count": 2970,
+            "mean_predicted_prob": 0.3392,
+            "fraction_of_positives": 0.4657,
+            "calibration_gap": 0.1264
+          },
+          {
+            "bin_index": 4,
+            "bin_count": 173,
+            "mean_predicted_prob": 0.4332,
+            "fraction_of_positives": 0.7341,
+            "calibration_gap": 0.3009
+          }
+        ],
+        "prob_true": [
+          0.0284,
+          0.0912,
+          0.2428,
+          0.4657,
+          0.7341
+        ],
+        "prob_pred": [
+          0.08,
+          0.1421,
+          0.2331,
+          0.3392,
+          0.4332
+        ]
+      },
+      "financial": {
+        "currency": "USD",
+        "dispatch_cost_per_inspection": 100.0,
+        "counts": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 232542,
+          "fn": 21690,
+          "total_inspections": 0
+        },
+        "financial_breakdown": {
+          "total_fp_dispatch_cost": 0.0,
+          "total_fn_leakage_cost": 1406645.88,
+          "total_baseline_operational_loss": 1406645.88,
+          "total_tp_inspection_cost": 0.0,
+          "estimated_gross_recovery": 0.0,
+          "estimated_net_recovery": 0.0
+        },
+        "audit_trail": [
+          {
+            "parameter_name": "currency",
+            "value": "USD",
+            "unit": "ISO code",
+            "source_type": "assumed",
+            "description": "Monetary currency unit for evaluation"
+          },
+          {
+            "parameter_name": "dispatch_cost",
+            "value": 100.0,
+            "unit": "USD",
+            "source_type": "assumed",
+            "description": "Operational cost to dispatch a physical field inspection crew"
+          },
+          {
+            "parameter_name": "tariff_rate",
+            "value": 0.15,
+            "unit": "USD/kWh",
+            "source_type": "assumed",
+            "description": "Configured regional benchmark tariff fallback"
+          },
+          {
+            "parameter_name": "undetected_billing_cycles",
+            "value": 12,
+            "unit": "months",
+            "source_type": "assumed",
+            "description": "Estimated horizon undetected tampering continues before discovery"
+          },
+          {
+            "parameter_name": "estimated_leakage_cost",
+            "value": "Deficit kWh x Tariff x Horizon",
+            "unit": "USD",
+            "source_type": "derived",
+            "description": "Derived financial impact of unmetered electricity theft"
+          }
+        ]
+      }
+    },
+    "class_weight_3x": {
+      "config": {
+        "name": "class_weight_3x",
+        "strategy": "class_weight",
+        "scale_pos_weight": 3.0,
+        "resample": false
+      },
+      "sample_audit": null,
+      "statistical": {
+        "total_samples": 254232,
+        "actual_positives": 21690,
+        "actual_negatives": 232542,
+        "prevalence": 0.0853,
+        "confusion_matrix": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 232542,
+          "fn": 21690
+        },
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "pr_auc": 0.163,
+        "roc_auc": 0.6843,
+        "false_positive_rate": 0.0,
+        "positive_prediction_rate": 0.0
+      },
+      "ranking": {
+        "10": {
+          "k": 10,
+          "true_positives": 9,
+          "false_positives": 1,
+          "precision_at_k": 0.9,
+          "recall_at_k": 0.0004
+        },
+        "50": {
+          "k": 50,
+          "true_positives": 39,
+          "false_positives": 11,
+          "precision_at_k": 0.78,
+          "recall_at_k": 0.0018
+        },
+        "100": {
+          "k": 100,
+          "true_positives": 80,
+          "false_positives": 20,
+          "precision_at_k": 0.8,
+          "recall_at_k": 0.0037
+        },
+        "500": {
+          "k": 500,
+          "true_positives": 235,
+          "false_positives": 265,
+          "precision_at_k": 0.47,
+          "recall_at_k": 0.0108
+        },
+        "1000": {
+          "k": 1000,
+          "true_positives": 383,
+          "false_positives": 617,
+          "precision_at_k": 0.383,
+          "recall_at_k": 0.0177
+        },
+        "2000": {
+          "k": 2000,
+          "true_positives": 816,
+          "false_positives": 1184,
+          "precision_at_k": 0.408,
+          "recall_at_k": 0.0376
+        }
+      },
+      "calibration": {
+        "brier_score": 0.0769,
+        "expected_calibration_error": 0.0254,
+        "n_bins": 10,
+        "binned_calibration": [
+          {
+            "bin_index": 0,
+            "bin_count": 114063,
+            "mean_predicted_prob": 0.0912,
+            "fraction_of_positives": 0.038,
+            "calibration_gap": 0.0532
+          },
+          {
+            "bin_index": 1,
+            "bin_count": 140078,
+            "mean_predicted_prob": 0.1258,
+            "fraction_of_positives": 0.1234,
+            "calibration_gap": 0.0024
+          },
+          {
+            "bin_index": 2,
+            "bin_count": 91,
+            "mean_predicted_prob": 0.2122,
+            "fraction_of_positives": 0.8242,
+            "calibration_gap": 0.612
+          }
+        ],
+        "prob_true": [
+          0.038,
+          0.1234,
+          0.8242
+        ],
+        "prob_pred": [
+          0.0912,
+          0.1258,
+          0.2122
+        ]
+      },
+      "financial": {
+        "currency": "USD",
+        "dispatch_cost_per_inspection": 100.0,
+        "counts": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 232542,
+          "fn": 21690,
+          "total_inspections": 0
+        },
+        "financial_breakdown": {
+          "total_fp_dispatch_cost": 0.0,
+          "total_fn_leakage_cost": 1406645.88,
+          "total_baseline_operational_loss": 1406645.88,
+          "total_tp_inspection_cost": 0.0,
+          "estimated_gross_recovery": 0.0,
+          "estimated_net_recovery": 0.0
+        },
+        "audit_trail": [
+          {
+            "parameter_name": "currency",
+            "value": "USD",
+            "unit": "ISO code",
+            "source_type": "assumed",
+            "description": "Monetary currency unit for evaluation"
+          },
+          {
+            "parameter_name": "dispatch_cost",
+            "value": 100.0,
+            "unit": "USD",
+            "source_type": "assumed",
+            "description": "Operational cost to dispatch a physical field inspection crew"
+          },
+          {
+            "parameter_name": "tariff_rate",
+            "value": 0.15,
+            "unit": "USD/kWh",
+            "source_type": "assumed",
+            "description": "Configured regional benchmark tariff fallback"
+          },
+          {
+            "parameter_name": "undetected_billing_cycles",
+            "value": 12,
+            "unit": "months",
+            "source_type": "assumed",
+            "description": "Estimated horizon undetected tampering continues before discovery"
+          },
+          {
+            "parameter_name": "estimated_leakage_cost",
+            "value": "Deficit kWh x Tariff x Horizon",
+            "unit": "USD",
+            "source_type": "derived",
+            "description": "Derived financial impact of unmetered electricity theft"
+          }
+        ]
+      }
+    },
+    "class_weight_5x": {
+      "config": {
+        "name": "class_weight_5x",
+        "strategy": "class_weight",
+        "scale_pos_weight": 5.0,
+        "resample": false
+      },
+      "sample_audit": null,
+      "statistical": {
+        "total_samples": 254232,
+        "actual_positives": 21690,
+        "actual_negatives": 232542,
+        "prevalence": 0.0853,
+        "confusion_matrix": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 232542,
+          "fn": 21690
+        },
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "pr_auc": 0.176,
+        "roc_auc": 0.6908,
+        "false_positive_rate": 0.0,
+        "positive_prediction_rate": 0.0
+      },
+      "ranking": {
+        "10": {
+          "k": 10,
+          "true_positives": 6,
+          "false_positives": 4,
+          "precision_at_k": 0.6,
+          "recall_at_k": 0.0003
+        },
+        "50": {
+          "k": 50,
+          "true_positives": 24,
+          "false_positives": 26,
+          "precision_at_k": 0.48,
+          "recall_at_k": 0.0011
+        },
+        "100": {
+          "k": 100,
+          "true_positives": 52,
+          "false_positives": 48,
+          "precision_at_k": 0.52,
+          "recall_at_k": 0.0024
+        },
+        "500": {
+          "k": 500,
+          "true_positives": 228,
+          "false_positives": 272,
+          "precision_at_k": 0.456,
+          "recall_at_k": 0.0105
+        },
+        "1000": {
+          "k": 1000,
+          "true_positives": 417,
+          "false_positives": 583,
+          "precision_at_k": 0.417,
+          "recall_at_k": 0.0192
+        },
+        "2000": {
+          "k": 2000,
+          "true_positives": 861,
+          "false_positives": 1139,
+          "precision_at_k": 0.4305,
+          "recall_at_k": 0.0397
+        }
+      },
+      "calibration": {
+        "brier_score": 0.0771,
+        "expected_calibration_error": 0.0265,
+        "n_bins": 10,
+        "binned_calibration": [
+          {
+            "bin_index": 0,
+            "bin_count": 76265,
+            "mean_predicted_prob": 0.0937,
+            "fraction_of_positives": 0.0279,
+            "calibration_gap": 0.0659
+          },
+          {
+            "bin_index": 1,
+            "bin_count": 177967,
+            "mean_predicted_prob": 0.1195,
+            "fraction_of_positives": 0.1099,
+            "calibration_gap": 0.0096
+          }
+        ],
+        "prob_true": [
+          0.0279,
+          0.1099
+        ],
+        "prob_pred": [
+          0.0937,
+          0.1195
+        ]
+      },
+      "financial": {
+        "currency": "USD",
+        "dispatch_cost_per_inspection": 100.0,
+        "counts": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 232542,
+          "fn": 21690,
+          "total_inspections": 0
+        },
+        "financial_breakdown": {
+          "total_fp_dispatch_cost": 0.0,
+          "total_fn_leakage_cost": 1406645.88,
+          "total_baseline_operational_loss": 1406645.88,
+          "total_tp_inspection_cost": 0.0,
+          "estimated_gross_recovery": 0.0,
+          "estimated_net_recovery": 0.0
+        },
+        "audit_trail": [
+          {
+            "parameter_name": "currency",
+            "value": "USD",
+            "unit": "ISO code",
+            "source_type": "assumed",
+            "description": "Monetary currency unit for evaluation"
+          },
+          {
+            "parameter_name": "dispatch_cost",
+            "value": 100.0,
+            "unit": "USD",
+            "source_type": "assumed",
+            "description": "Operational cost to dispatch a physical field inspection crew"
+          },
+          {
+            "parameter_name": "tariff_rate",
+            "value": 0.15,
+            "unit": "USD/kWh",
+            "source_type": "assumed",
+            "description": "Configured regional benchmark tariff fallback"
+          },
+          {
+            "parameter_name": "undetected_billing_cycles",
+            "value": 12,
+            "unit": "months",
+            "source_type": "assumed",
+            "description": "Estimated horizon undetected tampering continues before discovery"
+          },
+          {
+            "parameter_name": "estimated_leakage_cost",
+            "value": "Deficit kWh x Tariff x Horizon",
+            "unit": "USD",
+            "source_type": "derived",
+            "description": "Derived financial impact of unmetered electricity theft"
+          }
+        ]
+      }
+    },
+    "class_weight_balanced": {
+      "config": {
+        "name": "class_weight_balanced",
+        "strategy": "class_weight",
+        "scale_pos_weight": 10.72,
+        "resample": false
+      },
+      "sample_audit": null,
+      "statistical": {
+        "total_samples": 254232,
+        "actual_positives": 21690,
+        "actual_negatives": 232542,
+        "prevalence": 0.0853,
+        "confusion_matrix": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 232542,
+          "fn": 21690
+        },
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "pr_auc": 0.1292,
+        "roc_auc": 0.6593,
+        "false_positive_rate": 0.0,
+        "positive_prediction_rate": 0.0
+      },
+      "ranking": {
+        "10": {
+          "k": 10,
+          "true_positives": 0,
+          "false_positives": 10,
+          "precision_at_k": 0.0,
+          "recall_at_k": 0.0
+        },
+        "50": {
+          "k": 50,
+          "true_positives": 2,
+          "false_positives": 48,
+          "precision_at_k": 0.04,
+          "recall_at_k": 0.0001
+        },
+        "100": {
+          "k": 100,
+          "true_positives": 5,
+          "false_positives": 95,
+          "precision_at_k": 0.05,
+          "recall_at_k": 0.0002
+        },
+        "500": {
+          "k": 500,
+          "true_positives": 43,
+          "false_positives": 457,
+          "precision_at_k": 0.086,
+          "recall_at_k": 0.002
+        },
+        "1000": {
+          "k": 1000,
+          "true_positives": 99,
+          "false_positives": 901,
+          "precision_at_k": 0.099,
+          "recall_at_k": 0.0046
+        },
+        "2000": {
+          "k": 2000,
+          "true_positives": 198,
+          "false_positives": 1802,
+          "precision_at_k": 0.099,
+          "recall_at_k": 0.0091
+        }
+      },
+      "calibration": {
+        "brier_score": 0.0778,
+        "expected_calibration_error": 0.0234,
+        "n_bins": 10,
+        "binned_calibration": [
+          {
+            "bin_index": 0,
+            "bin_count": 33109,
+            "mean_predicted_prob": 0.0931,
+            "fraction_of_positives": 0.0262,
+            "calibration_gap": 0.0669
+          },
+          {
+            "bin_index": 1,
+            "bin_count": 221123,
+            "mean_predicted_prob": 0.1111,
+            "fraction_of_positives": 0.0942,
+            "calibration_gap": 0.0169
+          }
+        ],
+        "prob_true": [
+          0.0262,
+          0.0942
+        ],
+        "prob_pred": [
+          0.0931,
+          0.1111
+        ]
+      },
+      "financial": {
+        "currency": "USD",
+        "dispatch_cost_per_inspection": 100.0,
+        "counts": {
+          "tp": 0,
+          "fp": 0,
+          "tn": 232542,
+          "fn": 21690,
+          "total_inspections": 0
+        },
+        "financial_breakdown": {
+          "total_fp_dispatch_cost": 0.0,
+          "total_fn_leakage_cost": 1406645.88,
+          "total_baseline_operational_loss": 1406645.88,
+          "total_tp_inspection_cost": 0.0,
+          "estimated_gross_recovery": 0.0,
+          "estimated_net_recovery": 0.0
+        },
+        "audit_trail": [
+          {
+            "parameter_name": "currency",
+            "value": "USD",
+            "unit": "ISO code",
+            "source_type": "assumed",
+            "description": "Monetary currency unit for evaluation"
+          },
+          {
+            "parameter_name": "dispatch_cost",
+            "value": 100.0,
+            "unit": "USD",
+            "source_type": "assumed",
+            "description": "Operational cost to dispatch a physical field inspection crew"
+          },
+          {
+            "parameter_name": "tariff_rate",
+            "value": 0.15,
+            "unit": "USD/kWh",
+            "source_type": "assumed",
+            "description": "Configured regional benchmark tariff fallback"
+          },
+          {
+            "parameter_name": "undetected_billing_cycles",
+            "value": 12,
+            "unit": "months",
+            "source_type": "assumed",
+            "description": "Estimated horizon undetected tampering continues before discovery"
+          },
+          {
+            "parameter_name": "estimated_leakage_cost",
+            "value": "Deficit kWh x Tariff x Horizon",
+            "unit": "USD",
+            "source_type": "derived",
+            "description": "Derived financial impact of unmetered electricity theft"
+          }
+        ]
+      }
+    },
+    "controlled_oversample_0.20": {
+      "config": {
+        "name": "controlled_oversample_0.20",
+        "strategy": "controlled_oversample",
+        "scale_pos_weight": 1.0,
+        "resample": true,
+        "resample_strategy": "controlled_oversample",
+        "target_pos_ratio": 0.2
+      },
+      "sample_audit": {
+        "strategy": "controlled_oversample",
+        "target_pos_ratio": 0.2,
+        "random_seed": 42,
+        "original_counts": {
+          "total": 932184,
+          "positives": 79530,
+          "negatives": 852654,
+          "pos_ratio": 0.0853
+        },
+        "resampled_counts": {
+          "total": 1023184,
+          "positives": 170530,
+          "negatives": 852654,
+          "pos_ratio": 0.1667
+        }
+      },
+      "statistical": {
+        "total_samples": 254232,
+        "actual_positives": 21690,
+        "actual_negatives": 232542,
+        "prevalence": 0.0853,
+        "confusion_matrix": {
+          "tp": 4382,
+          "fp": 4653,
+          "tn": 227889,
+          "fn": 17308
+        },
+        "precision": 0.485,
+        "recall": 0.202,
+        "f1_score": 0.2852,
+        "pr_auc": 0.3131,
+        "roc_auc": 0.77,
+        "false_positive_rate": 0.02,
+        "positive_prediction_rate": 0.0355
+      },
+      "ranking": {
+        "10": {
+          "k": 10,
+          "true_positives": 10,
+          "false_positives": 0,
+          "precision_at_k": 1.0,
+          "recall_at_k": 0.0005
+        },
+        "50": {
+          "k": 50,
+          "true_positives": 42,
+          "false_positives": 8,
+          "precision_at_k": 0.84,
+          "recall_at_k": 0.0019
+        },
+        "100": {
+          "k": 100,
+          "true_positives": 87,
+          "false_positives": 13,
+          "precision_at_k": 0.87,
+          "recall_at_k": 0.004
+        },
+        "500": {
+          "k": 500,
+          "true_positives": 372,
+          "false_positives": 128,
+          "precision_at_k": 0.744,
+          "recall_at_k": 0.0172
+        },
+        "1000": {
+          "k": 1000,
+          "true_positives": 676,
+          "false_positives": 324,
+          "precision_at_k": 0.676,
+          "recall_at_k": 0.0312
+        },
+        "2000": {
+          "k": 2000,
+          "true_positives": 1240,
+          "false_positives": 760,
+          "precision_at_k": 0.62,
+          "recall_at_k": 0.0572
+        }
+      },
+      "calibration": {
+        "brier_score": 0.0778,
+        "expected_calibration_error": 0.0903,
+        "n_bins": 10,
+        "binned_calibration": [
+          {
+            "bin_index": 0,
+            "bin_count": 81714,
+            "mean_predicted_prob": 0.0646,
+            "fraction_of_positives": 0.0219,
+            "calibration_gap": 0.0427
+          },
+          {
+            "bin_index": 1,
+            "bin_count": 91080,
+            "mean_predicted_prob": 0.1468,
+            "fraction_of_positives": 0.0583,
+            "calibration_gap": 0.0885
+          },
+          {
+            "bin_index": 2,
+            "bin_count": 51081,
+            "mean_predicted_prob": 0.2424,
+            "fraction_of_positives": 0.0982,
+            "calibration_gap": 0.1441
+          },
+          {
+            "bin_index": 3,
+            "bin_count": 14212,
+            "mean_predicted_prob": 0.3439,
+            "fraction_of_positives": 0.2069,
+            "calibration_gap": 0.137
+          },
+          {
+            "bin_index": 4,
+            "bin_count": 7110,
+            "mean_predicted_prob": 0.446,
+            "fraction_of_positives": 0.3159,
+            "calibration_gap": 0.1301
+          },
+          {
+            "bin_index": 5,
+            "bin_count": 4484,
+            "mean_predicted_prob": 0.5444,
+            "fraction_of_positives": 0.4199,
+            "calibration_gap": 0.1245
+          },
+          {
+            "bin_index": 6,
+            "bin_count": 2837,
+            "mean_predicted_prob": 0.6486,
+            "fraction_of_positives": 0.4963,
+            "calibration_gap": 0.1523
+          },
+          {
+            "bin_index": 7,
+            "bin_count": 1494,
+            "mean_predicted_prob": 0.7376,
+            "fraction_of_positives": 0.6118,
+            "calibration_gap": 0.1258
+          },
+          {
+            "bin_index": 8,
+            "bin_count": 216,
+            "mean_predicted_prob": 0.8363,
+            "fraction_of_positives": 0.8009,
+            "calibration_gap": 0.0354
+          },
+          {
+            "bin_index": 9,
+            "bin_count": 4,
+            "mean_predicted_prob": 0.9054,
+            "fraction_of_positives": 1.0,
+            "calibration_gap": 0.0946
+          }
+        ],
+        "prob_true": [
+          0.0219,
+          0.0583,
+          0.0982,
+          0.2069,
+          0.3159,
+          0.4199,
+          0.4963,
+          0.6118,
+          0.8009,
+          1.0
+        ],
+        "prob_pred": [
+          0.0646,
+          0.1468,
+          0.2424,
+          0.3439,
+          0.446,
+          0.5444,
+          0.6486,
+          0.7376,
+          0.8363,
+          0.9054
+        ]
+      },
+      "financial": {
+        "currency": "USD",
+        "dispatch_cost_per_inspection": 100.0,
+        "counts": {
+          "tp": 4382,
+          "fp": 4653,
+          "tn": 227889,
+          "fn": 17308,
+          "total_inspections": 9035
+        },
+        "financial_breakdown": {
+          "total_fp_dispatch_cost": 465300.0,
+          "total_fn_leakage_cost": 310822.16,
+          "total_baseline_operational_loss": 776122.16,
+          "total_tp_inspection_cost": 438200.0,
+          "estimated_gross_recovery": 1095823.75,
+          "estimated_net_recovery": 192323.75
+        },
+        "audit_trail": [
+          {
+            "parameter_name": "currency",
+            "value": "USD",
+            "unit": "ISO code",
+            "source_type": "assumed",
+            "description": "Monetary currency unit for evaluation"
+          },
+          {
+            "parameter_name": "dispatch_cost",
+            "value": 100.0,
+            "unit": "USD",
+            "source_type": "assumed",
+            "description": "Operational cost to dispatch a physical field inspection crew"
+          },
+          {
+            "parameter_name": "tariff_rate",
+            "value": 0.15,
+            "unit": "USD/kWh",
+            "source_type": "assumed",
+            "description": "Configured regional benchmark tariff fallback"
+          },
+          {
+            "parameter_name": "undetected_billing_cycles",
+            "value": 12,
+            "unit": "months",
+            "source_type": "assumed",
+            "description": "Estimated horizon undetected tampering continues before discovery"
+          },
+          {
+            "parameter_name": "estimated_leakage_cost",
+            "value": "Deficit kWh x Tariff x Horizon",
+            "unit": "USD",
+            "source_type": "derived",
+            "description": "Derived financial impact of unmetered electricity theft"
+          }
+        ]
+      }
+    },
+    "controlled_undersample_0.33": {
+      "config": {
+        "name": "controlled_undersample_0.33",
+        "strategy": "controlled_undersample",
+        "scale_pos_weight": 1.0,
+        "resample": true,
+        "resample_strategy": "controlled_undersample",
+        "target_pos_ratio": 0.33
+      },
+      "sample_audit": {
+        "strategy": "controlled_undersample",
+        "target_pos_ratio": 0.33,
+        "random_seed": 42,
+        "original_counts": {
+          "total": 932184,
+          "positives": 79530,
+          "negatives": 852654,
+          "pos_ratio": 0.0853
+        },
+        "resampled_counts": {
+          "total": 320530,
+          "positives": 79530,
+          "negatives": 241000,
+          "pos_ratio": 0.2481
+        }
+      },
+      "statistical": {
+        "total_samples": 254232,
+        "actual_positives": 21690,
+        "actual_negatives": 232542,
+        "prevalence": 0.0853,
+        "confusion_matrix": {
+          "tp": 6235,
+          "fp": 8929,
+          "tn": 223613,
+          "fn": 15455
+        },
+        "precision": 0.4112,
+        "recall": 0.2875,
+        "f1_score": 0.3384,
+        "pr_auc": 0.3027,
+        "roc_auc": 0.7684,
+        "false_positive_rate": 0.0384,
+        "positive_prediction_rate": 0.0596
+      },
+      "ranking": {
+        "10": {
+          "k": 10,
+          "true_positives": 10,
+          "false_positives": 0,
+          "precision_at_k": 1.0,
+          "recall_at_k": 0.0005
+        },
+        "50": {
+          "k": 50,
+          "true_positives": 49,
+          "false_positives": 1,
+          "precision_at_k": 0.98,
+          "recall_at_k": 0.0023
+        },
+        "100": {
+          "k": 100,
+          "true_positives": 83,
+          "false_positives": 17,
+          "precision_at_k": 0.83,
+          "recall_at_k": 0.0038
+        },
+        "500": {
+          "k": 500,
+          "true_positives": 372,
+          "false_positives": 128,
+          "precision_at_k": 0.744,
+          "recall_at_k": 0.0172
+        },
+        "1000": {
+          "k": 1000,
+          "true_positives": 636,
+          "false_positives": 364,
+          "precision_at_k": 0.636,
+          "recall_at_k": 0.0293
+        },
+        "2000": {
+          "k": 2000,
+          "true_positives": 1129,
+          "false_positives": 871,
+          "precision_at_k": 0.5645,
+          "recall_at_k": 0.0521
+        }
+      },
+      "calibration": {
+        "brier_score": 0.0962,
+        "expected_calibration_error": 0.1548,
+        "n_bins": 10,
+        "binned_calibration": [
+          {
+            "bin_index": 0,
+            "bin_count": 36859,
+            "mean_predicted_prob": 0.0732,
+            "fraction_of_positives": 0.014,
+            "calibration_gap": 0.0592
+          },
+          {
+            "bin_index": 1,
+            "bin_count": 77226,
+            "mean_predicted_prob": 0.149,
+            "fraction_of_positives": 0.0359,
+            "calibration_gap": 0.1131
+          },
+          {
+            "bin_index": 2,
+            "bin_count": 70047,
+            "mean_predicted_prob": 0.2473,
+            "fraction_of_positives": 0.0682,
+            "calibration_gap": 0.1791
+          },
+          {
+            "bin_index": 3,
+            "bin_count": 40083,
+            "mean_predicted_prob": 0.335,
+            "fraction_of_positives": 0.1098,
+            "calibration_gap": 0.2252
+          },
+          {
+            "bin_index": 4,
+            "bin_count": 14853,
+            "mean_predicted_prob": 0.4458,
+            "fraction_of_positives": 0.2008,
+            "calibration_gap": 0.2449
+          },
+          {
+            "bin_index": 5,
+            "bin_count": 7260,
+            "mean_predicted_prob": 0.5476,
+            "fraction_of_positives": 0.3277,
+            "calibration_gap": 0.2199
+          },
+          {
+            "bin_index": 6,
+            "bin_count": 4467,
+            "mean_predicted_prob": 0.6451,
+            "fraction_of_positives": 0.4486,
+            "calibration_gap": 0.1965
+          },
+          {
+            "bin_index": 7,
+            "bin_count": 2944,
+            "mean_predicted_prob": 0.7445,
+            "fraction_of_positives": 0.5044,
+            "calibration_gap": 0.24
+          },
+          {
+            "bin_index": 8,
+            "bin_count": 454,
+            "mean_predicted_prob": 0.8361,
+            "fraction_of_positives": 0.7247,
+            "calibration_gap": 0.1114
+          },
+          {
+            "bin_index": 9,
+            "bin_count": 39,
+            "mean_predicted_prob": 0.911,
+            "fraction_of_positives": 0.9744,
+            "calibration_gap": 0.0634
+          }
+        ],
+        "prob_true": [
+          0.014,
+          0.0359,
+          0.0682,
+          0.1098,
+          0.2008,
+          0.3277,
+          0.4486,
+          0.5044,
+          0.7247,
+          0.9744
+        ],
+        "prob_pred": [
+          0.0732,
+          0.149,
+          0.2473,
+          0.335,
+          0.4458,
+          0.5476,
+          0.6451,
+          0.7445,
+          0.8361,
+          0.911
+        ]
+      },
+      "financial": {
+        "currency": "USD",
+        "dispatch_cost_per_inspection": 100.0,
+        "counts": {
+          "tp": 6235,
+          "fp": 8929,
+          "tn": 223613,
+          "fn": 15455,
+          "total_inspections": 15164
+        },
+        "financial_breakdown": {
+          "total_fp_dispatch_cost": 892900.0,
+          "total_fn_leakage_cost": 208223.14,
+          "total_baseline_operational_loss": 1101123.14,
+          "total_tp_inspection_cost": 623500.0,
+          "estimated_gross_recovery": 1198422.75,
+          "estimated_net_recovery": -317977.25
+        },
+        "audit_trail": [
+          {
+            "parameter_name": "currency",
+            "value": "USD",
+            "unit": "ISO code",
+            "source_type": "assumed",
+            "description": "Monetary currency unit for evaluation"
+          },
+          {
+            "parameter_name": "dispatch_cost",
+            "value": 100.0,
+            "unit": "USD",
+            "source_type": "assumed",
+            "description": "Operational cost to dispatch a physical field inspection crew"
+          },
+          {
+            "parameter_name": "tariff_rate",
+            "value": 0.15,
+            "unit": "USD/kWh",
+            "source_type": "assumed",
+            "description": "Configured regional benchmark tariff fallback"
+          },
+          {
+            "parameter_name": "undetected_billing_cycles",
+            "value": 12,
+            "unit": "months",
+            "source_type": "assumed",
+            "description": "Estimated horizon undetected tampering continues before discovery"
+          },
+          {
+            "parameter_name": "estimated_leakage_cost",
+            "value": "Deficit kWh x Tariff x Horizon",
+            "unit": "USD",
+            "source_type": "derived",
+            "description": "Derived financial impact of unmetered electricity theft"
+          }
+        ]
+      }
+    },
+    "smote_k5_0.20": {
+      "config": {
+        "name": "smote_k5_0.20",
+        "strategy": "smote",
+        "scale_pos_weight": 1.0,
+        "resample": true,
+        "resample_strategy": "smote",
+        "target_pos_ratio": 0.2
+      },
+      "sample_audit": {
+        "strategy": "smote",
+        "target_pos_ratio": 0.2,
+        "random_seed": 42,
+        "original_counts": {
+          "total": 932184,
+          "positives": 79530,
+          "negatives": 852654,
+          "pos_ratio": 0.0853
+        },
+        "resampled_counts": {
+          "total": 982184,
+          "positives": 129530,
+          "negatives": 852654,
+          "pos_ratio": 0.1319
+        }
+      },
+      "statistical": {
+        "total_samples": 254232,
+        "actual_positives": 21690,
+        "actual_negatives": 232542,
+        "prevalence": 0.0853,
+        "confusion_matrix": {
+          "tp": 2088,
+          "fp": 1942,
+          "tn": 230600,
+          "fn": 19602
+        },
+        "precision": 0.5181,
+        "recall": 0.0963,
+        "f1_score": 0.1624,
+        "pr_auc": 0.281,
+        "roc_auc": 0.7555,
+        "false_positive_rate": 0.0084,
+        "positive_prediction_rate": 0.0159
+      },
+      "ranking": {
+        "10": {
+          "k": 10,
+          "true_positives": 10,
+          "false_positives": 0,
+          "precision_at_k": 1.0,
+          "recall_at_k": 0.0005
+        },
+        "50": {
+          "k": 50,
+          "true_positives": 46,
+          "false_positives": 4,
+          "precision_at_k": 0.92,
+          "recall_at_k": 0.0021
+        },
+        "100": {
+          "k": 100,
+          "true_positives": 83,
+          "false_positives": 17,
+          "precision_at_k": 0.83,
+          "recall_at_k": 0.0038
+        },
+        "500": {
+          "k": 500,
+          "true_positives": 377,
+          "false_positives": 123,
+          "precision_at_k": 0.754,
+          "recall_at_k": 0.0174
+        },
+        "1000": {
+          "k": 1000,
+          "true_positives": 684,
+          "false_positives": 316,
+          "precision_at_k": 0.684,
+          "recall_at_k": 0.0315
+        },
+        "2000": {
+          "k": 2000,
+          "true_positives": 1207,
+          "false_positives": 793,
+          "precision_at_k": 0.6035,
+          "recall_at_k": 0.0556
+        }
+      },
+      "calibration": {
+        "brier_score": 0.0721,
+        "expected_calibration_error": 0.0378,
+        "n_bins": 10,
+        "binned_calibration": [
+          {
+            "bin_index": 0,
+            "bin_count": 146966,
+            "mean_predicted_prob": 0.0571,
+            "fraction_of_positives": 0.0372,
+            "calibration_gap": 0.0199
+          },
+          {
+            "bin_index": 1,
+            "bin_count": 60750,
+            "mean_predicted_prob": 0.139,
+            "fraction_of_positives": 0.0932,
+            "calibration_gap": 0.0457
+          },
+          {
+            "bin_index": 2,
+            "bin_count": 28009,
+            "mean_predicted_prob": 0.2396,
+            "fraction_of_positives": 0.1543,
+            "calibration_gap": 0.0853
+          },
+          {
+            "bin_index": 3,
+            "bin_count": 10439,
+            "mean_predicted_prob": 0.3407,
+            "fraction_of_positives": 0.2494,
+            "calibration_gap": 0.0912
+          },
+          {
+            "bin_index": 4,
+            "bin_count": 4038,
+            "mean_predicted_prob": 0.4455,
+            "fraction_of_positives": 0.3839,
+            "calibration_gap": 0.0617
+          },
+          {
+            "bin_index": 5,
+            "bin_count": 2473,
+            "mean_predicted_prob": 0.5447,
+            "fraction_of_positives": 0.4428,
+            "calibration_gap": 0.1019
+          },
+          {
+            "bin_index": 6,
+            "bin_count": 1078,
+            "mean_predicted_prob": 0.6417,
+            "fraction_of_positives": 0.5816,
+            "calibration_gap": 0.0601
+          },
+          {
+            "bin_index": 7,
+            "bin_count": 334,
+            "mean_predicted_prob": 0.7434,
+            "fraction_of_positives": 0.7335,
+            "calibration_gap": 0.0098
+          },
+          {
+            "bin_index": 8,
+            "bin_count": 138,
+            "mean_predicted_prob": 0.8377,
+            "fraction_of_positives": 0.8261,
+            "calibration_gap": 0.0116
+          },
+          {
+            "bin_index": 9,
+            "bin_count": 7,
+            "mean_predicted_prob": 0.9177,
+            "fraction_of_positives": 1.0,
+            "calibration_gap": 0.0823
+          }
+        ],
+        "prob_true": [
+          0.0372,
+          0.0932,
+          0.1543,
+          0.2494,
+          0.3839,
+          0.4428,
+          0.5816,
+          0.7335,
+          0.8261,
+          1.0
+        ],
+        "prob_pred": [
+          0.0571,
+          0.139,
+          0.2396,
+          0.3407,
+          0.4455,
+          0.5447,
+          0.6417,
+          0.7434,
+          0.8377,
+          0.9177
+        ]
+      },
+      "financial": {
+        "currency": "USD",
+        "dispatch_cost_per_inspection": 100.0,
+        "counts": {
+          "tp": 2088,
+          "fp": 1942,
+          "tn": 230600,
+          "fn": 19602,
+          "total_inspections": 4030
+        },
+        "financial_breakdown": {
+          "total_fp_dispatch_cost": 194200.0,
+          "total_fn_leakage_cost": 579276.5,
+          "total_baseline_operational_loss": 773476.5,
+          "total_tp_inspection_cost": 208800.0,
+          "estimated_gross_recovery": 827369.44,
+          "estimated_net_recovery": 424369.44
+        },
+        "audit_trail": [
+          {
+            "parameter_name": "currency",
+            "value": "USD",
+            "unit": "ISO code",
+            "source_type": "assumed",
+            "description": "Monetary currency unit for evaluation"
+          },
+          {
+            "parameter_name": "dispatch_cost",
+            "value": 100.0,
+            "unit": "USD",
+            "source_type": "assumed",
+            "description": "Operational cost to dispatch a physical field inspection crew"
+          },
+          {
+            "parameter_name": "tariff_rate",
+            "value": 0.15,
+            "unit": "USD/kWh",
+            "source_type": "assumed",
+            "description": "Configured regional benchmark tariff fallback"
+          },
+          {
+            "parameter_name": "undetected_billing_cycles",
+            "value": 12,
+            "unit": "months",
+            "source_type": "assumed",
+            "description": "Estimated horizon undetected tampering continues before discovery"
+          },
+          {
+            "parameter_name": "estimated_leakage_cost",
+            "value": "Deficit kWh x Tariff x Horizon",
+            "unit": "USD",
+            "source_type": "derived",
+            "description": "Derived financial impact of unmetered electricity theft"
+          }
+        ]
+      }
+    }
+  },
+  "test_evaluation": {
+    "baseline": {
+      "statistical": {
+        "total_samples": 254232,
+        "actual_positives": 21690,
+        "actual_negatives": 232542,
+        "prevalence": 0.0853,
+        "confusion_matrix": {
+          "tp": 3161,
+          "fp": 3580,
+          "tn": 228962,
+          "fn": 18529
+        },
+        "precision": 0.4689,
+        "recall": 0.1457,
+        "f1_score": 0.2224,
+        "pr_auc": 0.2959,
+        "roc_auc": 0.7711,
+        "false_positive_rate": 0.0154,
+        "positive_prediction_rate": 0.0265
+      },
+      "ranking": {
+        "10": {
+          "k": 10,
+          "true_positives": 8,
+          "false_positives": 2,
+          "precision_at_k": 0.8,
+          "recall_at_k": 0.0004
+        },
+        "50": {
+          "k": 50,
+          "true_positives": 42,
+          "false_positives": 8,
+          "precision_at_k": 0.84,
+          "recall_at_k": 0.0019
+        },
+        "100": {
+          "k": 100,
+          "true_positives": 82,
+          "false_positives": 18,
+          "precision_at_k": 0.82,
+          "recall_at_k": 0.0038
+        },
+        "500": {
+          "k": 500,
+          "true_positives": 316,
+          "false_positives": 184,
+          "precision_at_k": 0.632,
+          "recall_at_k": 0.0146
+        },
+        "1000": {
+          "k": 1000,
+          "true_positives": 570,
+          "false_positives": 430,
+          "precision_at_k": 0.57,
+          "recall_at_k": 0.0263
+        },
+        "2000": {
+          "k": 2000,
+          "true_positives": 1029,
+          "false_positives": 971,
+          "precision_at_k": 0.5145,
+          "recall_at_k": 0.0474
+        }
+      },
+      "calibration": {
+        "brier_score": 0.0706,
+        "expected_calibration_error": 0.0327,
+        "n_bins": 10,
+        "binned_calibration": [
+          {
+            "bin_index": 0,
+            "bin_count": 154300,
+            "mean_predicted_prob": 0.0494,
+            "fraction_of_positives": 0.0364,
+            "calibration_gap": 0.013
+          },
+          {
+            "bin_index": 1,
+            "bin_count": 62564,
+            "mean_predicted_prob": 0.1462,
+            "fraction_of_positives": 0.0911,
+            "calibration_gap": 0.0551
+          },
+          {
+            "bin_index": 2,
+            "bin_count": 19281,
+            "mean_predicted_prob": 0.2389,
+            "fraction_of_positives": 0.1692,
+            "calibration_gap": 0.0697
+          },
+          {
+            "bin_index": 3,
+            "bin_count": 7209,
+            "mean_predicted_prob": 0.3452,
+            "fraction_of_positives": 0.3053,
+            "calibration_gap": 0.0399
+          },
+          {
+            "bin_index": 4,
+            "bin_count": 4137,
+            "mean_predicted_prob": 0.4461,
+            "fraction_of_positives": 0.4242,
+            "calibration_gap": 0.0218
+          },
+          {
+            "bin_index": 5,
+            "bin_count": 2837,
+            "mean_predicted_prob": 0.5482,
+            "fraction_of_positives": 0.4293,
+            "calibration_gap": 0.1189
+          },
+          {
+            "bin_index": 6,
+            "bin_count": 2226,
+            "mean_predicted_prob": 0.6496,
+            "fraction_of_positives": 0.4717,
+            "calibration_gap": 0.1779
+          },
+          {
+            "bin_index": 7,
+            "bin_count": 1348,
+            "mean_predicted_prob": 0.7438,
+            "fraction_of_positives": 0.4948,
+            "calibration_gap": 0.249
+          },
+          {
+            "bin_index": 8,
+            "bin_count": 311,
+            "mean_predicted_prob": 0.8331,
+            "fraction_of_positives": 0.6785,
+            "calibration_gap": 0.1547
+          },
+          {
+            "bin_index": 9,
+            "bin_count": 19,
+            "mean_predicted_prob": 0.9124,
+            "fraction_of_positives": 0.7895,
+            "calibration_gap": 0.1229
+          }
+        ],
+        "prob_true": [
+          0.0364,
+          0.0911,
+          0.1692,
+          0.3053,
+          0.4242,
+          0.4293,
+          0.4717,
+          0.4948,
+          0.6785,
+          0.7895
+        ],
+        "prob_pred": [
+          0.0494,
+          0.1462,
+          0.2389,
+          0.3452,
+          0.4461,
+          0.5482,
+          0.6496,
+          0.7438,
+          0.8331,
+          0.9124
+        ]
+      },
+      "financial": {
+        "currency": "USD",
+        "dispatch_cost_per_inspection": 100.0,
+        "counts": {
+          "tp": 3161,
+          "fp": 3580,
+          "tn": 228962,
+          "fn": 18529,
+          "total_inspections": 6741
+        },
+        "financial_breakdown": {
+          "total_fp_dispatch_cost": 358000.0,
+          "total_fn_leakage_cost": 765766.0,
+          "total_baseline_operational_loss": 1123766.0,
+          "total_tp_inspection_cost": 316100.0,
+          "estimated_gross_recovery": 1447265.25,
+          "estimated_net_recovery": 773165.25
+        },
+        "audit_trail": [
+          {
+            "parameter_name": "currency",
+            "value": "USD",
+            "unit": "ISO code",
+            "source_type": "assumed",
+            "description": "Monetary currency unit for evaluation"
+          },
+          {
+            "parameter_name": "dispatch_cost",
+            "value": 100.0,
+            "unit": "USD",
+            "source_type": "assumed",
+            "description": "Operational cost to dispatch a physical field inspection crew"
+          },
+          {
+            "parameter_name": "tariff_rate",
+            "value": 0.15,
+            "unit": "USD/kWh",
+            "source_type": "assumed",
+            "description": "Configured regional benchmark tariff fallback"
+          },
+          {
+            "parameter_name": "undetected_billing_cycles",
+            "value": 12,
+            "unit": "months",
+            "source_type": "assumed",
+            "description": "Estimated horizon undetected tampering continues before discovery"
+          },
+          {
+            "parameter_name": "estimated_leakage_cost",
+            "value": "Deficit kWh x Tariff x Horizon",
+            "unit": "USD",
+            "source_type": "derived",
+            "description": "Derived financial impact of unmetered electricity theft"
+          }
+        ]
+      }
+    },
+    "champion": {
+      "strategy_name": "controlled_oversample_0.20",
+      "statistical": {
+        "total_samples": 254232,
+        "actual_positives": 21690,
+        "actual_negatives": 232542,
+        "prevalence": 0.0853,
+        "confusion_matrix": {
+          "tp": 5170,
+          "fp": 6293,
+          "tn": 226249,
+          "fn": 16520
+        },
+        "precision": 0.451,
+        "recall": 0.2384,
+        "f1_score": 0.3119,
+        "pr_auc": 0.3132,
+        "roc_auc": 0.7693,
+        "false_positive_rate": 0.0271,
+        "positive_prediction_rate": 0.0451
+      },
+      "ranking": {
+        "10": {
+          "k": 10,
+          "true_positives": 10,
+          "false_positives": 0,
+          "precision_at_k": 1.0,
+          "recall_at_k": 0.0005
+        },
+        "50": {
+          "k": 50,
+          "true_positives": 41,
+          "false_positives": 9,
+          "precision_at_k": 0.82,
+          "recall_at_k": 0.0019
+        },
+        "100": {
+          "k": 100,
+          "true_positives": 84,
+          "false_positives": 16,
+          "precision_at_k": 0.84,
+          "recall_at_k": 0.0039
+        },
+        "500": {
+          "k": 500,
+          "true_positives": 383,
+          "false_positives": 117,
+          "precision_at_k": 0.766,
+          "recall_at_k": 0.0177
+        },
+        "1000": {
+          "k": 1000,
+          "true_positives": 693,
+          "false_positives": 307,
+          "precision_at_k": 0.693,
+          "recall_at_k": 0.032
+        },
+        "2000": {
+          "k": 2000,
+          "true_positives": 1235,
+          "false_positives": 765,
+          "precision_at_k": 0.6175,
+          "recall_at_k": 0.0569
+        }
+      },
+      "calibration": {
+        "brier_score": 0.0811,
+        "expected_calibration_error": 0.1014,
+        "n_bins": 10,
+        "binned_calibration": [
+          {
+            "bin_index": 0,
+            "bin_count": 79887,
+            "mean_predicted_prob": 0.0642,
+            "fraction_of_positives": 0.0221,
+            "calibration_gap": 0.042
+          },
+          {
+            "bin_index": 1,
+            "bin_count": 82233,
+            "mean_predicted_prob": 0.1452,
+            "fraction_of_positives": 0.0537,
+            "calibration_gap": 0.0914
+          },
+          {
+            "bin_index": 2,
+            "bin_count": 54745,
+            "mean_predicted_prob": 0.2476,
+            "fraction_of_positives": 0.0902,
+            "calibration_gap": 0.1573
+          },
+          {
+            "bin_index": 3,
+            "bin_count": 17141,
+            "mean_predicted_prob": 0.3423,
+            "fraction_of_positives": 0.1745,
+            "calibration_gap": 0.1678
+          },
+          {
+            "bin_index": 4,
+            "bin_count": 8763,
+            "mean_predicted_prob": 0.4467,
+            "fraction_of_positives": 0.2742,
+            "calibration_gap": 0.1725
+          },
+          {
+            "bin_index": 5,
+            "bin_count": 5541,
+            "mean_predicted_prob": 0.5459,
+            "fraction_of_positives": 0.3765,
+            "calibration_gap": 0.1694
+          },
+          {
+            "bin_index": 6,
+            "bin_count": 3773,
+            "mean_predicted_prob": 0.6475,
+            "fraction_of_positives": 0.4673,
+            "calibration_gap": 0.1802
+          },
+          {
+            "bin_index": 7,
+            "bin_count": 1863,
+            "mean_predicted_prob": 0.7364,
+            "fraction_of_positives": 0.5931,
+            "calibration_gap": 0.1433
+          },
+          {
+            "bin_index": 8,
+            "bin_count": 284,
+            "mean_predicted_prob": 0.8327,
+            "fraction_of_positives": 0.7535,
+            "calibration_gap": 0.0792
+          },
+          {
+            "bin_index": 9,
+            "bin_count": 2,
+            "mean_predicted_prob": 0.9068,
+            "fraction_of_positives": 1.0,
+            "calibration_gap": 0.0932
+          }
+        ],
+        "prob_true": [
+          0.0221,
+          0.0537,
+          0.0902,
+          0.1745,
+          0.2742,
+          0.3765,
+          0.4673,
+          0.5931,
+          0.7535,
+          1.0
+        ],
+        "prob_pred": [
+          0.0642,
+          0.1452,
+          0.2476,
+          0.3423,
+          0.4467,
+          0.5459,
+          0.6475,
+          0.7364,
+          0.8327,
+          0.9068
+        ]
+      },
+      "financial": {
+        "currency": "USD",
+        "dispatch_cost_per_inspection": 100.0,
+        "counts": {
+          "tp": 5170,
+          "fp": 6293,
+          "tn": 226249,
+          "fn": 16520,
+          "total_inspections": 11463
+        },
+        "financial_breakdown": {
+          "total_fp_dispatch_cost": 629300.0,
+          "total_fn_leakage_cost": 490798.88,
+          "total_baseline_operational_loss": 1120098.88,
+          "total_tp_inspection_cost": 517000.0,
+          "estimated_gross_recovery": 1722232.38,
+          "estimated_net_recovery": 575932.38
+        },
+        "audit_trail": [
+          {
+            "parameter_name": "currency",
+            "value": "USD",
+            "unit": "ISO code",
+            "source_type": "assumed",
+            "description": "Monetary currency unit for evaluation"
+          },
+          {
+            "parameter_name": "dispatch_cost",
+            "value": 100.0,
+            "unit": "USD",
+            "source_type": "assumed",
+            "description": "Operational cost to dispatch a physical field inspection crew"
+          },
+          {
+            "parameter_name": "tariff_rate",
+            "value": 0.15,
+            "unit": "USD/kWh",
+            "source_type": "assumed",
+            "description": "Configured regional benchmark tariff fallback"
+          },
+          {
+            "parameter_name": "undetected_billing_cycles",
+            "value": 12,
+            "unit": "months",
+            "source_type": "assumed",
+            "description": "Estimated horizon undetected tampering continues before discovery"
+          },
+          {
+            "parameter_name": "estimated_leakage_cost",
+            "value": "Deficit kWh x Tariff x Horizon",
+            "unit": "USD",
+            "source_type": "derived",
+            "description": "Derived financial impact of unmetered electricity theft"
+          }
+        ]
+      }
+    },
+    "delta": {
+      "pr_auc_diff": 0.0173,
+      "recall_diff": 0.0927,
+      "precision_diff": -0.0179,
+      "f1_diff": 0.0895,
+      "brier_diff": 0.0105,
+      "total_loss_diff": -3667.12
+    }
+  }
+}

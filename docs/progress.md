@@ -153,7 +153,52 @@
 
 ---
 
+## Phase 5: Class Imbalance Strategy & Rare-Tampering Learning
+
+- **Status**: Completed / Operational
+- **Completed Date**: 2026-10-02
+- **Lead Implementation Engineer**: Antigravity Autonomous Agent
+
+### 1. Completed Items
+- [x] **Ground-Truth Class Prevalence Audit**:
+  - Measured exact training class distribution: 852,654 normal instances (91.47%) vs. 79,530 positive instances (8.53%), reflecting an imbalance ratio of **10.72 : 1**.
+  - Documented target granularity (temporal observation snapshot for meter $m$ at time $t$ over causal trailing features $\le t$).
+- [x] **Strict Leakage Prevention & Audit (`grid_guard.data.sampling`, `test_imbalance_leakage.py`)**:
+  - Verified training-only class weighting and resampling. Validation (254,232 rows) and test (254,232 rows) remain 100% untouched.
+  - Implemented 10-point leakage audit verifying absence of test mutations on training weights, absence of synthetic timestamps/meter IDs, and strict temporal boundary compliance.
+- [x] **Candidate Imbalance Strategies Evaluated**:
+  - Evaluated 8 candidate strategies across 4 paradigms on chronological validation partition (`2016-01-01` to `2016-05-31`):
+    - `unweighted_baseline` ($w = 1.0$): Validation PR-AUC = 0.3035
+    - Class Weighting Sensitivity Grid ($w \in \{2.0, 3.0, 5.0, 10.72\}$): Validation PR-AUC = 0.2262, 0.1630, 0.1760, 0.1292
+    - Controlled Oversampling (`target_pos_ratio = 0.20`): Validation PR-AUC = **0.3131** (Winner!)
+    - Controlled Undersampling (`target_pos_ratio = 0.33`): Validation PR-AUC = 0.3027
+    - SMOTE ($k=5$, `target_pos_ratio = 0.20`): Validation PR-AUC = 0.2810
+  - Completed technical suitability assessment documenting why vanilla SMOTE introduces synthetic boundary distortions on AMI consumption features.
+- [x] **Validation Selection & Held-Out Test Evaluation**:
+  - Champion strategy (`controlled_oversample_0.20`) selected strictly on validation PR-AUC.
+  - Evaluated once on held-out test partition (`2016-06-01` to `2016-10-31`):
+    - **PR-AUC**: Improved from `0.2959` to **`0.3132`** (`+0.0173`).
+    - **Theft Recall**: Increased from `14.57%` to **`23.84%`** (**+9.27% absolute increase**, catching **2,009 more thieves**).
+    - **Precision@10**: **100.0%** (vs. 80.0%).
+    - **Precision@500**: **76.6%** (vs. 63.2%, +13.4% lift).
+    - **Precision@1000**: **69.3%** (vs. 57.0%, +12.3% lift).
+    - **Precision@2000**: **61.8%** (vs. 51.4%, +10.4% lift, catching 1,235 confirmed thefts).
+    - **Financial Operational Loss**: Reduced to **`$1,120,098.88`** (saving **`$274,967.12`** in unrecovered theft leakage).
+- [x] **Calibration & Reliability Analysis (`grid_guard.evaluation.calibration`)**:
+  - Quantified calibration shift via Brier score (`0.0706` to `0.0811`) and ECE (`0.0239` to `0.0384`).
+- [x] **MLflow Experiment Tracking & Visualizations**:
+  - Logged run `imbalance_champion_controlled_oversample_0.20` to MLflow experiment `grid-guard-ntl-detection` (Run ID: `885ac4d64cfd404881af51940d89d628`).
+  - Generated 7 publication-grade comparison plots in `artifacts/imbalance/figures/`.
+  - Exported `artifacts/imbalance/imbalance_comparison_report.md` and `imbalance_comparison.json`.
+- [x] **CLI & Test Suite**:
+  - Built `scripts/run_imbalance.py` for automated reproduction.
+  - Test suite expanded to 70 tests with **89.50%** code coverage.
+  - Ruff formatting and linting 100% compliant.
+
+---
+
 ### 2. Next Phase
 
-- **Phase 5: Class Imbalance & Representation Strategies**
-  - Implement and evaluate balanced sub-sampling, SMOTE / focal loss alternatives, and minority representation enhancement without leaking test data.
+- **Phase 6: Cost-Sensitive Optimization & Utility Objective Loss**
+  - Implement asymmetric financial loss functions directly in gradient boosting, incorporating per-meter consumption volume, tariff structure, and dispatch cost into tree splits.
+
