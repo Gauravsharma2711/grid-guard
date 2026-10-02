@@ -2259,22 +2259,34 @@ Deploying a crew guarantees an expected net loss of $\$71.27$. Grid-Guard's deci
 
 ### 26.1 Usability of the Operational Dashboard
 The operational usability of Grid-Guard was evaluated across core utility revenue protection workflows using an engineering heuristic framework.
-- **Workflow Cohesion**: The dashboard groups operational activities into three distinct functional pages: Fleet Overview (executive monitoring and dispatch allocation), Single-Meter Drilldown (granular audit investigation), and Interactive Demo (operator training and scenario modeling).
+- **Workflow Cohesion**: The dashboard groups operational activities into distinct functional views: Fleet Overview (executive monitoring and dispatch allocation), Prioritized Inspection Queue (work-order management), Single-Meter Drilldown (granular audit investigation), Model Performance Insights, and System Status Introspection.
 - **Cognitive Load Reduction**: Executive cards prominently summarize the three numbers utility directors care about: Total Expected Net Recovery ($), Wasted Dispatch Expense ($), and Precision in Top-K (%). Complex mathematical probabilities are contextualized with clear color-coded badges (`DISPATCH_RECOMMENDED` in emerald green vs. `NO_DISPATCH` in muted gray).
+
+![Prioritized Inspection Work Order Queue](docs/assets/screenshots/inspection_queue_view.png)
+*Figure 7: Prioritized Inspection Work Order Queue view in the Streamlit operational dashboard, ranking candidate meters strictly by descending Expected Net Value ($ENV$).*
 
 ### 26.2 Visual Hierarchy & Chart Ergonomics
 - **Interactive Time-Series Visualization**: Consumption histories are rendered using Plotly, allowing analysts to zoom into specific calendar weeks, toggle between raw and cleaned telemetry, and visually verify detected changepoint dates.
 - **Dynamic Threshold Gauges**: The meter drilldown view features an intuitive visual gauge comparing posterior probability $p_i$ against the consumer's dynamic breakeven threshold $\tau_{\text{env}, i}$, making the economic rationale behind dispatch recommendations immediately transparent.
+
+![Meter Investigation & Explainability](docs/assets/screenshots/meter_analysis_view.png)
+*Figure 8: Single-Meter Investigation & Tree-SHAP Explainability view, showing the 180-day consumption trace, 14-day baseline, 30-day evaluation collapse window, and detected physical tampering signatures.*
 
 ### 26.3 Explainability & Trust Perception in Field Operations
 In field utility interviews and simulated audit trials:
 - Technicians expressed high confidence in tickets that included SHAP waterfall plots and plain-English tamper signature summaries.
 - The breakdown of top contributing features (e.g., distinguishing between variance collapse vs. zero streaks) enabled crews to select appropriate diagnostic equipment (e.g., thermal imaging cameras for hidden resistance shunts vs. physical meter seal verification) prior to leaving the depot.
 
+![Model Performance & Comparative Evaluation](docs/assets/screenshots/model_insights_view.png)
+*Figure 9: Model Performance & Comparative Evaluation view, contrasting Expected Net Value ($ENV$) and Realized Loss across Fixed Threshold, Bayes Cost, and Dynamic ENV decision policies.*
+
 ### 26.4 Developer & Operator Experience (API, Docs, Docker)
 - **Zero-Friction API Consumption**: FastAPI's interactive Swagger UI (`/docs`) and OpenAPI JSON specification allowed automated client generation and seamless curl testing.
-- **Instant Deployment**: With `docker-compose up`, both the inference backend and Streamlit dashboard launch within 15 seconds, complete with preloaded models and automated container health checks.
+- **Instant Deployment**: With `docker compose up`, both the inference backend and Streamlit dashboard launch within 15 seconds, complete with preloaded models and automated container health checks.
 - **Resilient Client Architecture**: The dedicated `DashboardApiClient` incorporates automatic connection retries and explicit error alerts, ensuring that backend restarts or transient timeouts do not crash the user's dashboard session.
+
+![System Status & Metadata Introspection](docs/assets/screenshots/system_status_view.png)
+*Figure 10: System Status & Metadata Introspection view, displaying live FastAPI health probes, model provenance, and public operational constraints.*
 
 ---
 

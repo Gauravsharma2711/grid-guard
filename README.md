@@ -19,7 +19,65 @@ Grid-Guard turns smart-meter anomaly detection into an economically rational fie
 
 ---
 
-## 2. The Operational Problem
+## 2. Interactive Operational Dashboard Interfaces
+
+Grid-Guard provides an enterprise-grade, multi-view operational web interface built with **Streamlit**, connected asynchronously via REST to the FastAPI inference backend. The interface empowers revenue protection analysts, dispatch supervisors, and executive management to monitor fleet health, investigate specific smart meters, inspect model explainability, and configure operational parameters.
+
+---
+
+### 2.1 Prioritized Inspection Work Order Queue
+![Prioritized Inspection Work Order Queue](docs/assets/screenshots/inspection_queue_view.png)
+
+- **Purpose & User Role**: Primary operational dispatch center designed for utility **Field Dispatch Supervisors** and **Revenue Protection Planners**.
+- **Core Capabilities & Insights**:
+  - **Dynamic Economic Ranking**: Automatically filters and ranks candidate meters across the 42,372-meter fleet in strictly descending order of **Expected Net Value** ($\text{ENV}_i = p_i \times R_i - C_{\text{dispatch}}$).
+  - **Multi-Criteria Fleet Controls**: Interactive filter sliders to isolate meters above a minimum tamper probability (e.g., $p \ge 0.50$), minimum net recovery threshold ($\text{ENV} \ge \$0$), search by exact Meter ID, or limit queue size for crew shift capacity.
+  - **Comprehensive Candidate Metadata**: Displays Rank, Meter ID, Tamper Probability (e.g., 98.6%), Estimated Recoverable Revenue ($\$32,375.68$), Dispatch Cost ($\$100.00$), Net Value ($\$31,822.42$), Decision Policy (`env`), Crew Recommended toggle, and detected physical tampering signatures.
+  - **Operational Workflow**: Provides a 1-click **"Investigate Selected Meter in Meter Analysis"** button for deep-dive forensic audit, plus an **"Export Queue (CSV)"** button for dispatching work orders directly to field crew mobile terminals or utility ERP systems.
+
+---
+
+### 2.2 Single-Meter Investigation & Tree-SHAP Explainability
+![Meter Investigation & Explainability](docs/assets/screenshots/meter_analysis_view.png)
+
+- **Purpose & User Role**: Forensic audit view designed for **Utility Revenue Analysts** and **Technical Field Auditors**.
+- **Core Capabilities & Insights**:
+  - **Dataset & Archetype Selection**: Choose from 5 pre-configured synthetic tampering archetypes (e.g., Sustained Step-Down Anomaly, Partial Shunting, Commercial Theft, Lifeline Rural Consumer) or input custom smart-meter consumption histories.
+  - **One-Click End-to-End Pipeline**: A single click on **"🚀 Score Meter & Generate Ticket"** passes raw daily consumption through the 60-feature causal pipeline, queries the cost-sensitive booster, evaluates dynamic breakeven thresholds, and computes Tree-SHAP feature attributions in real time.
+  - **Financial Decision Summary**: Contextual metric cards display Tamper Probability (35.9%), Decision (`DISPATCH RECOMMENDED`), Estimated Recoverable Revenue ($\$28,598.40$), Dispatch Cost ($\$100.00$), and Expected Net Value ($\$10,156.45$).
+  - **Interactive Plotly Time-Series Visualizer**: Renders 180-day consumption history (blue curve), 14-day rolling baseline (green dashed curve), and highlights the 30-day evaluation window (pink shaded area) where energy usage abruptly collapsed.
+  - **Evidentiary Signatures & Counter-Evidence**: Automatically synthesizes plain-English physical diagnostic evidence (e.g., *"Sustained consumption reduction of 94.2% below historical baseline (26.6 kWh/day deficit) persisting for 31 consecutive days"*), providing field crews with concrete physical bypass indicators to verify on-site.
+
+---
+
+### 2.3 Model Performance & Comparative Evaluation
+![Model Performance & Comparative Evaluation](docs/assets/screenshots/model_insights_view.png)
+
+- **Purpose & User Role**: Analytical benchmarking dashboard for **Data Science Evaluators**, **Grid Operations Directors**, and **Chief Economists**.
+- **Core Capabilities & Insights**:
+  - **Policy-Level Benchmarking**: Evaluates and contrasts three candidate operational decisioning policies across the 42,372 candidate smart meters:
+    1. *Fixed Threshold ($p \ge 0.50$)*: Conventional machine learning cutoff that ignores monetary stakes and treats a $\$10$ leakage customer identically to a $\$100,000$ industrial customer.
+    2. *Bayes Cost Threshold*: Theoretical decision cutoff scaled by the cost ratio $\tau = \frac{C_{\text{FP}}}{C_{\text{FP}} + C_{\text{FN}}}$.
+    3. *Dynamic Expected Net Value (Grid-Guard)*: Dispatches an inspection crew if and only if expected gross recovery exceeds crew cost ($p_i \times R_i > C_{\text{dispatch}}$) and prioritizes by net dollar yield.
+  - **Visual Comparative Analytics**:
+    - **Expected Net Value ($k)**: Grid-Guard's dynamic ENV policy achieves **$\$275.2k** in net fleet recovery, outperforming the fixed baseline ($\$223.1k$) by **+$\$52,100.00**.
+    - **Realized Operational Loss ($k)**: Combines wasted false-positive dispatches with undetected leakage. Grid-Guard cuts total loss to **$\$64.8k** (lowest across all evaluated policies), down from **$\$82.7k$ under the conventional fixed threshold.
+
+---
+
+### 2.4 System Status & Metadata Introspection
+![System Status & Metadata Introspection](docs/assets/screenshots/system_status_view.png)
+
+- **Purpose & User Role**: Transparency and operational observability dashboard for **DevOps Engineers**, **System Administrators**, and **Regulatory Auditors**.
+- **Core Capabilities & Insights**:
+  - **Live Service Health Probes**: Real-time HTTP liveness monitoring for the FastAPI service (`/health` $\rightarrow$ `HEALTHY`) and model booster & explainer readiness (`/ready` $\rightarrow$ `READY`).
+  - **Model & Checkpoint Provenance**: Documents the active model version (`phase6_cost_sensitive_v1`), LightGBM booster architecture, custom financially weighted log-loss training objective, 60 temporal feature dimensions, Tree-SHAP explainer engine, and baseline expected value (`-2.3713 log-odds`).
+  - **Operational Constraints & Tariff Defaults**: Publicly displays input ingestion constraints (daily active energy readings, minimum 14-day history, maximum 730-day window, batch limit 50 meters) and financial parameter defaults (standard tariff: $\$0.15$/kWh, crew dispatch cost: $\$100.00$, leakage recovery horizon: 12 billing cycles).
+  - **Continuous Connectivity Indicator**: The sidebar features an active status badge (`API Online (v1.0)`), assuring users that all analytical outputs are generated dynamically by the live backend.
+
+---
+
+## 3. The Operational Problem
 
 Electric power utilities lose tens of billions of dollars annually to **Non-Technical Losses (NTL)**—primarily physical meter tampering, illegal line tapping, and unauthorized consumption.
 
@@ -31,7 +89,7 @@ A naive model that flags a rural lifeline customer with high confidence may caus
 
 ---
 
-## 3. The Grid-Guard Solution
+## 4. The Grid-Guard Solution
 
 Grid-Guard solves this asymmetric challenge through a **four-pillar financial architecture**:
 
@@ -44,7 +102,7 @@ Grid-Guard solves this asymmetric challenge through a **four-pillar financial ar
 
 ---
 
-## 4. End-to-End Architecture
+## 5. End-to-End Architecture
 
 ```
                           AMI Smart-Meter Daily Readings (kWh)
@@ -81,7 +139,7 @@ Grid-Guard solves this asymmetric challenge through a **four-pillar financial ar
 
 ---
 
-## 5. Technology Stack
+## 6. Technology Stack
 
 - **Core & Data Processing**: Python 3.11, Polars, NumPy, Pandas, Pydantic V2
 - **Machine Learning**: LightGBM (Gradient Boosted Trees), Scikit-Learn, Imbalanced-Learn
@@ -92,7 +150,7 @@ Grid-Guard solves this asymmetric challenge through a **four-pillar financial ar
 
 ---
 
-## 6. Project Structure
+## 7. Project Structure
 
 ```
 grid-guard/
@@ -136,9 +194,9 @@ grid-guard/
 
 ---
 
-## 7. Installation and Execution Guide
+## 8. Installation and Execution Guide
 
-### 7.1 Prerequisites & System Requirements
+### 8.1 Prerequisites & System Requirements
 - **Operating System**: Windows 10/11, Linux (Ubuntu 20.04+), or macOS (Intel / Apple Silicon)
 - **Python Runtime**: Version `3.11` (or `3.12`)
 - **Package Manager**: [`uv`](https://docs.astral.sh/uv/) (recommended for 10x faster installation) or standard `pip`
@@ -147,7 +205,7 @@ grid-guard/
 
 ---
 
-### 7.2 Installation Guide
+### 8.2 Installation Guide
 
 #### Option A: Fast Installation with `uv` (Recommended)
 `uv` automatically handles Python virtual environment creation, resolution, and dependency locking:
@@ -191,7 +249,7 @@ pip install -e .
 
 ---
 
-### 7.3 Running the Backend (FastAPI Inference Service)
+### 8.3 Running the Backend (FastAPI Inference Service)
 
 The backend exposes the core machine learning inference pipeline, Tree-SHAP explainer, dynamic threshold engine, and inspection work-order generator.
 
@@ -225,7 +283,7 @@ uvicorn grid_guard.api.main:app --host 0.0.0.0 --port 8000 --reload
 
 ---
 
-### 7.4 Running the Frontend (Streamlit Operational Dashboard)
+### 8.4 Running the Frontend (Streamlit Operational Dashboard)
 
 The frontend provides an interactive, reactive web dashboard for utility revenue analysts, dispatch supervisors, and field technicians.
 
@@ -256,7 +314,7 @@ streamlit run src/grid_guard/dashboard/app.py --server.port 8501
 
 ---
 
-### 7.5 Running Both Services Concurrently (One-Command Launcher)
+### 8.5 Running Both Services Concurrently (One-Command Launcher)
 
 To launch both the FastAPI backend and Streamlit dashboard in a single terminal session:
 
@@ -272,7 +330,7 @@ This single command:
 
 ---
 
-### 7.6 Running with Docker & Docker Compose
+### 8.6 Running with Docker & Docker Compose
 
 For a zero-dependency, containerized deployment:
 
@@ -295,7 +353,7 @@ docker compose down
 
 ---
 
-### 7.7 Running Automated Tests & Code Quality
+### 8.7 Running Automated Tests & Code Quality
 
 Validate system correctness, leakage prevention, and mathematical formulations across all 162 unit and integration tests:
 
@@ -312,7 +370,7 @@ uv run ruff check .
 
 ---
 
-## 8. Interactive Demonstration Experience
+## 9. Interactive Demonstration Experience
 
 The dashboard includes **5 deterministic synthetic demonstration archetypes** illustrating core operational regimes without exposing real customer data:
 
@@ -324,16 +382,16 @@ The dashboard includes **5 deterministic synthetic demonstration archetypes** il
 
 ---
 
-## 9. Measured Empirical Benchmarks
+## 10. Measured Empirical Benchmarks
 
-### 9.1 Machine Learning Model Comparison (254,232 Validation Samples)
+### 10.1 Machine Learning Model Comparison (254,232 Validation Samples)
 | Phase | Architecture | PR-AUC | ROC-AUC | Precision@100 | Wasted Dispatch | Undetected Leakage | Total Operational Loss |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Phase 4** | Unweighted Baseline | 0.3035 | 0.7739 | 0.65 | $261,200 | $1,711,500 | $1,972,700 |
 | **Phase 5** | SMOTE-Tomek Imbalance | 0.2841 | 0.7612 | 0.58 | $342,100 | $1,385,200 | $1,727,300 |
 | **Phase 6** | **Cost-Sensitive (Champion)**| **0.3021** | **0.7725** | **0.72** | **$215,800** | **$1,273,600** | **$1,489,400 (-24.5%)** |
 
-### 9.2 Operational Policy Comparison (42,372 Fleet Candidates)
+### 10.2 Operational Policy Comparison (42,372 Fleet Candidates)
 | Inspection Policy Rule | Recommended Dispatches | Expected Gross Recovery | Total Dispatch Cost | Expected Net Value (ENV) | Realized Operational Loss |
 | :--- | :---: | :---: | :---: | :---: | :---: |
 | **Fixed Threshold (p >= 0.50)** | 170 (0.40%) | $240,120.42 | $17,000.00 | $223,120.42 | $82,685.27 |
@@ -342,7 +400,7 @@ The dashboard includes **5 deterministic synthetic demonstration archetypes** il
 
 ---
 
-## 10. Financial Methodology & Caveats
+## 11. Financial Methodology & Caveats
 
 - **Observed / Derived**: Daily deficits and unmetered volumes are derived from comparing recent 14-day consumption against historical 60-day baselines.
 - **Assumed / Modeled Parameters**: Default tariff (\$0.15/kWh), crew dispatch cost (\$100/visit), and recovery horizon (12 billing cycles) are configurable in settings.
@@ -350,7 +408,7 @@ The dashboard includes **5 deterministic synthetic demonstration archetypes** il
 
 ---
 
-## 11. Known Limitations & Future Work
+## 12. Known Limitations & Future Work
 
 - **Granularity**: The current release operates on daily AMI aggregates. Integrating 15-minute interval smart-meter data could unlock reactive power and phase-angle anomaly signatures.
 - **Feeder Aggregation**: Future iterations can incorporate substation-level energy balancing (total feeder sendout vs. sum of meters) to bound total NTL prior to individual meter scoring.
@@ -358,7 +416,7 @@ The dashboard includes **5 deterministic synthetic demonstration archetypes** il
 
 ---
 
-## 12. License & Citation
+## 13. License & Citation
 
 Grid-Guard is developed for research and operational utility loss reduction under the MIT License.
 Dataset acknowledgments: State Grid Corporation of China (SGCC) Smart Meter Benchmark.
