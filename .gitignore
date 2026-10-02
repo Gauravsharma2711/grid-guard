@@ -44,6 +44,8 @@ data/external/*
 artifacts/baseline/*.txt
 artifacts/imbalance/*.txt
 artifacts/cost_sensitive/*.txt
+artifacts/decision/*.csv
+!artifacts/decision/top_100_inspection_tickets.csv
 
 # MLflow tracking artifacts & runs
 mlruns/

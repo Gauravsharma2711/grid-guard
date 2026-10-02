@@ -248,10 +248,53 @@
 
 ---
 
+## Phase 7: Dynamic Thresholding, Expected Net Value & Inspection Prioritization
+
+- **Status**: Completed / Operational
+- **Completed Date**: 2026-10-02
+- **Lead Implementation Engineer**: Antigravity Autonomous Agent
+
+### 1. Completed Items
+- [x] **Dynamic Decision Threshold Engine (`grid_guard.decision.thresholds`)**:
+  - Implemented Bayes Cost Threshold minimizing expected error loss: $\tau_{\text{cost}, i} = \frac{C_{\text{dispatch}}}{C_{\text{dispatch}} + C_{FN, i}}$.
+  - Implemented Direct Economic ENV Threshold guaranteeing positive expected net cash return: $\tau_{\text{env}, i} = \frac{C_{\text{dispatch}}}{R_i}$ (when $R_i > 0$).
+  - Established and proved the mathematical inequality $\tau_{\text{cost}, i} < \tau_{\text{env}, i}$ for all positive error costs and revenues.
+- [x] **Expected Net Value Prioritization Engine (`grid_guard.decision.env`, `grid_guard.decision.prioritization`)**:
+  - Formulated and computed: $\text{ENV}_i = p_i \times R_i - C_{\text{dispatch}}$ across 42,372 candidate meters.
+  - Implemented strict period aggregation (`latest_snapshot`), collapsing multitemporal records to strictly **one ticket per meter per inspection unit**.
+  - Generated deterministic cryptographic ticket IDs via SHA-256: `TCK-{eval_period}-{hash[:8]}`.
+  - Built multi-key ranking system sorting primarily by ENV descending, with calibrated probability, recoverable revenue, and meter ID tie-breakers.
+- [x] **Capacity-Constrained Dispatch Policy (`grid_guard.decision.capacity`)**:
+  - Enforced `strictly_positive_env` policy ensuring field crews are never dispatched to loss-making inspections merely to fill quotas.
+  - Supported configurable hard caps `max_inspections_per_period`.
+- [x] **Controlled Three-Policy Benchmark Evaluation**:
+  - Evaluated on the held-out test partition (42,372 unique candidate meters):
+    - **Policy A (Fixed Threshold $p \ge 0.5$)**: 170 inspections, 79 confirmed thefts, Expected Net Value = $223,120.42, Realized Net Recovery = $161,410.85.
+    - **Policy B (Bayes Cost Threshold $p \ge \tau_{\text{cost}}$)**: 880 inspections, 235 confirmed thefts, Expected Net Value = $274,497.41, Realized Net Recovery = $160,422.29.
+    - **Policy C (Dynamic ENV Rule $\text{ENV} > 0$)**: **801 inspections**, **224 confirmed thefts**, **Expected Net Value = $275,230.47** (Highest), **Realized Net Recovery = $164,753.20** (Highest).
+    - **Economic Insight**: Dynamic ENV eliminated 79 marginal inspections recommended by Bayes Cost that cost $7,900 but returned only $3,569, increasing realized net recovery by **+$4,330.91** and nearly tripling theft detection over Fixed 0.5 (+183.5%).
+- [x] **Top-K Inspection Queue Analysis (`grid_guard.evaluation.decision_metrics`)**:
+  - Top 10 inspections: Precision@10 = **60.0%**, Realized Net Recovery = **$92,832.00**.
+  - Top 50 inspections: Precision@50 = **46.0%**, Realized Net Recovery = **$132,658.00**.
+  - Top 100 inspections: Precision@100 = **37.0%**, Realized Net Recovery = **$145,887.00**.
+  - Top 500 inspections: Realized Net Recovery = **$173,164.00** (cumulative recovery peak).
+- [x] **Economic Scenario Sensitivity Analysis**:
+  - Verified queue contractions and expansions under High/Low Dispatch Cost ($200 vs $50), High/Low Tariff ($0.25 vs $0.08), and Conservative Recovery (70%).
+- [x] **Publication-Grade Visualizations & Tracking (`grid_guard.evaluation.plots`)**:
+  - Generated 5 publication-grade figures in `artifacts/decision/figures/` (`env_distribution.png`, `probability_vs_env.png`, `threshold_vs_financial_exposure.png`, `cumulative_env_by_rank.png`, `policy_comparison_bar.png`).
+  - Tracked run `decision_engine_env` to MLflow experiment `grid-guard-ntl-detection` (Run ID: `c0dfbc322a8241c5b00ec5d9192ab988`).
+  - Exported `artifacts/decision/inspection_tickets.parquet`, `decision_comparison.json`, `decision_comparison_report.md`, and `top_100_inspection_tickets.csv`.
+- [x] **Automated CLI & Test Suite**:
+  - Built `scripts/run_decision_engine.py` supporting `all`, `tickets`, `evaluate`, and `scenarios`.
+  - Expanded test suite to **105 tests** with **89.61%** line coverage.
+  - Ruff formatting and linting 100% compliant across 112 files.
+
+---
+
 ### 2. Next Phase
 
-- **Phase 7: Dynamic Cost-Optimal Thresholds & Expected Net Value (ENV) Inspection Prioritization**
-  - Implement per-meter Bayesian cost-optimal thresholding $p_i^* = \frac{C_{\text{dispatch}}}{C_{FN, i}}$.
-  - Compute Expected Net Value: $\text{ENV}_i = p_i \cdot C_{FN, i} - C_{\text{dispatch}}$.
-  - Prioritize dispatches dynamically under finite utility crew constraints ($\text{ENV}_i > 0$).
+- **Phase 8: Explainable AI (XAI) with Tree SHAP & Feature Attribution**
+  - Implement TreeSHAP explainability for individual inspection tickets.
+  - Generate local feature contribution waterfalls and global summary beeswarm plots.
+  - Provide human-auditable explanations for why specific meters were prioritized for physical inspection.
 

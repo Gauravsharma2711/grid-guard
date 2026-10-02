@@ -94,4 +94,23 @@ cost_sensitive:
   selection_metric: "total_operational_loss"
   random_seed: 42
 
+decision:
+  decision_rule: "env"
+  dispatch_cost: 100.0
+  default_tariff: 0.15
+  recovery_factor: 1.0
+  undetected_cycles: 12
+  min_leakage_kwh: 5.0
+  min_probability: 0.0
+  min_recoverable_revenue: 0.0
+  min_env: 0.0
+  fixed_threshold: 0.5
+  max_inspections_per_period: null
+  capacity_policy: "strictly_positive_env"
+  ranking_strategy: "env_descending"
+  probability_source: "calibrated"
+  aggregation_period: "latest_snapshot"
+  top_k_values: [10, 25, 50, 100, 250, 500, 1000, 2000]
+  random_seed: 42
+
 

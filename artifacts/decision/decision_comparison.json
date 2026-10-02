@@ -1,0 +1,292 @@
+{
+  "execution_time_seconds": 5.1,
+  "decision_settings": {
+    "decision_rule": "env",
+    "dispatch_cost": 100.0,
+    "default_tariff": 0.15,
+    "recovery_factor": 1.0,
+    "undetected_cycles": 12,
+    "fixed_threshold": 0.5,
+    "capacity_policy": "strictly_positive_env",
+    "ranking_strategy": "env_descending",
+    "aggregation_period": "latest_snapshot"
+  },
+  "primary_queue_summary": {
+    "total_candidates": 42372,
+    "inspections_recommended": 801,
+    "inspection_rate_pct": 1.89,
+    "expected_financials": {
+      "expected_gross_recovery": 355330.47,
+      "expected_dispatch_cost": 80100.0,
+      "expected_net_value": 275230.47,
+      "mean_env_per_ticket": 343.61,
+      "median_env_per_ticket": 67.52,
+      "max_env": 32275.68
+    },
+    "realized_evaluation": {
+      "tp": 224,
+      "fp": 577,
+      "fn": 3391,
+      "tn": 38180,
+      "precision": 0.2797,
+      "recall": 0.062,
+      "f1_score": 0.1014,
+      "realized_fp_dispatch_cost": 57700.0,
+      "realized_tp_dispatch_cost": 22400.0,
+      "realized_total_dispatch_cost": 80100.0,
+      "realized_fn_leakage_lost": 7142.91,
+      "realized_gross_recovery": 244853.2,
+      "realized_net_recovery": 164753.2,
+      "realized_total_operational_loss": 64842.91
+    }
+  },
+  "policy_comparison": {
+    "fixed_threshold_0.5": {
+      "total_candidates": 42372,
+      "inspections_recommended": 170,
+      "inspection_rate_pct": 0.4,
+      "expected_financials": {
+        "expected_gross_recovery": 240120.42,
+        "expected_dispatch_cost": 17000.0,
+        "expected_net_value": 223120.42,
+        "mean_env_per_ticket": 1312.47,
+        "median_env_per_ticket": 565.15,
+        "max_env": 32275.68
+      },
+      "realized_evaluation": {
+        "tp": 79,
+        "fp": 91,
+        "fn": 3536,
+        "tn": 38666,
+        "precision": 0.4647,
+        "recall": 0.0219,
+        "f1_score": 0.0417,
+        "realized_fp_dispatch_cost": 9100.0,
+        "realized_tp_dispatch_cost": 7900.0,
+        "realized_total_dispatch_cost": 17000.0,
+        "realized_fn_leakage_lost": 73585.27,
+        "realized_gross_recovery": 178410.85,
+        "realized_net_recovery": 161410.85,
+        "realized_total_operational_loss": 82685.27
+      }
+    },
+    "bayes_cost_threshold": {
+      "total_candidates": 42372,
+      "inspections_recommended": 880,
+      "inspection_rate_pct": 2.08,
+      "expected_financials": {
+        "expected_gross_recovery": 362497.41,
+        "expected_dispatch_cost": 88000.0,
+        "expected_net_value": 274497.41,
+        "mean_env_per_ticket": 311.93,
+        "median_env_per_ticket": 57.77,
+        "max_env": 32275.68
+      },
+      "realized_evaluation": {
+        "tp": 235,
+        "fp": 645,
+        "fn": 3380,
+        "tn": 38112,
+        "precision": 0.267,
+        "recall": 0.065,
+        "f1_score": 0.1046,
+        "realized_fp_dispatch_cost": 64500.0,
+        "realized_tp_dispatch_cost": 23500.0,
+        "realized_total_dispatch_cost": 88000.0,
+        "realized_fn_leakage_lost": 3573.82,
+        "realized_gross_recovery": 248422.29,
+        "realized_net_recovery": 160422.29,
+        "realized_total_operational_loss": 68073.82
+      }
+    },
+    "dynamic_env_rule": {
+      "total_candidates": 42372,
+      "inspections_recommended": 801,
+      "inspection_rate_pct": 1.89,
+      "expected_financials": {
+        "expected_gross_recovery": 355330.47,
+        "expected_dispatch_cost": 80100.0,
+        "expected_net_value": 275230.47,
+        "mean_env_per_ticket": 343.61,
+        "median_env_per_ticket": 67.52,
+        "max_env": 32275.68
+      },
+      "realized_evaluation": {
+        "tp": 224,
+        "fp": 577,
+        "fn": 3391,
+        "tn": 38180,
+        "precision": 0.2797,
+        "recall": 0.062,
+        "f1_score": 0.1014,
+        "realized_fp_dispatch_cost": 57700.0,
+        "realized_tp_dispatch_cost": 22400.0,
+        "realized_total_dispatch_cost": 80100.0,
+        "realized_fn_leakage_lost": 7142.91,
+        "realized_gross_recovery": 244853.2,
+        "realized_net_recovery": 164753.2,
+        "realized_total_operational_loss": 64842.91
+      }
+    }
+  },
+  "top_k_ranking": [
+    {
+      "k": 10,
+      "inspections_evaluated": 10,
+      "expected_gross_recovery": 106487.91,
+      "expected_dispatch_cost": 1000.0,
+      "expected_net_value": 105487.91,
+      "confirmed_thefts": 6,
+      "precision_at_k": 0.6,
+      "recall_at_k": 0.0017,
+      "realized_gross_recovery": 93831.5,
+      "realized_net_recovery": 92831.5
+    },
+    {
+      "k": 25,
+      "inspections_evaluated": 25,
+      "expected_gross_recovery": 145037.03,
+      "expected_dispatch_cost": 2500.0,
+      "expected_net_value": 142537.03,
+      "confirmed_thefts": 13,
+      "precision_at_k": 0.52,
+      "recall_at_k": 0.0036,
+      "realized_gross_recovery": 117436.0,
+      "realized_net_recovery": 114936.0
+    },
+    {
+      "k": 50,
+      "inspections_evaluated": 50,
+      "expected_gross_recovery": 179998.4,
+      "expected_dispatch_cost": 5000.0,
+      "expected_net_value": 174998.4,
+      "confirmed_thefts": 23,
+      "precision_at_k": 0.46,
+      "recall_at_k": 0.0064,
+      "realized_gross_recovery": 137658.46,
+      "realized_net_recovery": 132658.46
+    },
+    {
+      "k": 100,
+      "inspections_evaluated": 100,
+      "expected_gross_recovery": 221126.09,
+      "expected_dispatch_cost": 10000.0,
+      "expected_net_value": 211126.09,
+      "confirmed_thefts": 37,
+      "precision_at_k": 0.37,
+      "recall_at_k": 0.0102,
+      "realized_gross_recovery": 155886.83,
+      "realized_net_recovery": 145886.83
+    },
+    {
+      "k": 250,
+      "inspections_evaluated": 250,
+      "expected_gross_recovery": 274194.28,
+      "expected_dispatch_cost": 25000.0,
+      "expected_net_value": 249194.28,
+      "confirmed_thefts": 84,
+      "precision_at_k": 0.336,
+      "recall_at_k": 0.0232,
+      "realized_gross_recovery": 190436.3,
+      "realized_net_recovery": 165436.3
+    },
+    {
+      "k": 500,
+      "inspections_evaluated": 500,
+      "expected_gross_recovery": 319437.91,
+      "expected_dispatch_cost": 50000.0,
+      "expected_net_value": 269437.91,
+      "confirmed_thefts": 158,
+      "precision_at_k": 0.316,
+      "recall_at_k": 0.0437,
+      "realized_gross_recovery": 223164.13,
+      "realized_net_recovery": 173164.13
+    },
+    {
+      "k": 1000,
+      "inspections_evaluated": 1000,
+      "expected_gross_recovery": 368675.35,
+      "expected_dispatch_cost": 100000.0,
+      "expected_net_value": 268675.35,
+      "confirmed_thefts": 244,
+      "precision_at_k": 0.244,
+      "recall_at_k": 0.0675,
+      "realized_gross_recovery": 251160.83,
+      "realized_net_recovery": 151160.83
+    },
+    {
+      "k": 2000,
+      "inspections_evaluated": 2000,
+      "expected_gross_recovery": 370809.94,
+      "expected_dispatch_cost": 200000.0,
+      "expected_net_value": 170809.94,
+      "confirmed_thefts": 636,
+      "precision_at_k": 0.318,
+      "recall_at_k": 0.1759,
+      "realized_gross_recovery": 251996.12,
+      "realized_net_recovery": 51996.12
+    }
+  ],
+  "scenario_sensitivity": {
+    "baseline": {
+      "dispatch_cost": 100.0,
+      "recovery_factor": 1.0,
+      "inspections_recommended": 801,
+      "expected_gross_recovery": 355330.47,
+      "expected_net_value": 275230.47,
+      "mean_env_per_ticket": 343.61,
+      "realized_precision": 0.2797,
+      "realized_net_recovery": 164753.2
+    },
+    "high_dispatch_cost_200": {
+      "dispatch_cost": 200.0,
+      "recovery_factor": 1.0,
+      "inspections_recommended": 313,
+      "expected_gross_recovery": 288043.04,
+      "expected_net_value": 225443.04,
+      "mean_env_per_ticket": 720.27,
+      "realized_precision": 0.3195,
+      "realized_net_recovery": 136054.08
+    },
+    "low_dispatch_cost_50": {
+      "dispatch_cost": 50.0,
+      "recovery_factor": 1.0,
+      "inspections_recommended": 937,
+      "expected_gross_recovery": 366117.34,
+      "expected_net_value": 319267.34,
+      "mean_env_per_ticket": 340.73,
+      "realized_precision": 0.2561,
+      "realized_net_recovery": 203084.7
+    },
+    "conservative_recovery_0.70": {
+      "dispatch_cost": 100.0,
+      "recovery_factor": 0.7,
+      "inspections_recommended": 510,
+      "expected_gross_recovery": 224613.75,
+      "expected_net_value": 173613.75,
+      "mean_env_per_ticket": 340.42,
+      "realized_precision": 0.3196,
+      "realized_net_recovery": 106612.56
+    },
+    "high_tariff_0.25": {
+      "dispatch_cost": 100.0,
+      "recovery_factor": 1.667,
+      "inspections_recommended": 917,
+      "expected_gross_recovery": 608364.03,
+      "expected_net_value": 516664.03,
+      "mean_env_per_ticket": 563.43,
+      "realized_precision": 0.2595,
+      "realized_net_recovery": 323761.37
+    },
+    "low_tariff_0.08": {
+      "dispatch_cost": 100.0,
+      "recovery_factor": 0.533,
+      "inspections_recommended": 342,
+      "expected_gross_recovery": 156594.88,
+      "expected_net_value": 122394.88,
+      "mean_env_per_ticket": 357.88,
+      "realized_precision": 0.3187,
+      "realized_net_recovery": 73965.17
+    }
+  }
+}

@@ -4,6 +4,7 @@ from grid_guard.evaluation.cost_analysis import (
     FinancialWeightAuditReport,
     FinancialWeightBuilder,
 )
+from grid_guard.evaluation.decision_metrics import DecisionEvaluator
 from grid_guard.evaluation.financial import (
     DataSourceType,
     FinancialAuditRecord,
@@ -17,6 +18,7 @@ from grid_guard.evaluation.metrics import (
 from grid_guard.evaluation.plots import (
     BaselineVisualizer,
     CostSensitiveVisualizer,
+    DecisionVisualizer,
     ImbalanceVisualizer,
 )
 
@@ -26,6 +28,8 @@ __all__ = [
     "ClassificationMetricsEvaluator",
     "CostSensitiveVisualizer",
     "DataSourceType",
+    "DecisionEvaluator",
+    "DecisionVisualizer",
     "FinancialAuditRecord",
     "FinancialCostEvaluator",
     "FinancialDiagnosticEvaluator",

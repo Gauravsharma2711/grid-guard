@@ -752,3 +752,279 @@ class CostSensitiveVisualizer:
         fig.savefig(out_path, dpi=200)
         plt.close(fig)
         return out_path
+
+
+class DecisionVisualizer:
+    """Visualization engine for Expected Net Value (ENV), dynamic thresholds, and inspection queues."""
+
+    def __init__(self, output_dir: Path | str) -> None:
+        self.output_dir = Path(output_dir)
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+        plt.rcParams.update(
+            {
+                "figure.autolayout": True,
+                "axes.titlesize": 12,
+                "axes.labelsize": 10,
+                "xtick.labelsize": 9,
+                "ytick.labelsize": 9,
+                "legend.fontsize": 9,
+                "lines.linewidth": 1.8,
+            }
+        )
+
+    def plot_env_distribution(
+        self,
+        env_values: np.ndarray,
+        output_filename: str = "env_distribution.png",
+    ) -> Path:
+        """Plot histogram and KDE distribution of Expected Net Value (ENV) across meters."""
+        fig, ax = plt.subplots(figsize=(8, 5))
+
+        # Separate positive vs negative ENV
+        pos_env = env_values[env_values > 0]
+        neg_env = env_values[env_values <= 0]
+
+        # Clip extreme outliers for visualization clarity
+        p99 = np.percentile(pos_env, 99.0) if len(pos_env) > 0 else 1000.0
+        vis_env = np.clip(env_values, -150.0, p99 * 1.5)
+
+        ax.hist(
+            vis_env[vis_env <= 0],
+            bins=30,
+            color="#E53E3E",
+            alpha=0.7,
+            label=f"Negative ENV (Unjustified): {len(neg_env):,} ({len(neg_env) / len(env_values) * 100:.1f}%)",
+        )
+        ax.hist(
+            vis_env[vis_env > 0],
+            bins=40,
+            color="#38A169",
+            alpha=0.8,
+            label=f"Positive ENV (Viable): {len(pos_env):,} ({len(pos_env) / len(env_values) * 100:.1f}%)",
+        )
+
+        ax.axvline(0, color="black", linestyle="--", linewidth=1.5, label="ENV = $0.00 Hurdle")
+        ax.set_xlabel("Expected Net Value ($ USD)")
+        ax.set_ylabel("Candidate Meter Count")
+        ax.set_title("Expected Net Value (ENV) Distribution Across Candidate Meters")
+        ax.legend(loc="upper right")
+        ax.grid(True, linestyle="--", alpha=0.5)
+
+        fig.tight_layout()
+        out_path = self.output_dir / output_filename
+        fig.savefig(out_path, dpi=200)
+        plt.close(fig)
+        return out_path
+
+    def plot_probability_vs_env(
+        self,
+        probabilities: np.ndarray,
+        env_values: np.ndarray,
+        recoverable_revenue: np.ndarray,
+        output_filename: str = "probability_vs_env.png",
+    ) -> Path:
+        """Scatter plot showing Predicted Probability vs. ENV, color-coded by financial exposure."""
+        fig, ax = plt.subplots(figsize=(9, 6))
+
+        # Subsample if large to prevent overplotting
+        n_samples = len(probabilities)
+        if n_samples > 10000:
+            idx = np.random.choice(n_samples, 10000, replace=False)
+            p_sub = probabilities[idx]
+            env_sub = env_values[idx]
+            r_sub = recoverable_revenue[idx]
+        else:
+            p_sub = probabilities
+            env_sub = env_values
+            r_sub = recoverable_revenue
+
+        # Clip visual range
+        r_log = np.log10(np.maximum(1.0, r_sub))
+        scatter = ax.scatter(
+            p_sub,
+            env_sub,
+            c=r_log,
+            cmap="viridis",
+            alpha=0.5,
+            s=12,
+            edgecolors="none",
+        )
+        cbar = fig.colorbar(scatter, ax=ax)
+        cbar.set_label("Log10 Recoverable Revenue ($)")
+
+        ax.axhline(0, color="red", linestyle="--", linewidth=1.5, label="ENV = $0 Threshold")
+        ax.axvline(0.5, color="gray", linestyle=":", linewidth=1.2, label="Fixed p = 0.5")
+
+        ax.set_xlabel("Predicted Tampering Probability (p)")
+        ax.set_ylabel("Expected Net Value (ENV = p * R - C_dispatch)")
+        ax.set_title("Probability vs. Expected Net Value: Financial Exposure Decoupling")
+        ax.legend(loc="upper left")
+        ax.grid(True, linestyle="--", alpha=0.5)
+
+        fig.tight_layout()
+        out_path = self.output_dir / output_filename
+        fig.savefig(out_path, dpi=200)
+        plt.close(fig)
+        return out_path
+
+    def plot_threshold_vs_financial_exposure(
+        self,
+        dispatch_cost: float = 100.0,
+        max_revenue: float = 2000.0,
+        output_filename: str = "threshold_vs_financial_exposure.png",
+    ) -> Path:
+        """Plot the relationship between Recoverable Revenue and Dynamic Thresholds."""
+        fig, ax = plt.subplots(figsize=(8, 5))
+
+        r_vals = np.linspace(10.0, max_revenue, 300)
+        # Bayes cost threshold: tau_cost = C / (C + R)
+        tau_cost = dispatch_cost / (dispatch_cost + r_vals)
+        # ENV threshold: tau_env = C / R
+        tau_env = np.clip(dispatch_cost / r_vals, 0.0, 1.0)
+
+        ax.plot(
+            r_vals,
+            tau_cost,
+            label=r"Bayes Cost Threshold $\tau_{\mathrm{cost}} = \frac{C_{\mathrm{disp}}}{C_{\mathrm{disp}} + R}$",
+            color="#2B6CB0",
+            linewidth=2.0,
+        )
+        ax.plot(
+            r_vals,
+            tau_env,
+            label=r"Direct ENV Threshold $\tau_{\mathrm{env}} = \frac{C_{\mathrm{disp}}}{R}$",
+            color="#C53030",
+            linewidth=2.0,
+        )
+        ax.axhline(
+            0.5,
+            color="#718096",
+            linestyle="--",
+            label="Conventional Fixed Threshold (p = 0.5)",
+            linewidth=1.5,
+        )
+
+        ax.set_xlabel("Estimated Financial Exposure / Recoverable Revenue ($ USD)")
+        ax.set_ylabel("Decision Threshold (Probability Cutoff)")
+        ax.set_title(
+            f"Dynamic Threshold Response to Revenue Exposure (C_dispatch = ${dispatch_cost:,.0f})"
+        )
+        ax.set_ylim([0.0, 1.05])
+        ax.legend(loc="upper right")
+        ax.grid(True, linestyle="--", alpha=0.5)
+
+        fig.tight_layout()
+        out_path = self.output_dir / output_filename
+        fig.savefig(out_path, dpi=200)
+        plt.close(fig)
+        return out_path
+
+    def plot_cumulative_env_by_rank(
+        self,
+        env_ranked_env: np.ndarray,
+        prob_ranked_env: np.ndarray,
+        top_n: int = 1000,
+        output_filename: str = "cumulative_env_by_rank.png",
+    ) -> Path:
+        """Compare cumulative realized/expected net value between ENV-ranked and Probability-ranked queues."""
+        fig, ax = plt.subplots(figsize=(9, 5))
+
+        n_eff = min(top_n, len(env_ranked_env), len(prob_ranked_env))
+        cum_env_rule = np.cumsum(env_ranked_env[:n_eff])
+        cum_prob_rule = np.cumsum(prob_ranked_env[:n_eff])
+
+        x = np.arange(1, n_eff + 1)
+        ax.plot(
+            x,
+            cum_env_rule,
+            label="Grid-Guard Dynamic ENV Prioritization",
+            color="#38A169",
+            linewidth=2.2,
+        )
+        ax.plot(
+            x,
+            cum_prob_rule,
+            label="Traditional Probability-Only Prioritization",
+            color="#4A5568",
+            linestyle="--",
+            linewidth=1.8,
+        )
+
+        ax.set_xlabel("Number of Dispatched Field Inspections (Top-K)")
+        ax.set_ylabel("Cumulative Expected Net Value ($ USD)")
+        ax.set_title(f"Cumulative Financial Yield by Inspection Quota (Top {n_eff:,} Inspections)")
+        ax.legend(loc="lower right")
+        ax.grid(True, linestyle="--", alpha=0.5)
+
+        fig.tight_layout()
+        out_path = self.output_dir / output_filename
+        fig.savefig(out_path, dpi=200)
+        plt.close(fig)
+        return out_path
+
+    def plot_policy_comparison_bar(
+        self,
+        comparison_dict: dict[str, Any],
+        output_filename: str = "policy_comparison_bar.png",
+    ) -> Path:
+        """Bar chart comparing inspections, dispatch cost, and net recovery across decision policies."""
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+
+        policy_labels = {
+            "fixed_threshold_0.5": "Fixed (p >= 0.5)",
+            "bayes_cost_threshold": "Bayes Cost (p >= tau_cost)",
+            "dynamic_env_rule": "Dynamic ENV (ENV > 0)",
+        }
+        names = [policy_labels.get(k, k) for k in comparison_dict.keys()]
+
+        inspections = [comparison_dict[k]["inspections_recommended"] for k in comparison_dict]
+        exp_env = [
+            comparison_dict[k]["expected_financials"]["expected_net_value"] for k in comparison_dict
+        ]
+
+        x = np.arange(len(names))
+        colors = ["#718096", "#3182CE", "#38A169"]
+
+        # Plot 1: Total Inspections
+        bars1 = ax1.bar(x, inspections, color=colors, alpha=0.85)
+        ax1.set_xticks(x)
+        ax1.set_xticklabels(names, rotation=15, ha="right")
+        ax1.set_ylabel("Number of Recommended Inspections")
+        ax1.set_title("Field Inspection Quota Demands")
+        ax1.grid(True, linestyle="--", alpha=0.5, axis="y")
+        for bar in bars1:
+            h = bar.get_height()
+            ax1.annotate(
+                f"{h:,}",
+                xy=(bar.get_x() + bar.get_width() / 2, h),
+                xytext=(0, 3),
+                textcoords="offset points",
+                ha="center",
+                va="bottom",
+                fontweight="bold",
+            )
+
+        # Plot 2: Expected Net Value ($)
+        bars2 = ax2.bar(x, [e / 1000.0 for e in exp_env], color=colors, alpha=0.85)
+        ax2.set_xticks(x)
+        ax2.set_xticklabels(names, rotation=15, ha="right")
+        ax2.set_ylabel("Expected Net Value ($k USD)")
+        ax2.set_title("Projected Utility Net Financial Yield ($k)")
+        ax2.grid(True, linestyle="--", alpha=0.5, axis="y")
+        for bar in bars2:
+            h = bar.get_height()
+            ax2.annotate(
+                f"${h:,.1f}k",
+                xy=(bar.get_x() + bar.get_width() / 2, h),
+                xytext=(0, 3),
+                textcoords="offset points",
+                ha="center",
+                va="bottom",
+                fontweight="bold",
+            )
+
+        fig.tight_layout()
+        out_path = self.output_dir / output_filename
+        fig.savefig(out_path, dpi=200)
+        plt.close(fig)
+        return out_path

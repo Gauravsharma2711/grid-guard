@@ -5,6 +5,14 @@ from grid_guard.config.cost_sensitive import (
     CostSensitiveSettings,
     ProbabilityCalibrationType,
 )
+from grid_guard.config.decision import (
+    AggregationPeriod,
+    CapacityPolicy,
+    DecisionRule,
+    DecisionSettings,
+    ProbabilitySource,
+    RankingStrategy,
+)
 from grid_guard.config.financial import BaselineModelSettings, FinancialAssumptions
 from grid_guard.config.imbalance import ImbalanceSettings, ImbalanceStrategyType
 from grid_guard.config.settings import (
@@ -18,16 +26,22 @@ from grid_guard.config.settings import (
 )
 
 __all__ = [
+    "AggregationPeriod",
     "BaselineModelSettings",
+    "CapacityPolicy",
     "CostNormalizationType",
     "CostSensitiveSettings",
     "DatasetColumnMapping",
     "DatasetSettings",
+    "DecisionRule",
+    "DecisionSettings",
     "FeatureSettings",
     "FinancialAssumptions",
     "ImbalanceSettings",
     "ImbalanceStrategyType",
     "ProbabilityCalibrationType",
+    "ProbabilitySource",
+    "RankingStrategy",
     "Settings",
     "TrackingSettings",
     "find_project_root",

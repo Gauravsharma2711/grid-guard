@@ -32,8 +32,10 @@ Field inspections are prioritized strictly when $\text{ENV} > 0$ and ranked to m
 - **Phase 4: Cost Matrix Definition & Unweighted Baseline Modeling** — *Completed / Operational*
 - **Phase 5: Class Imbalance & Representation Strategies** — *Completed / Operational*
 - **Phase 6: Cost-Sensitive Custom Objective & Financially Weighted Learning** — *Completed / Operational*
-- **Phase 7: Expected Net Value (ENV) & Dynamic Thresholding** — *Upcoming*
-- **Phase 8: Explainable AI (SHAP) & Operational Dashboard** — *Upcoming*
+- **Phase 7: Expected Net Value (ENV) & Dynamic Thresholding** — *Completed / Operational*
+- **Phase 8: Explainable AI (SHAP Tree Explainer & Attribution)** — *Upcoming*
+- **Phase 9: FastAPI Operational Decision Service** — *Upcoming*
+- **Phase 10: Interactive Operational Dashboard** — *Upcoming*
 
 > [!NOTE]
 > Phases 1–4 establish the empirical benchmark: high-performance Polars ingestion, data validation rules, localized bounded-gap imputation, a 60-feature causal temporal extraction pipeline, a strictly time-aware LightGBM baseline binary classifier, and a configurable financial cost model tracking field dispatch costs vs. undetected revenue leakage.
@@ -469,9 +471,89 @@ python scripts/run_cost_sensitive.py all --dispatch-cost 100.0 --tariff 0.15 --n
 
 ---
 
-## 15. Upcoming Phases
+## 15. Dynamic Thresholding, Expected Net Value & Inspection Prioritization (Phase 7)
 
-- **Phase 7**: Expected Net Value (ENV) & Dynamic Per-Meter Inspection Thresholding ($p_i^* = C_{\text{dispatch}} / C_{FN, i}$).
-- **Phase 8**: Explainable AI (SHAP Tree Explainer) & FastAPI Operational Decision Dashboard.
+Phase 7 transforms the Phase 6 cost-sensitive model outputs into a financially informed operational decision engine. Rather than using arbitrary global classification cutoffs (e.g., $p \ge 0.5$), Grid-Guard derives per-meter dynamic thresholds and computes **Expected Net Value (ENV)** to guide operational field crew dispatches.
+
+### A. Mathematical Formulation
+
+For meter $i$, with tamper probability $p_i$, estimated annual recoverable revenue $R_i$, and dispatch cost $C_{\text{dispatch}}$:
+
+1. **Expected Net Value (ENV)**:
+   $$\text{ENV}_i = p_i \times R_i - C_{\text{dispatch}}$$
+   $$\text{Decision Rule: Inspect if } \text{ENV}_i > 0$$
+
+2. **Bayes Cost Threshold ($\tau_{\text{cost}, i}$)**:
+   Minimizes expected classification loss where $C_{FP} = C_{\text{dispatch}}$ and $C_{FN, i} = R_i$:
+   $$\tau_{\text{cost}, i} = \frac{C_{\text{dispatch}}}{C_{\text{dispatch}} + C_{FN, i}}$$
+
+3. **Direct ENV Economic Threshold ($\tau_{\text{env}, i}$)**:
+   Guarantees non-negative expected net cash flow ($p_i \times R_i \ge C_{\text{dispatch}}$):
+   $$\tau_{\text{env}, i} = \frac{C_{\text{dispatch}}}{R_i}$$
+
+> [!NOTE]
+> **Threshold Inequality**: For all valid economic parameters ($R_i = C_{FN, i} > 0, C_{\text{dispatch}} > 0$), $\tau_{\text{cost}, i} < \tau_{\text{env}, i}$. The Bayes cost threshold is slightly more permissive (minimizing aggregate risk), whereas the ENV threshold enforces positive expected cash flow per ticket.
+
+### B. Three-Policy Operational Benchmark (42,372 Candidate Meters)
+
+Evaluated on the held-out test evaluation period:
+
+| Operational Metric | Policy A (Fixed $p \ge 0.5$) | Policy B (Bayes Cost $p \ge \tau_{\text{cost}}$) | Policy C (Dynamic ENV $\text{ENV} > 0$) | Economic Takeaway |
+|---|---|---|---|---|
+| **Dispatched Inspections** | `170` | `880` | **`801`** | Dynamic ENV filters out 79 loss-making dispatches |
+| **Confirmed Thefts ($TP$)** | `79` | **`235`** | **`224`** | **+183.5% more thefts caught** than fixed 0.5 |
+| **False Positives ($FP$)** | `91` | `645` | `577` | Operational trade-off to capture high-value theft |
+| **Inspection Precision** | **`46.47%`** | `26.70%` | `27.97%` | Precision on broad financial coverage |
+| **Theft Recall** | `2.62%` | **`7.78%`** | **`7.42%`** | Triple the recall of fixed thresholding |
+| **Total Crew Dispatch Cost** | **`$17,000.00`** | `$88,000.00` | `$80,100.00` | $7.9k saved vs Bayes Cost |
+| **Expected Net Value (ENV)** | `$223,120.42` | `$274,497.41` | **`$275,230.47`** | **Highest projected economic surplus** |
+| **Realized Gross Recovery** | `$178,410.85` | `$248,422.29` | **`$244,853.20`** | **+$66.4k (+37.2%) revenue recovered** over fixed 0.5 |
+| **Realized Net Recovery** | `$161,410.85` | `$160,422.29` | **`$164,753.20`** | **Highest net return after subtracting dispatch costs** |
+
+### C. Top-K Ranked Inspection Queue (Capacity-Constrained Dispatch)
+
+Meters are sorted deterministically by $\text{ENV}_i$ descending with secondary tie-breakers. Enforces strict capacity limits without dispatching negative-ENV candidates:
+
+| Inspection Quota ($K$) | Target Dispatches | Confirmed Thefts | Precision@K | Cumulative Crew Cost | Realized Gross Recovery | Realized Net Value |
+|---|---|---|---|---|---|---|
+| **Top 10** | 10 | 6 | **60.0%** | $1,000.00 | $93,832.00 | **$92,832.00** |
+| **Top 25** | 25 | 11 | **44.0%** | $2,500.00 | $116,913.00 | **$114,413.00** |
+| **Top 50** | 50 | 23 | **46.0%** | $5,000.00 | $137,658.00 | **$132,658.00** |
+| **Top 100** | 100 | 37 | **37.0%** | $10,000.00 | $155,887.00 | **$145,887.00** |
+| **Top 250** | 250 | 92 | **36.8%** | $25,000.00 | $185,553.00 | **$160,553.00** |
+| **Top 500** | 500 | 170 | **34.0%** | $50,000.00 | $223,164.00 | **$173,164.00** |
+| **Top 801 (All Positive)** | 801 | 224 | **28.0%** | $80,100.00 | $244,853.20 | **$164,753.20** |
+
+### D. Running the Decision Engine
+
+```bash
+# Execute end-to-end decision pipeline: thresholds, ENV, ranking, tickets, comparisons, plots, MLflow
+python scripts/run_decision_engine.py all
+
+# Customize dispatch capacity or operational rule
+python scripts/run_decision_engine.py run --rule env_positive --max-inspections 500
+
+# Run economic scenario sensitivity analysis
+python scripts/run_decision_engine.py scenarios
+```
+
+### E. Generated Phase 7 Artifacts
+- **Prioritized Tickets Parquet**: `artifacts/decision/inspection_tickets.parquet`
+- **Prioritized Tickets CSV**: `artifacts/decision/inspection_tickets.csv`
+- **Top 100 Operational Tickets**: `artifacts/decision/top_100_inspection_tickets.csv`
+- **Policy Comparison JSON**: `artifacts/decision/decision_comparison.json`
+- **Comprehensive Markdown Report**: `artifacts/decision/decision_comparison_report.md`
+- **Detailed Documentation**: `docs/financial_decisioning.md`
+- **5 Publication-Grade Visualizations**: `artifacts/decision/figures/`
+  (`env_distribution.png`, `probability_vs_env.png`, `threshold_vs_financial_exposure.png`, `cumulative_env_by_rank.png`, `policy_comparison_bar.png`)
+
+---
+
+## 16. Upcoming Phases
+
+- **Phase 8**: Explainable AI (TreeSHAP Feature Attribution, Waterfall Inspection Reports, Watermark Auditing).
+- **Phase 9**: FastAPI Operational Decision Microservice (Real-time Scoring, Dynamic Dispatch Tickets).
+- **Phase 10**: Interactive Streamlit / Web Operational Dashboard for Field Crew Operations.
+
 
 
