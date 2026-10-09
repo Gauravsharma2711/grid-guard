@@ -4,12 +4,13 @@
 
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3110/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-1.0.0-009688.svg)](https://fastapi.tiangolo.com/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.64.0-FF4B4B.svg)](https://streamlit.io/)
+[![React 18](https://img.shields.io/badge/React-18-61DAFB.svg)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6.svg)](https://www.typescriptlang.org/)
 [![LightGBM](https://img.shields.io/badge/LightGBM-4.6.0-brightgreen.svg)](https://lightgbm.readthedocs.io/)
 [![Tree--SHAP](https://img.shields.io/badge/Explainability-Tree--SHAP-yellow.svg)](https://shap.readthedocs.io/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg)](https://www.docker.com/)
 [![Code Style: Ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
-[![Tests: 162 Passing](https://img.shields.io/badge/tests-162%20passed-success.svg)](tests/)
+[![Tests: 162 Python | 104 React](https://img.shields.io/badge/tests-266%20passed-success.svg)](tests/)
 
 ---
 
@@ -19,9 +20,10 @@ Grid-Guard turns smart-meter anomaly detection into an economically rational fie
 
 ---
 
-## 2. Interactive Operational Dashboard Interfaces
+## 2. Interactive Operational Interfaces (React + TypeScript)
 
-Grid-Guard provides an enterprise-grade, multi-view operational web interface built with **Streamlit**, connected asynchronously via REST to the FastAPI inference backend. The interface empowers revenue protection analysts, dispatch supervisors, and executive management to monitor fleet health, investigate specific smart meters, inspect model explainability, and configure operational parameters.
+Grid-Guard provides an enterprise-grade operational web interface built with **React 18, TypeScript, and Vite**, strictly conforming to the `/DesignSystem.md` ("Calm Proof Flow") specification and communicating asynchronously via REST with the FastAPI inference backend (`http://localhost:8000`). The interface empowers revenue protection analysts, dispatch supervisors, and executive management to monitor fleet health, investigate specific smart meters, inspect model explainability, review field work orders, and configure operational parameters.
+
 
 ---
 
@@ -347,23 +349,23 @@ See [docs/react_migration.md](docs/react_migration.md) for full architecture aud
 
 ### 8.6 Running Both Services Concurrently (One-Command Launcher)
 
-To launch both the FastAPI backend and Streamlit dashboard in a single terminal session:
+To launch both the FastAPI backend and React frontend concurrently in a single terminal session:
 
 ```bash
 uv run python scripts/run_services.py
 ```
 
 This single command:
-1. Starts the FastAPI inference backend.
+1. Starts the FastAPI inference backend on `http://localhost:8000`.
 2. Waits 3 seconds for the Lifespan model booster to preload into RAM.
-3. Spawns the Streamlit operational dashboard.
+3. Spawns the React Vite development server on `http://localhost:5173`.
 4. Manages process lifecycles cleanly—pressing `Ctrl+C` terminates both services gracefully.
 
 ---
 
 ### 8.7 Running with Docker & Docker Compose
 
-For a zero-dependency, containerized deployment:
+For a zero-dependency, production containerized deployment:
 
 ```bash
 # 1. Build and start all services in detached mode
@@ -379,24 +381,31 @@ docker compose ps
 docker compose down
 ```
 
-- **Dashboard Interface**: [http://localhost:8501](http://localhost:8501)
-- **FastAPI OpenAPI Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)
-
----
+- **React Web Application**: [http://localhost:3000](http://localhost:3000)
+- **FastAPI OpenAPI Documentation**: [http://localhost:8000/docs](http://localhost:8000/docs)
+- **API Health Probe**: [http://localhost:8000/health](http://localhost:8000/health)
 
 ### 8.8 Running Automated Tests & Code Quality
 
-Validate system correctness, leakage prevention, and mathematical formulations across all 162 unit and integration tests:
+Validate system correctness, leakage prevention, financial invariants, and UI components across all 266 unit and integration tests:
 
 ```bash
-# Run complete test suite (162 tests)
-uv run pytest
+# 1. Backend Python regression test suite (162 tests)
+uv run pytest -q
 
-# Run with verbose output and short traceback
-uv run pytest -v --tb=short
-
-# Run code style and linter check (Ruff)
+# 2. Python code quality and linter check (Ruff)
 uv run ruff check .
+
+# 3. Frontend React unit and integration suite (104 tests across 27 files)
+cd frontend
+npm run test
+
+# 4. Frontend TypeScript typecheck and ESLint
+npm run typecheck
+npm run lint
+
+# 5. Production bundle build
+npm run build
 ```
 
 ---

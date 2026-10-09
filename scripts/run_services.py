@@ -1,4 +1,4 @@
-"""CLI runner to launch both the FastAPI backend and Streamlit dashboard concurrently."""
+"""CLI runner to launch both the FastAPI backend and React frontend concurrently."""
 
 from __future__ import annotations
 
@@ -10,9 +10,9 @@ from pathlib import Path
 
 
 def main() -> None:
-    """Launch API and Dashboard simultaneously for seamless local demo."""
+    """Launch API and React Frontend simultaneously for seamless local operation."""
     root_dir = Path(__file__).resolve().parent.parent
-    dashboard_script = root_dir / "scripts" / "run_dashboard.py"
+    frontend_dir = root_dir / "frontend"
     api_script = root_dir / "scripts" / "run_api.py"
 
     print("=" * 65)
@@ -27,20 +27,24 @@ def main() -> None:
     print("Waiting 3 seconds for FastAPI lifespan initialization...")
     time.sleep(3)
 
-    print("Starting Streamlit Dashboard (http://localhost:8501)...")
-    dash_proc = subprocess.Popen([sys.executable, str(dashboard_script)], env=env)
+    print("Starting React Frontend (http://localhost:5173)...")
+    frontend_proc = subprocess.Popen(
+        ["npm", "run", "dev", "--", "--host", "127.0.0.1", "--port", "5173"],
+        cwd=str(frontend_dir),
+        shell=True,
+    )
 
     print("\nServices active:")
     print("  - FastAPI API:       http://localhost:8000  (Docs: /docs)")
-    print("  - Streamlit UI:      http://localhost:8501")
+    print("  - React Frontend:    http://localhost:5173")
     print("Press Ctrl+C to terminate both services.\n")
 
     try:
-        dash_proc.wait()
+        frontend_proc.wait()
     except KeyboardInterrupt:
         print("\nStopping services...")
     finally:
-        for p in (dash_proc, api_proc):
+        for p in (frontend_proc, api_proc):
             try:
                 p.terminate()
                 p.wait(timeout=3)
@@ -51,3 +55,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
