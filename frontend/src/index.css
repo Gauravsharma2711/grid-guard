@@ -1,0 +1,128 @@
+/* ==========================================================================
+   GRID-GUARD DESIGN SYSTEM TOKENS
+   Authoritative source: /designsystem.md
+   ========================================================================== */
+
+:root {
+  /* 2.1 Palette Tokens */
+  --gg-canvas: #fbfbf7;
+  --gg-surface: #ffffff;
+  --gg-ink: #121512;
+  --gg-ink-soft: #344038;
+  --gg-muted: #737b74;
+  --gg-rule: #e1e5dd;
+  --gg-signal: #d9ff4a;
+  --gg-signal-ink: #3f4b08;
+  --gg-evidence: #7d6db2;
+  --gg-safe: #3f8b61;
+  --gg-warning: #b88418;
+  --gg-danger: #c45646;
+  --gg-code: #151a16;
+  --gg-code-ink: #e7eee7;
+
+  /* 3. Typography Families */
+  --gg-font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --gg-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --gg-font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* 4.1 Spacing Scale */
+  --gg-space-1: 4px;
+  --gg-space-2: 8px;
+  --gg-space-3: 12px;
+  --gg-space-4: 16px;
+  --gg-space-6: 24px;
+  --gg-space-8: 32px;
+  --gg-space-12: 48px;
+  --gg-space-16: 64px;
+  --gg-space-20: 80px;
+
+  /* 4.2 Geometry Tokens */
+  --gg-radius-xs: 4px;
+  --gg-radius-sm: 6px;
+  --gg-radius-lg: 10px;
+  --gg-rule-width: 1px;
+  --gg-header-height: 58px;
+  --gg-content-width: 640px;
+  --gg-drawer-width: 480px;
+  --gg-control-height: 44px;
+  --gg-page-max-width: 1440px;
+
+  /* 7. Motion Tokens */
+  --gg-motion-press: 140ms ease;
+  --gg-motion-content: 220ms ease;
+  --gg-motion-drawer: 240ms ease;
+}
+
+/* ==========================================================================
+   CSS RESET & BASE STYLES
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--gg-canvas);
+  color: var(--gg-ink);
+  font-family: var(--gg-font-body);
+  line-height: 1.55;
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--gg-canvas);
+  color: var(--gg-ink);
+}
+
+/* Accessible focus styling */
+:focus-visible {
+  outline: 2px solid var(--gg-ink);
+  outline-offset: 2px;
+}
+
+/* Typography elements */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--gg-font-display);
+  font-weight: 600;
+  color: var(--gg-ink);
+  line-height: 1.1;
+}
+
+p {
+  color: var(--gg-ink-soft);
+}
+
+code, pre, kbd, samp {
+  font-family: var(--gg-font-mono);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: var(--gg-font-body);
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

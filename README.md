@@ -314,7 +314,38 @@ streamlit run src/grid_guard/dashboard/app.py --server.port 8501
 
 ---
 
-### 8.5 Running Both Services Concurrently (One-Command Launcher)
+### 8.5 Running the React + TypeScript Frontend (Phase 1 Foundation)
+
+The repository includes a modern React + TypeScript frontend foundation located in `frontend/`, designed to replace Streamlit over a five-phase migration following the authoritative Calm Proof Flow design system (`designsystem.md`).
+
+```bash
+# Navigate to the frontend directory
+cd frontend
+
+# Install dependencies
+npm install
+
+# Start the Vite development server (http://localhost:3000)
+npm run dev
+
+# Run strict TypeScript type-checking
+npm run typecheck
+
+# Run ESLint check
+npm run lint
+
+# Run Vitest automated test suite
+npm run test
+
+# Build production bundle
+npm run build
+```
+
+See [docs/react_migration.md](docs/react_migration.md) for full architecture audit and migration documentation.
+
+---
+
+### 8.6 Running Both Services Concurrently (One-Command Launcher)
 
 To launch both the FastAPI backend and Streamlit dashboard in a single terminal session:
 
@@ -330,7 +361,7 @@ This single command:
 
 ---
 
-### 8.6 Running with Docker & Docker Compose
+### 8.7 Running with Docker & Docker Compose
 
 For a zero-dependency, containerized deployment:
 
@@ -353,7 +384,7 @@ docker compose down
 
 ---
 
-### 8.7 Running Automated Tests & Code Quality
+### 8.8 Running Automated Tests & Code Quality
 
 Validate system correctness, leakage prevention, and mathematical formulations across all 162 unit and integration tests:
 
