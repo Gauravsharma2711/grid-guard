@@ -15,20 +15,26 @@
   justify-content: space-between;
   border-bottom: 1px solid var(--gg-rule);
   padding-bottom: var(--gg-space-3);
+  gap: var(--gg-space-2);
+  flex-wrap: wrap;
 }
 
 .gg-signatures-kicker {
   color: var(--gg-evidence);
+  font-weight: 600;
+  letter-spacing: 0.04em;
 }
 
 .gg-signatures-title {
   margin: 0;
+  color: var(--gg-ink);
 }
 
 .gg-signatures-count {
   font-size: 12px;
+  font-family: var(--gg-font-mono);
   background-color: var(--gg-canvas);
-  border: 1px solid var(--gg-rule);
+  border: 1px solid var(--gg-border-subtle);
   border-radius: var(--gg-radius-xs);
   padding: 3px 8px;
   color: var(--gg-ink);
@@ -43,7 +49,7 @@
   padding: var(--gg-space-4);
   background-color: var(--gg-canvas);
   border: 1px solid var(--gg-rule);
-  border-radius: var(--gg-radius-sm);
+  border-radius: var(--gg-radius-md);
   color: var(--gg-muted);
   font-style: italic;
 }
@@ -60,13 +66,18 @@
   gap: var(--gg-space-2);
   background-color: var(--gg-surface);
   border: 1px solid var(--gg-rule);
-  border-radius: var(--gg-radius-sm);
+  border-left: 3px solid var(--gg-signal);
+  border-radius: var(--gg-radius-md);
   padding: var(--gg-space-4);
-  transition: border-color 0.15s ease;
+  box-shadow: 0 1px 2px rgba(18, 21, 18, 0.02);
+  transition: all var(--gg-motion-press);
 }
 
 .gg-sig-item-card:hover {
-  border-color: var(--gg-ink-soft);
+  border-color: var(--gg-border);
+  border-left-color: var(--gg-signal);
+  box-shadow: var(--gg-shadow-sm);
+  transform: translateY(-1px);
 }
 
 .gg-sig-item-header {
@@ -85,6 +96,7 @@
 
 .gg-sig-item-name {
   font-size: 14px;
+  font-weight: 600;
   color: var(--gg-ink);
 }
 
@@ -92,7 +104,7 @@
   margin: 0;
   font-size: 13px;
   color: var(--gg-ink-soft);
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
 .gg-sig-item-meta {
@@ -111,13 +123,14 @@
   background-color: var(--gg-canvas);
   border: 1px solid var(--gg-rule);
   border-left: 3px solid var(--gg-warning);
-  border-radius: var(--gg-radius-sm);
+  border-radius: var(--gg-radius-md);
   padding: var(--gg-space-3) var(--gg-space-4);
 }
 
 .gg-disclaimer-tag {
   font-size: 11px;
   font-weight: 700;
+  font-family: var(--gg-font-mono);
   color: var(--gg-warning);
   letter-spacing: 0.05em;
 }
@@ -125,5 +138,6 @@
 .gg-disclaimer-text {
   margin: 0;
   color: var(--gg-ink-soft);
-  line-height: 1.4;
+  line-height: 1.45;
+  font-size: 12px;
 }

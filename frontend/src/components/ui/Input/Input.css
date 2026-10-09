@@ -42,13 +42,17 @@
   background-color: var(--gg-surface);
   border: var(--gg-rule-width) solid var(--gg-rule);
   border-radius: var(--gg-radius-sm);
-  transition: border-color var(--gg-motion-press);
+  transition: border-color var(--gg-motion-press), box-shadow var(--gg-motion-press);
   appearance: none;
 }
 
 .gg-input--mono {
   font-family: var(--gg-font-mono);
   font-size: 13px;
+}
+
+.gg-input:hover:not(:disabled) {
+  border-color: var(--gg-muted);
 }
 
 .gg-input:focus {
@@ -107,6 +111,11 @@
   border-radius: var(--gg-radius-sm);
   cursor: pointer;
   appearance: none;
+  transition: border-color var(--gg-motion-press);
+}
+
+.gg-select:hover:not(:disabled) {
+  border-color: var(--gg-muted);
 }
 
 .gg-select:focus {

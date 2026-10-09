@@ -17,7 +17,7 @@ describe('ModelInsightsScreen Component', () => {
   it('renders model insights title, checkpoint card, and policy evaluation table', async () => {
     vi.mocked(apiClient.getModelMetadata).mockResolvedValueOnce({
       model_name: 'cost_sensitive_champion_lgb',
-      model_version: 'phase6_cost_sensitive_v1',
+      model_version: 'cost-sensitive-v1',
       model_type: 'LightGBM Booster',
       objective_type: 'financially_weighted_logistic',
       feature_version: 'phase3_temporal_features_v1',

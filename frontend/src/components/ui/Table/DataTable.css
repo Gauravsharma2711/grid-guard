@@ -9,6 +9,7 @@
   background-color: var(--gg-surface);
   border: var(--gg-rule-width) solid var(--gg-rule);
   border-radius: var(--gg-radius-lg);
+  box-shadow: var(--gg-shadow-sm);
 }
 
 .gg-table {
@@ -26,6 +27,7 @@
   font-weight: 600;
   color: var(--gg-ink);
   border-bottom: 1px solid var(--gg-rule);
+  background-color: var(--gg-surface);
 }
 
 /* Table Header */
@@ -43,12 +45,13 @@
   text-transform: uppercase;
   color: var(--gg-muted);
   white-space: nowrap;
+  user-select: none;
 }
 
 /* Table Body Rows */
 .gg-table__row {
   border-bottom: 1px solid var(--gg-rule);
-  transition: background-color var(--gg-motion-press);
+  transition: background-color var(--gg-motion-press), box-shadow var(--gg-motion-press);
 }
 
 .gg-table__row:last-child {
@@ -59,7 +62,8 @@
   padding: var(--gg-space-3) var(--gg-space-4);
   font-size: 13px;
   color: var(--gg-ink-soft);
-  line-height: 1.4;
+  line-height: 1.45;
+  vertical-align: middle;
 }
 
 /* Alignment */
@@ -88,7 +92,7 @@
 }
 
 .gg-table__row--clickable:hover {
-  background-color: #fafaf5;
+  background-color: #f7f9f4;
 }
 
 .gg-table__row--clickable:focus-visible {
@@ -97,7 +101,12 @@
 }
 
 .gg-table__row--selected {
-  background-color: #f5f7f2;
+  background-color: #f0f4ec;
+  box-shadow: inset 3px 0 0 var(--gg-ink);
+}
+
+.gg-table__row--selected:hover {
+  background-color: #ebf1e6;
 }
 
 /* State cells (Loading & Empty) */

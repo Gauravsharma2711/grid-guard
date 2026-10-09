@@ -90,14 +90,15 @@
   top: var(--gg-space-3);
   right: var(--gg-space-3);
   background: var(--gg-code);
-  color: var(--gg-code-text);
-  padding: var(--gg-space-2) var(--gg-space-3);
+  color: var(--gg-code-ink);
+  padding: 6px 12px;
   border-radius: var(--gg-radius-sm);
   display: flex;
-  gap: var(--gg-space-2);
+  gap: var(--gg-space-3);
   align-items: center;
   font-size: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(225, 229, 221, 0.12);
   pointer-events: none;
   z-index: 5;
 }

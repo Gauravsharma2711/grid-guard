@@ -72,4 +72,21 @@
      ======================================================================== */
   --gg-focus-outline: 2px solid var(--gg-ink);
   --gg-focus-offset: 2px;
+
+  /* ========================================================================
+     Semantic Aliases & Elevation (Strictly adhering to DesignSystem.md)
+     ======================================================================== */
+  --gg-text: var(--gg-ink);
+  --gg-text-soft: var(--gg-ink-soft);
+  --gg-text-muted: var(--gg-muted);
+  --gg-border: var(--gg-rule);
+  --gg-border-subtle: rgba(225, 229, 221, 0.7);
+  --gg-surface-subtle: #f7f8f4;
+  --gg-radius-md: 8px;
+
+  /* Subtle editorial shadows (tactile paper feel) */
+  --gg-shadow-sm: 0 1px 2px rgba(18, 21, 18, 0.04);
+  --gg-shadow-md: 0 2px 6px rgba(18, 21, 18, 0.05), 0 1px 2px rgba(18, 21, 18, 0.03);
+  --gg-shadow-lg: 0 8px 20px rgba(18, 21, 18, 0.07), 0 2px 6px rgba(18, 21, 18, 0.03);
+  --gg-shadow-drawer: -6px 0 28px rgba(18, 21, 18, 0.09);
 }

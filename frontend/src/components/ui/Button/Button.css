@@ -44,27 +44,33 @@
   background-color: var(--gg-ink);
   color: #ffffff;
   border: 1px solid var(--gg-ink);
+  box-shadow: 0 1px 2px rgba(18, 21, 18, 0.12);
 }
 
 .gg-btn--primary:hover:not(:disabled) {
   background-color: var(--gg-ink-soft);
   border-color: var(--gg-ink-soft);
+  box-shadow: 0 2px 4px rgba(18, 21, 18, 0.16);
+  transform: translateY(-0.5px);
 }
 
 .gg-btn--primary:active:not(:disabled) {
   transform: scale(0.99);
+  box-shadow: 0 1px 2px rgba(18, 21, 18, 0.1);
 }
 
 /* Variant: Secondary */
 .gg-btn--secondary {
-  background-color: transparent;
+  background-color: var(--gg-surface);
   color: var(--gg-ink);
   border: 1px solid var(--gg-rule);
+  box-shadow: 0 1px 2px rgba(18, 21, 18, 0.04);
 }
 
 .gg-btn--secondary:hover:not(:disabled) {
   background-color: var(--gg-canvas);
   border-color: var(--gg-muted);
+  transform: translateY(-0.5px);
 }
 
 .gg-btn--secondary:active:not(:disabled) {
@@ -83,6 +89,7 @@
 .gg-btn--text:hover:not(:disabled) {
   color: var(--gg-ink);
   text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 /* Variant: Destructive */

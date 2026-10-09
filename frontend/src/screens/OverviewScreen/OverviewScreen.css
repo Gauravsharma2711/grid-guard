@@ -62,6 +62,9 @@
 .gg-overview-hero-surface {
   background: var(--gg-surface);
   border: 1px solid var(--gg-border);
+  border-radius: var(--gg-radius-lg);
+  box-shadow: var(--gg-shadow-md);
+  padding: var(--gg-space-6);
 }
 
 .gg-overview-hero-content {
@@ -93,10 +96,11 @@
 
 .gg-hero-value {
   font-family: var(--gg-font-display);
-  font-size: 36px;
+  font-size: 38px;
   font-weight: 700;
   color: var(--gg-text);
   line-height: 1.1;
+  letter-spacing: -0.02em;
 }
 
 .gg-hero-badge {
@@ -108,13 +112,15 @@
   font-family: var(--gg-font-mono);
   font-size: 11px;
   font-weight: 600;
-  border-radius: var(--gg-radius-sm);
+  border-radius: var(--gg-radius-xs);
+  letter-spacing: 0.02em;
 }
 
 .gg-hero-desc {
   color: var(--gg-text-muted);
   max-width: 540px;
   margin: 0;
+  line-height: 1.5;
 }
 
 .gg-overview-hero-policy {
@@ -149,13 +155,25 @@
 .gg-overview-kpi-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: var(--gg-space-3);
+  gap: var(--gg-space-4);
 }
 
 .gg-kpi-card {
   display: flex;
   flex-direction: column;
-  gap: var(--gg-space-1);
+  gap: var(--gg-space-2);
+  padding: var(--gg-space-5, 20px);
+  background: var(--gg-surface);
+  border: 1px solid var(--gg-border);
+  border-radius: var(--gg-radius-md);
+  box-shadow: var(--gg-shadow-sm);
+  transition: all var(--gg-motion-press);
+}
+
+.gg-kpi-card:hover {
+  border-color: rgba(18, 21, 18, 0.22);
+  box-shadow: var(--gg-shadow-md);
+  transform: translateY(-1px);
 }
 
 .gg-kpi-label {
@@ -174,6 +192,9 @@
 /* System Bar */
 .gg-overview-system-bar {
   background: var(--gg-surface-subtle);
+  border: 1px solid var(--gg-border-subtle);
+  border-radius: var(--gg-radius-md);
+  padding: var(--gg-space-4) var(--gg-space-6);
 }
 
 .gg-system-bar-items {

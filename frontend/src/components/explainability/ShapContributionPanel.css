@@ -20,10 +20,13 @@
 
 .gg-shap-kicker {
   color: var(--gg-evidence);
+  font-weight: 600;
+  letter-spacing: 0.04em;
 }
 
 .gg-shap-title {
   margin: 0;
+  color: var(--gg-ink);
 }
 
 .gg-shap-semantics-banner {
@@ -32,8 +35,9 @@
   gap: var(--gg-space-3);
   background-color: var(--gg-canvas);
   border: 1px solid var(--gg-rule);
-  border-radius: var(--gg-radius-sm);
+  border-radius: var(--gg-radius-md);
   padding: var(--gg-space-3) var(--gg-space-4);
+  box-shadow: var(--gg-shadow-sm);
 }
 
 .gg-shap-semantics-item {
@@ -46,6 +50,7 @@
   margin: 0;
   color: var(--gg-muted);
   font-style: italic;
+  font-size: 12px;
 }
 
 /* Visual Stack */
@@ -90,13 +95,16 @@
   gap: var(--gg-space-2);
   background-color: var(--gg-surface);
   border: 1px solid var(--gg-rule);
-  border-radius: var(--gg-radius-sm);
+  border-radius: var(--gg-radius-md);
   padding: var(--gg-space-3) var(--gg-space-4);
-  transition: border-color 0.15s ease;
+  box-shadow: 0 1px 2px rgba(18, 21, 18, 0.02);
+  transition: all var(--gg-motion-press);
 }
 
 .gg-shap-card:hover {
-  border-color: var(--gg-ink-soft);
+  border-color: var(--gg-border);
+  box-shadow: var(--gg-shadow-sm);
+  transform: translateY(-1px);
 }
 
 .gg-shap-card-top {
@@ -117,6 +125,7 @@
   font-size: 12px;
   font-weight: 700;
   color: var(--gg-muted);
+  font-family: var(--gg-font-mono);
 }
 
 .gg-shap-name {
@@ -130,6 +139,7 @@
   font-size: 11px;
   padding: 2px 6px;
   background-color: var(--gg-canvas);
+  border: 1px solid var(--gg-border-subtle);
   border-radius: var(--gg-radius-xs);
   color: var(--gg-muted);
 }
@@ -138,6 +148,8 @@
   font-size: 13px;
   font-weight: 700;
   white-space: nowrap;
+  font-family: var(--gg-font-mono);
+  font-variant-numeric: tabular-nums;
 }
 
 .gg-shap-val--pos {
@@ -151,16 +163,17 @@
 /* Meter Bar Track */
 .gg-shap-bar-track {
   width: 100%;
-  height: 6px;
-  background-color: var(--gg-rule);
-  border-radius: var(--gg-radius-xs);
+  height: 8px;
+  background-color: var(--gg-canvas);
+  border: 1px solid var(--gg-border-subtle);
+  border-radius: 4px;
   overflow: hidden;
 }
 
 .gg-shap-bar-fill {
   height: 100%;
-  border-radius: var(--gg-radius-xs);
-  transition: width 0.3s ease;
+  border-radius: 3px;
+  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .gg-shap-bar-fill--pos {
@@ -179,17 +192,21 @@
 
 .gg-shap-context {
   color: var(--gg-ink-soft);
+  font-size: 12px;
 }
 
 .gg-shap-desc {
   color: var(--gg-muted);
+  font-size: 12px;
+  line-height: 1.4;
 }
 
 /* Accessible Table */
 .gg-shap-table-container {
   overflow-x: auto;
   border: 1px solid var(--gg-rule);
-  border-radius: var(--gg-radius-sm);
+  border-radius: var(--gg-radius-md);
+  box-shadow: var(--gg-shadow-sm);
 }
 
 .gg-shap-table {
@@ -202,10 +219,12 @@
   background-color: var(--gg-canvas);
   padding: 8px 12px;
   border-bottom: 1px solid var(--gg-rule);
-  font-family: var(--gg-font-body);
-  font-size: 12px;
+  font-family: var(--gg-font-mono);
+  font-size: 11px;
   font-weight: 600;
-  color: var(--gg-ink-soft);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--gg-muted);
   text-align: left;
 }
 

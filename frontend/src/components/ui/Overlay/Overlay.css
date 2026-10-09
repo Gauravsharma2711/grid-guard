@@ -27,7 +27,7 @@
   flex-direction: column;
   outline: none;
   animation: gg-slide-left var(--gg-motion-drawer);
-  box-shadow: -4px 0 16px rgba(18, 21, 18, 0.08);
+  box-shadow: var(--gg-shadow-drawer);
 }
 
 .gg-drawer-header {

@@ -19,7 +19,8 @@
   padding: var(--gg-space-3) var(--gg-space-4);
   background-color: var(--gg-surface);
   border: 1px solid var(--gg-rule);
-  border-radius: var(--gg-radius-sm);
+  border-radius: var(--gg-radius-md);
+  box-shadow: var(--gg-shadow-sm);
   gap: var(--gg-space-3);
   flex-wrap: wrap;
 }
@@ -33,6 +34,7 @@
 .gg-ticket-badge {
   font-size: 11px;
   font-weight: 700;
+  font-family: var(--gg-font-mono);
   background-color: var(--gg-code);
   color: var(--gg-code-ink);
   padding: 3px 8px;
@@ -43,6 +45,7 @@
 .gg-ticket-id-tag {
   font-size: 13px;
   font-weight: 600;
+  font-family: var(--gg-font-mono);
   color: var(--gg-ink);
 }
 
@@ -56,7 +59,12 @@
   display: flex;
   flex-direction: column;
   gap: var(--gg-space-6);
+  background-color: var(--gg-surface);
+  border: 1px solid var(--gg-rule);
   border-top: 4px solid var(--gg-ink);
+  border-radius: var(--gg-radius-lg);
+  padding: var(--gg-space-6);
+  box-shadow: var(--gg-shadow-md);
 }
 
 /* Header Block */
@@ -84,13 +92,15 @@
   gap: var(--gg-space-3);
   background-color: var(--gg-canvas);
   border: 1px solid var(--gg-rule);
-  border-radius: var(--gg-radius-sm);
+  border-radius: var(--gg-radius-md);
   padding: var(--gg-space-3) var(--gg-space-4);
+  box-shadow: var(--gg-shadow-sm);
 }
 
 .gg-ticket-meta-id {
   word-break: break-all;
   font-weight: 600;
+  font-family: var(--gg-font-mono);
   color: var(--gg-ink);
 }
 
@@ -102,8 +112,9 @@
   gap: var(--gg-space-4);
   background-color: var(--gg-canvas);
   border: 1px solid var(--gg-rule);
-  border-radius: var(--gg-radius-sm);
+  border-radius: var(--gg-radius-md);
   padding: var(--gg-space-4);
+  box-shadow: var(--gg-shadow-sm);
   flex-wrap: wrap;
 }
 
@@ -123,6 +134,7 @@
 .gg-ticket-rank {
   font-size: 13px;
   font-weight: 700;
+  font-family: var(--gg-font-mono);
   color: var(--gg-ink);
 }
 
@@ -172,19 +184,29 @@
   gap: 4px;
   background-color: var(--gg-canvas);
   border: 1px solid var(--gg-rule);
-  border-radius: var(--gg-radius-sm);
+  border-radius: var(--gg-radius-md);
   padding: var(--gg-space-3) var(--gg-space-4);
+  transition: all var(--gg-motion-press);
+}
+
+.gg-fin-card:hover {
+  background-color: var(--gg-surface);
+  box-shadow: var(--gg-shadow-sm);
 }
 
 .gg-fin-card--hero {
   border-color: var(--gg-ink);
+  border-left: 3px solid var(--gg-safe);
   background-color: var(--gg-surface);
+  box-shadow: var(--gg-shadow-sm);
 }
 
 .gg-fin-val {
   font-size: 15px;
   font-weight: 700;
   color: var(--gg-ink);
+  font-family: var(--gg-font-mono);
+  font-variant-numeric: tabular-nums;
 }
 
 .gg-fin-desc {
@@ -199,21 +221,23 @@
   gap: var(--gg-space-2);
   background-color: var(--gg-canvas);
   border: 1px solid var(--gg-rule);
-  border-radius: var(--gg-radius-sm);
+  border-left: 3px solid var(--gg-signal);
+  border-radius: var(--gg-radius-md);
   padding: var(--gg-space-4);
+  box-shadow: var(--gg-shadow-sm);
 }
 
 .gg-ticket-summary-text {
   margin: 0;
   color: var(--gg-ink);
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.45;
 }
 
 .gg-ticket-detailed-text {
   margin: 0;
   color: var(--gg-ink-soft);
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 /* SHAP List in Ticket */
@@ -230,8 +254,13 @@
   padding: var(--gg-space-2) var(--gg-space-3);
   background-color: var(--gg-surface);
   border: 1px solid var(--gg-rule);
-  border-radius: var(--gg-radius-xs);
+  border-radius: var(--gg-radius-sm);
   gap: var(--gg-space-2);
+  transition: background-color var(--gg-motion-press);
+}
+
+.gg-ticket-shap-row:hover {
+  background-color: #f7f9f4;
 }
 
 .gg-ticket-shap-left {
@@ -243,15 +272,19 @@
 .gg-ticket-shap-rank {
   font-size: 11px;
   color: var(--gg-muted);
+  font-family: var(--gg-font-mono);
 }
 
 .gg-ticket-shap-name {
   font-size: 13px;
+  font-weight: 500;
   color: var(--gg-ink);
 }
 
 .gg-ticket-shap-cat {
   color: var(--gg-muted);
+  font-size: 11px;
+  font-family: var(--gg-font-mono);
 }
 
 .gg-ticket-shap-right {
@@ -264,6 +297,8 @@
   font-size: 13px;
   font-weight: 700;
   color: var(--gg-evidence);
+  font-family: var(--gg-font-mono);
+  font-variant-numeric: tabular-nums;
 }
 
 /* Temporal List */
@@ -279,7 +314,7 @@
   gap: 2px;
   background-color: var(--gg-canvas);
   border: 1px solid var(--gg-rule);
-  border-radius: var(--gg-radius-xs);
+  border-radius: var(--gg-radius-md);
   padding: var(--gg-space-3);
 }
 
@@ -292,11 +327,13 @@
 .gg-ticket-window-tag {
   font-size: 12px;
   color: var(--gg-ink-soft);
+  font-family: var(--gg-font-mono);
 }
 
 .gg-ticket-temporal-interp {
   margin: 0;
   color: var(--gg-ink-soft);
+  line-height: 1.4;
 }
 
 /* Signature Chips */
@@ -312,7 +349,8 @@
   gap: 4px;
   background-color: var(--gg-canvas);
   border: 1px solid var(--gg-rule);
-  border-radius: var(--gg-radius-xs);
+  border-left: 3px solid var(--gg-signal);
+  border-radius: var(--gg-radius-md);
   padding: var(--gg-space-3);
 }
 
@@ -326,6 +364,7 @@
   font-size: 11px;
   font-weight: 700;
   color: var(--gg-danger);
+  font-family: var(--gg-font-mono);
 }
 
 /* Counter-evidence */
@@ -341,13 +380,16 @@
   justify-content: space-between;
   padding: var(--gg-space-2) var(--gg-space-3);
   background-color: var(--gg-canvas);
-  border-radius: var(--gg-radius-xs);
+  border-radius: var(--gg-radius-sm);
+  border: 1px solid var(--gg-border-subtle);
 }
 
 .gg-ticket-counter-delta {
   font-size: 13px;
   font-weight: 700;
   color: var(--gg-safe);
+  font-family: var(--gg-font-mono);
+  font-variant-numeric: tabular-nums;
 }
 
 /* Disclaimer Box */
@@ -358,12 +400,14 @@
   background-color: var(--gg-canvas);
   border: 1px solid var(--gg-rule);
   border-left: 3px solid var(--gg-warning);
-  border-radius: var(--gg-radius-sm);
+  border-radius: var(--gg-radius-md);
   padding: var(--gg-space-4);
 }
 
 .gg-disclaimer-title {
   font-size: 11px;
+  font-family: var(--gg-font-mono);
+  font-weight: 700;
   color: var(--gg-warning);
   letter-spacing: 0.05em;
 }

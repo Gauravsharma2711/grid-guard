@@ -35,6 +35,9 @@
 .gg-checkpoint-surface {
   background: var(--gg-surface);
   border: 1px solid var(--gg-border);
+  border-radius: var(--gg-radius-lg);
+  padding: var(--gg-space-5, 20px);
+  box-shadow: var(--gg-shadow-sm);
 }
 
 .gg-checkpoint-header {
@@ -45,7 +48,7 @@
   gap: var(--gg-space-3);
   padding-bottom: var(--gg-space-3);
   border-bottom: 1px solid var(--gg-border-subtle);
-  margin-bottom: var(--gg-space-3);
+  margin-bottom: var(--gg-space-4);
 }
 
 .gg-checkpoint-title {
@@ -62,13 +65,18 @@
 .gg-checkpoint-metric {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
+  background: var(--gg-surface-subtle);
+  border: 1px solid var(--gg-border-subtle);
+  padding: var(--gg-space-3);
+  border-radius: var(--gg-radius-sm);
 }
 
 .gg-checkpoint-metric .gg-type-mono {
   font-size: 13px;
   font-weight: 600;
   color: var(--gg-text);
+  font-variant-numeric: tabular-nums;
 }
 
 /* Tab Switcher */
@@ -82,7 +90,12 @@
 .gg-insights-section {
   display: flex;
   flex-direction: column;
-  gap: var(--gg-space-3);
+  gap: var(--gg-space-4);
+  background: var(--gg-surface);
+  border: 1px solid var(--gg-border);
+  border-radius: var(--gg-radius-lg);
+  padding: var(--gg-space-5, 20px);
+  box-shadow: var(--gg-shadow-sm);
 }
 
 .gg-section-meta-text {
@@ -93,6 +106,7 @@
 
 .gg-section-meta-text h3 {
   margin: 0;
+  color: var(--gg-text);
 }
 
 .gg-section-meta-text p {
@@ -115,6 +129,8 @@
 
 .gg-policy-desc {
   color: var(--gg-text-muted);
+  font-size: 12px;
+  line-height: 1.4;
 }
 
 .gg-evolution-cell {
@@ -131,11 +147,14 @@
 
 .gg-evolution-strat {
   color: var(--gg-text-muted);
+  font-size: 12px;
+  line-height: 1.4;
 }
 
 .gg-metric-highlight {
   font-weight: 700;
   color: var(--gg-text);
+  font-family: var(--gg-font-mono);
 }
 
 .gg-topk-pill {
