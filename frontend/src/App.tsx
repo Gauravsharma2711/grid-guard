@@ -120,7 +120,10 @@ export const App: React.FC = () => {
         )}
 
         {activeTab === 'meter' && (
-          <MeterAnalysisScreen initialMeterId={selectedMeterId} />
+          <MeterAnalysisScreen
+            initialMeterId={selectedMeterId}
+            onNavigateToQueue={() => navigateTo('queue')}
+          />
         )}
 
         {activeTab === 'insights' && <ModelInsightsScreen />}

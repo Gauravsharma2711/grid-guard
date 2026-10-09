@@ -1,0 +1,375 @@
+/* ==========================================================================
+   INSPECTION TICKET VIEW
+   Authoritative source: /designsystem.md
+   ========================================================================== */
+
+.gg-ticket-doc {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-4);
+  max-width: 960px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.gg-ticket-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--gg-space-3) var(--gg-space-4);
+  background-color: var(--gg-surface);
+  border: 1px solid var(--gg-rule);
+  border-radius: var(--gg-radius-sm);
+  gap: var(--gg-space-3);
+  flex-wrap: wrap;
+}
+
+.gg-ticket-action-left {
+  display: flex;
+  align-items: center;
+  gap: var(--gg-space-2);
+}
+
+.gg-ticket-badge {
+  font-size: 11px;
+  font-weight: 700;
+  background-color: var(--gg-code);
+  color: var(--gg-code-ink);
+  padding: 3px 8px;
+  border-radius: var(--gg-radius-xs);
+  letter-spacing: 0.05em;
+}
+
+.gg-ticket-id-tag {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gg-ink);
+}
+
+.gg-ticket-action-right {
+  display: flex;
+  align-items: center;
+  gap: var(--gg-space-2);
+}
+
+.gg-ticket-surface {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-6);
+  border-top: 4px solid var(--gg-ink);
+}
+
+/* Header Block */
+.gg-ticket-header-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-4);
+  border-bottom: 1px solid var(--gg-rule);
+  padding-bottom: var(--gg-space-4);
+}
+
+.gg-ticket-title {
+  margin: 0 0 var(--gg-space-1) 0;
+  font-size: 24px;
+}
+
+.gg-ticket-lead {
+  margin: 0;
+  color: var(--gg-muted);
+}
+
+.gg-ticket-header-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--gg-space-3);
+  background-color: var(--gg-canvas);
+  border: 1px solid var(--gg-rule);
+  border-radius: var(--gg-radius-sm);
+  padding: var(--gg-space-3) var(--gg-space-4);
+}
+
+.gg-ticket-meta-id {
+  word-break: break-all;
+  font-weight: 600;
+  color: var(--gg-ink);
+}
+
+/* Decision Banner */
+.gg-ticket-decision-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gg-space-4);
+  background-color: var(--gg-canvas);
+  border: 1px solid var(--gg-rule);
+  border-radius: var(--gg-radius-sm);
+  padding: var(--gg-space-4);
+  flex-wrap: wrap;
+}
+
+.gg-ticket-decision-status {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-2);
+}
+
+.gg-ticket-status-row {
+  display: flex;
+  align-items: center;
+  gap: var(--gg-space-3);
+  flex-wrap: wrap;
+}
+
+.gg-ticket-rank {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gg-ink);
+}
+
+.gg-ticket-decision-stats {
+  display: flex;
+  align-items: center;
+  gap: var(--gg-space-4);
+  flex-wrap: wrap;
+}
+
+.gg-ticket-rule-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gg-ink);
+}
+
+/* Sections */
+.gg-ticket-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-3);
+}
+
+.gg-section-heading {
+  margin: 0;
+  font-size: 16px;
+  color: var(--gg-ink);
+  border-bottom: 1px solid var(--gg-rule);
+  padding-bottom: var(--gg-space-2);
+}
+
+.gg-section-sub {
+  margin: 0;
+  color: var(--gg-muted);
+}
+
+/* Financial Grid */
+.gg-ticket-fin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--gg-space-3);
+}
+
+.gg-fin-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background-color: var(--gg-canvas);
+  border: 1px solid var(--gg-rule);
+  border-radius: var(--gg-radius-sm);
+  padding: var(--gg-space-3) var(--gg-space-4);
+}
+
+.gg-fin-card--hero {
+  border-color: var(--gg-ink);
+  background-color: var(--gg-surface);
+}
+
+.gg-fin-val {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--gg-ink);
+}
+
+.gg-fin-desc {
+  color: var(--gg-muted);
+  font-size: 11px;
+}
+
+/* Narrative */
+.gg-ticket-narrative-box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-2);
+  background-color: var(--gg-canvas);
+  border: 1px solid var(--gg-rule);
+  border-radius: var(--gg-radius-sm);
+  padding: var(--gg-space-4);
+}
+
+.gg-ticket-summary-text {
+  margin: 0;
+  color: var(--gg-ink);
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.gg-ticket-detailed-text {
+  margin: 0;
+  color: var(--gg-ink-soft);
+  line-height: 1.4;
+}
+
+/* SHAP List in Ticket */
+.gg-ticket-shap-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-2);
+}
+
+.gg-ticket-shap-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--gg-space-2) var(--gg-space-3);
+  background-color: var(--gg-surface);
+  border: 1px solid var(--gg-rule);
+  border-radius: var(--gg-radius-xs);
+  gap: var(--gg-space-2);
+}
+
+.gg-ticket-shap-left {
+  display: flex;
+  align-items: center;
+  gap: var(--gg-space-2);
+}
+
+.gg-ticket-shap-rank {
+  font-size: 11px;
+  color: var(--gg-muted);
+}
+
+.gg-ticket-shap-name {
+  font-size: 13px;
+  color: var(--gg-ink);
+}
+
+.gg-ticket-shap-cat {
+  color: var(--gg-muted);
+}
+
+.gg-ticket-shap-right {
+  display: flex;
+  align-items: center;
+  gap: var(--gg-space-3);
+}
+
+.gg-ticket-shap-delta {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gg-evidence);
+}
+
+/* Temporal List */
+.gg-ticket-temporal-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-2);
+}
+
+.gg-ticket-temporal-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background-color: var(--gg-canvas);
+  border: 1px solid var(--gg-rule);
+  border-radius: var(--gg-radius-xs);
+  padding: var(--gg-space-3);
+}
+
+.gg-ticket-temporal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gg-ticket-window-tag {
+  font-size: 12px;
+  color: var(--gg-ink-soft);
+}
+
+.gg-ticket-temporal-interp {
+  margin: 0;
+  color: var(--gg-ink-soft);
+}
+
+/* Signature Chips */
+.gg-ticket-sig-chips {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--gg-space-3);
+}
+
+.gg-ticket-sig-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background-color: var(--gg-canvas);
+  border: 1px solid var(--gg-rule);
+  border-radius: var(--gg-radius-xs);
+  padding: var(--gg-space-3);
+}
+
+.gg-ticket-sig-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gg-ticket-sig-sev {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gg-danger);
+}
+
+/* Counter-evidence */
+.gg-ticket-counter-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-2);
+}
+
+.gg-ticket-counter-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--gg-space-2) var(--gg-space-3);
+  background-color: var(--gg-canvas);
+  border-radius: var(--gg-radius-xs);
+}
+
+.gg-ticket-counter-delta {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gg-safe);
+}
+
+/* Disclaimer Box */
+.gg-ticket-disclaimer-box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-2);
+  background-color: var(--gg-canvas);
+  border: 1px solid var(--gg-rule);
+  border-left: 3px solid var(--gg-warning);
+  border-radius: var(--gg-radius-sm);
+  padding: var(--gg-space-4);
+}
+
+.gg-disclaimer-title {
+  font-size: 11px;
+  color: var(--gg-warning);
+  letter-spacing: 0.05em;
+}
+
+.gg-disclaimer-body {
+  margin: 0;
+  color: var(--gg-ink-soft);
+  line-height: 1.45;
+}

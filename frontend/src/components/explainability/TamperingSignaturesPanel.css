@@ -1,0 +1,129 @@
+/* ==========================================================================
+   TAMPERING SIGNATURES PANEL
+   Authoritative source: /designsystem.md
+   ========================================================================== */
+
+.gg-signatures-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-4);
+}
+
+.gg-signatures-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--gg-rule);
+  padding-bottom: var(--gg-space-3);
+}
+
+.gg-signatures-kicker {
+  color: var(--gg-evidence);
+}
+
+.gg-signatures-title {
+  margin: 0;
+}
+
+.gg-signatures-count {
+  font-size: 12px;
+  background-color: var(--gg-canvas);
+  border: 1px solid var(--gg-rule);
+  border-radius: var(--gg-radius-xs);
+  padding: 3px 8px;
+  color: var(--gg-ink);
+}
+
+.gg-signatures-note {
+  margin: 0;
+  color: var(--gg-muted);
+}
+
+.gg-signatures-empty {
+  padding: var(--gg-space-4);
+  background-color: var(--gg-canvas);
+  border: 1px solid var(--gg-rule);
+  border-radius: var(--gg-radius-sm);
+  color: var(--gg-muted);
+  font-style: italic;
+}
+
+.gg-signatures-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--gg-space-3);
+}
+
+.gg-sig-item-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-2);
+  background-color: var(--gg-surface);
+  border: 1px solid var(--gg-rule);
+  border-radius: var(--gg-radius-sm);
+  padding: var(--gg-space-4);
+  transition: border-color 0.15s ease;
+}
+
+.gg-sig-item-card:hover {
+  border-color: var(--gg-ink-soft);
+}
+
+.gg-sig-item-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-1);
+}
+
+.gg-sig-item-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gg-space-2);
+  flex-wrap: wrap;
+}
+
+.gg-sig-item-name {
+  font-size: 14px;
+  color: var(--gg-ink);
+}
+
+.gg-sig-item-desc {
+  margin: 0;
+  font-size: 13px;
+  color: var(--gg-ink-soft);
+  line-height: 1.4;
+}
+
+.gg-sig-item-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--gg-space-4);
+  margin-top: auto;
+  padding-top: var(--gg-space-2);
+  border-top: 1px dashed var(--gg-rule);
+}
+
+.gg-signatures-disclaimer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background-color: var(--gg-canvas);
+  border: 1px solid var(--gg-rule);
+  border-left: 3px solid var(--gg-warning);
+  border-radius: var(--gg-radius-sm);
+  padding: var(--gg-space-3) var(--gg-space-4);
+}
+
+.gg-disclaimer-tag {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gg-warning);
+  letter-spacing: 0.05em;
+}
+
+.gg-disclaimer-text {
+  margin: 0;
+  color: var(--gg-ink-soft);
+  line-height: 1.4;
+}

@@ -12,9 +12,11 @@ import { Drawer } from '../../components/ui/Overlay/Overlay';
 import { StatusBadge } from '../../components/ui/Status/Status';
 import { Surface } from '../../components/ui/Surface/Surface';
 import { DataTable } from '../../components/ui/Table/DataTable';
+import { InspectionTicketView } from '../../components/tickets/InspectionTicketView';
 import { VALIDATED_TOP_TICKETS } from '../../data/validatedArtifacts';
 import { apiClient } from '../../services/apiClient';
 import type { InspectionTicketResponse } from '../../types/api';
+import { exportQueueAsCsv, exportTicketAsJson } from '../../utils/exportUtils';
 import './InspectionQueueScreen.css';
 
 export interface InspectionQueueScreenProps {
@@ -38,6 +40,7 @@ export const InspectionQueueScreen: React.FC<InspectionQueueScreenProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isLiveApi, setIsLiveApi] = useState<boolean>(false);
   const [selectedTicket, setSelectedTicket] = useState<InspectionTicketResponse | null>(null);
+  const [fullDocTicket, setFullDocTicket] = useState<InspectionTicketResponse | null>(null);
 
   const fetchQueue = useCallback(async () => {
     setIsLoading(true);
@@ -184,6 +187,21 @@ export const InspectionQueueScreen: React.FC<InspectionQueueScreenProps> = ({
     },
   ];
 
+  if (fullDocTicket) {
+    return (
+      <div className="gg-queue-screen">
+        <InspectionTicketView
+          ticket={fullDocTicket}
+          onClose={() => setFullDocTicket(null)}
+          onAnalyzeMeter={(mId) => {
+            setFullDocTicket(null);
+            onSelectMeterForAnalysis(mId);
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="gg-queue-screen">
       {/* Screen Header */}
@@ -196,12 +214,22 @@ export const InspectionQueueScreen: React.FC<InspectionQueueScreenProps> = ({
           </p>
         </div>
 
-        <div className="gg-queue-header-status">
-          {isLiveApi ? (
-            <StatusBadge status="safe" label="Live API Queue" />
-          ) : (
-            <StatusBadge status="warning" label="Offline Validated Candidates" />
-          )}
+        <div className="gg-queue-header-actions">
+          <Button
+            variant="secondary"
+            size="compact"
+            onClick={() => exportQueueAsCsv(displayTickets)}
+            aria-label="Export inspection queue as CSV"
+          >
+            Export Queue (CSV)
+          </Button>
+          <div className="gg-queue-header-status">
+            {isLiveApi ? (
+              <StatusBadge status="safe" label="Live API Queue" />
+            ) : (
+              <StatusBadge status="warning" label="Offline Validated Candidates" />
+            )}
+          </div>
         </div>
       </div>
 
@@ -418,9 +446,24 @@ export const InspectionQueueScreen: React.FC<InspectionQueueScreenProps> = ({
               </Button>
               <Button
                 variant="secondary"
+                onClick={() => {
+                  setFullDocTicket(selectedTicket);
+                  setSelectedTicket(null);
+                }}
+              >
+                View Full Work Order
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => exportTicketAsJson(selectedTicket)}
+              >
+                Download Ticket (JSON)
+              </Button>
+              <Button
+                variant="text"
                 onClick={() => setSelectedTicket(null)}
               >
-                Close Ticket
+                Close Drawer
               </Button>
             </div>
           </div>

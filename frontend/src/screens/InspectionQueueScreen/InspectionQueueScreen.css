@@ -18,6 +18,13 @@
   gap: var(--gg-space-4);
 }
 
+.gg-queue-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--gg-space-3);
+  flex-wrap: wrap;
+}
+
 .gg-queue-title-group {
   display: flex;
   flex-direction: column;

@@ -242,6 +242,89 @@ export const VALIDATED_TOP_TICKETS: InspectionTicketResponse[] = [
     data_quality_status: 'good',
     signatures_summary: 'Behavior Shift (moderate); Sudden Drop',
     safety_caveat: 'Model evidence indicates an anomalous consumption pattern and requires physical on-site inspection.',
+    explanation: {
+      summary:
+        'High tampering risk (100.0% probability) with positive Expected Net Value (₹32,275.68). Sudden week-over-week consumption collapse; elevated historical load volatility contrasting recent readings. Field inspection recommended to verify physical meter integrity.',
+      detailed_explanation:
+        'Rolling 14-day average collapsed from 16.4 kWh to 2.1 kWh. Primary driver is elevated 60-day historical volatility (+2.49 Δz) coupled with recent missingness telemetry (+0.64 Δz).',
+      top_positive_contributors: [
+        {
+          feature_name: 'rolling_std_60d',
+          display_name: '60-Day Historical Consumption Volatility',
+          category: 'Historical Baseline',
+          feature_value: 14.8,
+          baseline_value: 3.2,
+          shap_value: 2.49,
+          contribution_direction: 'positive',
+          rank: 1,
+          description:
+            'Trailing 60-day standard deviation reflecting high normal baseline variability.',
+        },
+        {
+          feature_name: 'missing_ratio',
+          display_name: 'Data Missingness Ratio',
+          category: 'Data Quality',
+          feature_value: 0.15,
+          baseline_value: 0.0,
+          shap_value: 0.64,
+          contribution_direction: 'positive',
+          rank: 2,
+          description: 'Telemetry gaps present in recent evaluation interval.',
+        },
+      ],
+      top_negative_contributors: [
+        {
+          feature_name: 'rolling_mean_7d',
+          display_name: '7-Day Trailing Consumption Average',
+          category: 'Recent Consumption',
+          feature_value: 12.1,
+          baseline_value: 13.0,
+          shap_value: -0.35,
+          contribution_direction: 'negative',
+          rank: 3,
+          description:
+            'Recent usage level exhibits consistent load matching seasonal expectations.',
+        },
+      ],
+      detected_signatures: [
+        {
+          signature_type: 'sustained_step_down',
+          detected: true,
+          magnitude: 0.85,
+          duration_days: 15,
+          severity: 'high',
+          description:
+            '85% sustained drop in daily consumption relative to 60-day baseline.',
+        },
+        {
+          signature_type: 'regime_shift',
+          detected: true,
+          magnitude: 0.65,
+          duration_days: 20,
+          severity: 'moderate',
+          description:
+            'Behavioral regime shift detected in rolling variance and mean load.',
+        },
+      ],
+      temporal_evidence: [
+        {
+          anchor_date: '2016-10-30',
+          source_window_start: '2016-09-01',
+          source_window_end: '2016-10-30',
+          feature_name: 'rolling_std_60d',
+          display_name: '60-Day Historical Volatility Window',
+          observed_value: 14.8,
+          reference_value: 3.2,
+          relative_difference_pct: 362.5,
+          shap_contribution: 2.49,
+          interpretation:
+            'Historical 60-day variability contrasted against sudden recent telemetry flatlining.',
+        },
+      ],
+      counter_evidence_summary: '2 counter-evidence features moderated risk margin.',
+      safety_caveat:
+        'Model evidence indicates an anomalous consumption pattern and requires physical on-site inspection.',
+    },
   },
   {
     ticket_id: 'TCK-2016-10-30-FC6A3494',

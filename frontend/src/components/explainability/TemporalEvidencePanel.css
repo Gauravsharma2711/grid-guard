@@ -1,0 +1,160 @@
+/* ==========================================================================
+   TEMPORAL EVIDENCE PANEL
+   Authoritative source: /designsystem.md
+   ========================================================================== */
+
+.gg-temporal-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-4);
+}
+
+.gg-temporal-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--gg-rule);
+  padding-bottom: var(--gg-space-3);
+}
+
+.gg-temporal-kicker {
+  color: var(--gg-evidence);
+}
+
+.gg-temporal-title {
+  margin: 0;
+}
+
+.gg-temporal-sub {
+  margin: 0;
+  color: var(--gg-muted);
+}
+
+.gg-temporal-empty {
+  padding: var(--gg-space-4);
+  background-color: var(--gg-canvas);
+  border: 1px solid var(--gg-rule);
+  border-radius: var(--gg-radius-sm);
+  color: var(--gg-muted);
+  font-style: italic;
+}
+
+.gg-temporal-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-3);
+}
+
+.gg-temporal-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-3);
+  background-color: var(--gg-surface);
+  border: 1px solid var(--gg-rule);
+  border-radius: var(--gg-radius-sm);
+  padding: var(--gg-space-4);
+  transition: border-color 0.15s ease;
+}
+
+.gg-temporal-card:hover {
+  border-color: var(--gg-ink-soft);
+}
+
+.gg-temporal-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gg-space-2);
+  flex-wrap: wrap;
+}
+
+.gg-temporal-feature-info {
+  display: flex;
+  align-items: center;
+  gap: var(--gg-space-2);
+}
+
+.gg-temporal-index {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gg-muted);
+}
+
+.gg-temporal-feature-name {
+  font-size: 14px;
+  color: var(--gg-ink);
+}
+
+.gg-temporal-badge {
+  background-color: var(--gg-canvas);
+  border: 1px solid var(--gg-rule);
+  border-radius: var(--gg-radius-xs);
+  padding: 2px 8px;
+  font-size: 11px;
+  color: var(--gg-ink-soft);
+}
+
+.gg-temporal-values-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: var(--gg-space-2);
+  background-color: var(--gg-canvas);
+  border-radius: var(--gg-radius-xs);
+  padding: var(--gg-space-2) var(--gg-space-3);
+}
+
+.gg-temporal-val-box {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gg-temporal-val {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gg-ink);
+}
+
+.gg-temporal-diff {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.gg-diff--neg {
+  color: var(--gg-danger);
+}
+
+.gg-diff--pos {
+  color: var(--gg-safe);
+}
+
+.gg-temporal-shap {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gg-evidence);
+}
+
+.gg-temporal-interpretation {
+  margin: 0;
+  font-size: 13px;
+  color: var(--gg-ink-soft);
+  line-height: 1.4;
+}
+
+.gg-temporal-zoom-btn {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--gg-font-body);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gg-ink);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.gg-temporal-zoom-btn:hover {
+  color: var(--gg-evidence);
+}

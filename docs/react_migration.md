@@ -382,12 +382,58 @@ Phase 3 transitions the Grid-Guard user interface into a live operational revenu
 
 ---
 
-## 11. Phase 4 Boundary (Explainability & Deep Forensic Workflows)
+---
 
-With operational screens, queue ranking, and time-series charting fully integrated, **Phase 4** will implement:
-- Deep Tree-SHAP attribution plots (waterfall and force plots).
-- Temporal feature importance breakdown per meter.
-- Detailed physical tamper signature inspection checklist for field crews.
-- PDF and CSV work order export and dispatch handoff.
+## 11. Phase 4 Deliverables & Accomplishments
+
+**Status:** Phase 4 Complete (Approved Baseline)
+
+Phase 4 makes the model's evidence, temporal patterns, and financial decisions completely understandable, actionable, and exportable:
+
+1. **SHAP Attribution Panel (`ShapContributionPanel`):**
+   - Renders local Tree-SHAP attributions with mathematical fidelity in log-odds margin space ($\Delta z$ shifts relative to base expectation $\mathbb{E}[z] = -2.3713$).
+   - Distinguishes positive risk drivers from negative mitigating factors using the dedicated evidence violet token (`--gg-evidence: #7d6db2`).
+   - Maps technical feature names to human-readable labels and operational categories via the feature registry.
+   - Provides on-demand accessible table view with comprehensive sorting, ranks, observed values, and baseline reference values.
+
+2. **Temporal Evidence Panel (`TemporalEvidencePanel`):**
+   - Displays real source calendar windows (`source_window_start` to `source_window_end`) without manufacturing intervals.
+   - Shows observed vs historical baseline readings with relative percentage differences.
+   - Integrates interactive highlight trigger with the SVG `TimeSeriesChart`.
+   - Honestly handles missing temporal mappings without inventing anomaly windows.
+
+3. **Tampering Signatures & Counter-Evidence (`TamperingSignaturesPanel`, `CounterEvidencePanel`):**
+   - Surfaces rule-based electrical signatures (sustained step-downs, behavioral shifts) with calibrated severity status.
+   - Enforces the mandatory operational caveat that signatures require physical on-site verification.
+   - Objectively presents mitigating factors and counter-evidence.
+
+4. **Financial Decision Context (`DecisionContextPanel`):**
+   - Integrates calibrated risk ($p_i$), estimated recoverable leakage (kWh), gross recovery, dispatch cost, and Expected Net Value (ENV).
+   - Side-by-side comparison of Dynamic ENV rule ($\tau_{\text{ENV}, i}$), Bayes cost threshold ($\tau_{\text{cost}, i}$), and Fixed 50% cutoff without client-side recalculation.
+
+5. **Complete Forensic Field Inspection Ticket (`InspectionTicketView`):**
+   - Complete utility work order document layout featuring ticket identifier, meter metadata, operational recommendation banner, economic breakdown, model evidence, signatures, temporal windows, and regulatory caveats.
+   - Actionable handoffs: one-click navigation between ticket document, queue drawer, and meter analysis workbench.
+
+6. **Validated Data Exports (`exportUtils.ts`):**
+   - JSON export for individual inspection tickets preserving complete structured explanation metadata and financial precision.
+   - RFC 4180 compliant CSV export for inspection queues with safe string escaping.
+
+7. **Verification & Quality Metrics:**
+   - Vitest: 27 test files, 104 tests passing (100%).
+   - TypeScript: `tsc --noEmit` passed with 0 errors.
+   - ESLint: passed with 0 warnings/errors.
+   - Production bundle: `tsc && vite build` succeeded in 1.50s (262.07 kB JS, 61.67 kB CSS).
+   - Backend regression: 162 pytest tests passing (100%).
+   - Python Ruff: 100% clean.
+
+---
+
+## 12. Phase 5 Boundary (Testing, Migration & Final Release)
+
+With explainability, inspection tickets, and exports completed in Phase 4, **Phase 5** will focus on:
+- Comprehensive cross-browser end-to-end testing and performance audits.
+- Formal migration validation and Streamlit deprecation/retirement plan.
+- Production deployment packaging, containerization, and final release sign-off.
 
 

@@ -1,0 +1,153 @@
+/* ==========================================================================
+   DECISION CONTEXT PANEL
+   Authoritative source: /designsystem.md
+   ========================================================================== */
+
+.gg-decision-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-4);
+}
+
+.gg-decision-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--gg-rule);
+  padding-bottom: var(--gg-space-3);
+  gap: var(--gg-space-2);
+  flex-wrap: wrap;
+}
+
+.gg-decision-kicker {
+  color: var(--gg-signal-ink);
+}
+
+.gg-decision-title {
+  margin: 0;
+}
+
+.gg-decision-sub {
+  margin: 0;
+  color: var(--gg-muted);
+}
+
+/* KPI Strip */
+.gg-decision-kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--gg-space-3);
+}
+
+.gg-decision-kpi-box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background-color: var(--gg-canvas);
+  border: 1px solid var(--gg-rule);
+  border-radius: var(--gg-radius-sm);
+  padding: var(--gg-space-3);
+}
+
+.gg-decision-kpi-box--hero {
+  border-color: var(--gg-ink);
+  background-color: var(--gg-surface);
+}
+
+.gg-leakage-val {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--gg-ink);
+}
+
+.gg-kpi-hint {
+  color: var(--gg-muted);
+  font-size: 11px;
+}
+
+/* Threshold Comparison */
+.gg-threshold-comparison {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-3);
+}
+
+.gg-threshold-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: var(--gg-space-3);
+}
+
+.gg-rule-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-2);
+  background-color: var(--gg-surface);
+  border: 1px solid var(--gg-rule);
+  border-radius: var(--gg-radius-sm);
+  padding: var(--gg-space-3) var(--gg-space-4);
+  transition: all 0.15s ease;
+}
+
+.gg-rule-card--active {
+  border-color: var(--gg-ink);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.gg-rule-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gg-space-2);
+}
+
+.gg-rule-name {
+  font-size: 14px;
+  color: var(--gg-ink);
+}
+
+.gg-rule-active-tag {
+  font-family: var(--gg-font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  background-color: var(--gg-signal);
+  color: var(--gg-signal-ink);
+  border-radius: var(--gg-radius-xs);
+  letter-spacing: 0.04em;
+}
+
+.gg-rule-formula {
+  margin: 0;
+  color: var(--gg-ink-soft);
+}
+
+.gg-rule-desc {
+  margin: 0;
+  color: var(--gg-muted);
+  line-height: 1.35;
+  font-size: 12px;
+}
+
+.gg-rule-status {
+  margin-top: auto;
+  padding-top: var(--gg-space-2);
+  border-top: 1px dashed var(--gg-rule);
+  font-size: 12px;
+  color: var(--gg-ink-soft);
+}
+
+.gg-decision-context-note {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background-color: var(--gg-canvas);
+  border: 1px solid var(--gg-rule);
+  border-radius: var(--gg-radius-sm);
+  padding: var(--gg-space-3) var(--gg-space-4);
+}
+
+.gg-decision-context-text {
+  margin: 0;
+  color: var(--gg-ink);
+}

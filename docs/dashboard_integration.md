@@ -100,27 +100,35 @@ All screens strictly adhere to `/designsystem.md` ("Calm Proof Flow"), avoiding 
 
 ---
 
-## 5. Verification & Test Suite Summary
+## 5. Verification & Test Suite Summary (Phase 4 Baseline)
 
 ### Frontend Verification (`frontend/`)
-- **Unit & Integration Tests:** 73 tests passing across 20 test files (`npm run test`).
+- **Unit & Integration Tests:** 104 tests passing across 27 test files (`npm run test`).
 - **TypeScript Typecheck:** 0 errors (`tsc --noEmit`).
 - **ESLint Cleanliness:** 0 warnings/errors (`eslint .`).
-- **Production Build:** Succeeded in 1.31s (`dist/index.html` 1.04 kB, `dist/assets/index-DXfcZ-DS.js` 224.89 kB, gzip: 66.45 kB).
-- **Browser Visual Audit:** Completed interactive verification across all 5 operational screens with screenshot artifacts.
+- **Production Build:** Succeeded (`dist/assets/index-l1nBnwWN.js` 262.07 kB, gzip: 74.75 kB).
+- **Inspection & Explainability Workflows:** Verified end-to-end user journey (Queue -> Drawer -> Full Ticket -> Workbench -> Export).
 
 ### Backend Verification (Repository Root)
 - **Pytest Suite:** 162 tests passing (`uv run pytest -q`, 100% passing).
 - **Ruff Linter:** 0 errors (`uv run ruff check .`).
-- **API Runtime:** Verified live responses from `uvicorn grid_guard.api.main:app`.
+- **API Runtime:** Verified live responses from `grid_guard.api.app:app`.
 - **Legacy Streamlit:** Fully operational and intact (`src/grid_guard/dashboard/app.py`).
 
 ---
 
-## 6. Phase 4 Transition Boundary
+## 6. Phase 4 Accomplishments & Phase 5 Boundary
 
-Phase 3 delivers all core operational screens and live API integration. The boundary for Phase 4 includes:
-- Deep Tree-SHAP waterfall and summary force plots.
-- Temporal feature importance drill-down per meter.
-- Physical evidence tamper signature checklist for dispatch crews.
-- PDF/CSV field inspection ticket export and work order dispatch handoff.
+Phase 4 successfully implemented:
+- Full local Tree-SHAP attributions in log-odds margin space with feature name registry mapping.
+- Source calendar temporal evidence intervals, observed vs reference readings, and interactive chart highlight integration.
+- Electrical tampering signatures (sustained step-downs, behavioral regime shifts) with calibrated severity status.
+- Objective counter-evidence and mitigating factor presentations.
+- Economic decision context comparing Dynamic ENV, Bayes cost thresholds, and fixed cutoffs.
+- Full forensic field inspection work order ticket view (`InspectionTicketView`).
+- Export utilities: JSON for full ticket document and RFC 4180 CSV for inspection queues.
+
+The boundary for Phase 5 (Final Release & Migration) includes:
+- Comprehensive multi-browser end-to-end regression testing.
+- Migration validation and formal Streamlit retirement plan.
+- Production deployment packaging and final release sign-off.

@@ -53,7 +53,7 @@ describe('App Component (Phase 3 Core Operational Screens & Navigation)', () => 
     const meterTab = screen.getByRole('button', { name: 'Meter Analysis' });
     fireEvent.click(meterTab);
 
-    expect(screen.getByRole('heading', { name: 'Meter Analysis' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Meter Analysis/i })).toBeInTheDocument();
     expect(screen.getByText('Consumption Time-Series')).toBeInTheDocument();
   });
 
@@ -97,4 +97,48 @@ describe('App Component (Phase 3 Core Operational Screens & Navigation)', () => 
     expect(screen.getByText('Grid-Guard Design System & Component Gallery')).toBeInTheDocument();
     expect(screen.getByText('1. Reusable Buttons')).toBeInTheDocument();
   });
+
+  it('supports end-to-end investigation journey from queue to workbench and inspection ticket', async () => {
+    vi.spyOn(apiClient, 'getReady').mockResolvedValue({
+      status: 'ready',
+      model_loaded: true,
+      explainer_loaded: true,
+      features_configured: true,
+      model_version: 'phase6_cost_sensitive_v1',
+      feature_count: 60,
+      api_version: '0.1.0',
+    });
+
+    render(<App />);
+
+    // 1. Navigate to Queue
+    const queueTab = screen.getByRole('button', { name: 'Inspection Queue' });
+    fireEvent.click(queueTab);
+
+    expect(screen.getByText('Inspection Work Orders')).toBeInTheDocument();
+
+    // 2. Open Drawer for first item
+    const viewTicketBtns = await screen.findAllByRole('button', { name: /View ticket for meter/i });
+    fireEvent.click(viewTicketBtns[0]);
+
+    // 3. Click "Analyze Meter in Workbench →"
+    const analyzeBtn = screen.getByRole('button', { name: /Analyze Meter in Workbench →/i });
+    fireEvent.click(analyzeBtn);
+
+    // 4. Verify we arrived on Meter Analysis screen
+    expect(screen.getByRole('heading', { name: /Meter Analysis/i })).toBeInTheDocument();
+
+    // 5. Open full ticket
+    const viewTicketBtn = await screen.findByRole('button', { name: /View complete inspection ticket/i });
+    fireEvent.click(viewTicketBtn);
+
+    expect(screen.getByText('Forensic Field Inspection Ticket')).toBeInTheDocument();
+
+    // 6. Close ticket back to workbench
+    const closeBtn = screen.getByRole('button', { name: /Close ticket view/i });
+    fireEvent.click(closeBtn);
+
+    expect(screen.getByRole('heading', { name: /Meter Analysis/i })).toBeInTheDocument();
+  });
 });
+

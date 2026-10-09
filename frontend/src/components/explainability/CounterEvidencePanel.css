@@ -1,0 +1,122 @@
+/* ==========================================================================
+   COUNTER-EVIDENCE PANEL
+   Authoritative source: /designsystem.md
+   ========================================================================== */
+
+.gg-counter-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-4);
+}
+
+.gg-counter-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--gg-rule);
+  padding-bottom: var(--gg-space-3);
+}
+
+.gg-counter-kicker {
+  color: var(--gg-safe);
+}
+
+.gg-counter-title {
+  margin: 0;
+}
+
+.gg-counter-sub {
+  margin: 0;
+  color: var(--gg-muted);
+}
+
+.gg-counter-empty {
+  padding: var(--gg-space-4);
+  background-color: var(--gg-canvas);
+  border: 1px solid var(--gg-rule);
+  border-radius: var(--gg-radius-sm);
+  color: var(--gg-muted);
+  font-style: italic;
+}
+
+.gg-counter-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-4);
+}
+
+.gg-counter-summary-banner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-1);
+  background-color: var(--gg-canvas);
+  border: 1px solid var(--gg-rule);
+  border-left: 3px solid var(--gg-safe);
+  border-radius: var(--gg-radius-sm);
+  padding: var(--gg-space-3) var(--gg-space-4);
+}
+
+.gg-counter-summary-text {
+  margin: 0;
+  color: var(--gg-ink);
+  line-height: 1.4;
+}
+
+.gg-counter-drivers-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-2);
+}
+
+.gg-counter-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-3);
+}
+
+.gg-counter-item-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-2);
+  background-color: var(--gg-surface);
+  border: 1px solid var(--gg-rule);
+  border-radius: var(--gg-radius-sm);
+  padding: var(--gg-space-3) var(--gg-space-4);
+}
+
+.gg-counter-item-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gg-space-2);
+}
+
+.gg-counter-item-name {
+  font-size: 14px;
+  color: var(--gg-ink);
+}
+
+.gg-counter-cat {
+  margin-left: var(--gg-space-2);
+  color: var(--gg-muted);
+}
+
+.gg-counter-val {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gg-safe);
+}
+
+.gg-counter-desc {
+  margin: 0;
+  color: var(--gg-ink-soft);
+}
+
+.gg-counter-item-bottom {
+  display: flex;
+  align-items: center;
+  gap: var(--gg-space-4);
+  padding-top: var(--gg-space-2);
+  border-top: 1px dashed var(--gg-rule);
+  color: var(--gg-muted);
+}

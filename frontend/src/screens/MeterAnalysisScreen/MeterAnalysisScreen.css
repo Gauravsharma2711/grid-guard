@@ -170,7 +170,36 @@
 
 .gg-safety-disclaimer {
   margin: 0;
-  color: var(--gg-text-muted);
+  color: var(--gg-muted);
   font-style: italic;
   font-size: 11px;
+}
+
+/* Dispatch Ticket Surface */
+.gg-ticket-dispatch-surface {
+  background-color: var(--gg-surface);
+  border: 1px solid var(--gg-rule);
+  border-top: 3px solid var(--gg-ink);
+}
+
+.gg-dispatch-summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gg-space-4);
+  flex-wrap: wrap;
+}
+
+.gg-dispatch-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--gg-space-3);
+  flex-wrap: wrap;
+}
+
+.gg-preset-meta-left {
+  display: flex;
+  align-items: center;
+  gap: var(--gg-space-3);
+  flex-wrap: wrap;
 }
