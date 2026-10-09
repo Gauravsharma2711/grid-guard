@@ -1,0 +1,84 @@
+/* ==========================================================================
+   FILTER CHIP COMPONENT
+   Authoritative source: /designsystem.md Section 6.3
+   ========================================================================== */
+
+.gg-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--gg-radius-sm);
+  background-color: var(--gg-surface);
+  border: var(--gg-rule-width) solid var(--gg-rule);
+  transition: all var(--gg-motion-press);
+  user-select: none;
+}
+
+.gg-filter-chip__button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gg-space-2);
+  padding: 6px 12px;
+  font-family: var(--gg-font-body);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--gg-ink-soft);
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: inherit;
+}
+
+.gg-filter-chip__button:focus-visible {
+  outline: var(--gg-focus-outline);
+  outline-offset: var(--gg-focus-offset);
+}
+
+.gg-filter-chip__count {
+  font-family: var(--gg-font-mono);
+  font-size: 11px;
+  padding: 1px 5px;
+  border-radius: var(--gg-radius-xs);
+  background-color: var(--gg-canvas);
+  color: var(--gg-muted);
+}
+
+/* Selected state: Chartreuse signal with signal-ink text */
+.gg-filter-chip--selected {
+  background-color: var(--gg-signal);
+  border-color: var(--gg-signal);
+}
+
+.gg-filter-chip--selected .gg-filter-chip__button {
+  color: var(--gg-signal-ink);
+  font-weight: 600;
+}
+
+.gg-filter-chip--selected .gg-filter-chip__count {
+  background-color: rgba(63, 75, 8, 0.15);
+  color: var(--gg-signal-ink);
+}
+
+.gg-filter-chip__remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  margin-right: 2px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gg-signal-ink);
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--gg-radius-xs);
+  line-height: 1;
+}
+
+.gg-filter-chip__remove:hover {
+  background-color: rgba(63, 75, 8, 0.2);
+}
+
+.gg-filter-chip__remove:focus-visible {
+  outline: var(--gg-focus-outline);
+  outline-offset: var(--gg-focus-offset);
+}

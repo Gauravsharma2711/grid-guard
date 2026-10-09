@@ -290,10 +290,57 @@ uv run ruff check .
 
 ## 8. Known Limitations & Next-Phase Boundary
 
-### Current Phase 1 Deliverable:
-- Minimal, clean application bootstrap demonstrating verified React + TypeScript mounting, design token integration, strict type-checking, honest connection probing, and automated frontend testing.
+### Current Status:
+- **Phase 1 (Repository Audit & React Foundation):** COMPLETE.
+- **Phase 2 (Design System Implementation, Reusable Components & Application Shell):** COMPLETE.
 - Preserves all 162 backend tests, Streamlit entrypoint, and ML model weights without modification.
 
-### Explicit Phase Boundaries:
-- **Not in Phase 1:** Overview dashboard KPI cards, inspection queue table with sorting/filtering, meter analysis time-series charts, SHAP attribution waterfall visualizers, model performance comparison tables, and field ticket export workflows.
-- These components will be built in **Phase 2** (Component Library & Theme System), **Phase 3** (Inspection Queue & Meter Workbench), and **Phase 4** (Explainability & Model Insights).
+---
+
+## 9. Phase 2 Deliverables & Accomplishments
+
+Phase 2 implemented the authoritative design system (`/designsystem.md`) into a cohesive, reusable component library and application shell:
+
+1. **Tokens & Foundations:**
+   - Global tokens in `frontend/src/styles/tokens.css` covering palette, typography, spacing, dimensions, transitions, and focus rings.
+   - Typography classes in `frontend/src/styles/typography.css` covering Space Grotesk, Inter, and IBM Plex Mono.
+   - Automated token test in `frontend/src/styles/tokens.test.ts` validating all CSS custom properties against `/designsystem.md`.
+2. **Reusable UI Components:**
+   - Buttons (`primary`, `secondary`, `text`, `destructive`, `compact`, loading spinner, disabled).
+   - Form Controls (`FormField`, `TextInput` with mono support, `NumberInput` with unit suffixes, `Select`).
+   - Filter Chips with chartreuse signal highlight, count badges, and removal triggers.
+   - Status & Evidence badges (`StatusBadge`, `EvidenceBadge` strictly for SHAP, `TechnicalMetadata`, `DataQualityWarning`).
+   - Surfaces & Dividers (`Surface`, `Divider`, `CodeSurface`).
+   - Data Table (`DataTable` with quiet borders, right-aligned monetary values, monospace IDs, keyboard row selection).
+   - Financial Presentation Primitives (`CurrencyValue`, `EnvMetric`, `ProbabilityMetric`, `FinancialSummaryBlock`). Strictly formatting only; no client-side financial calculations.
+   - Chart Container (`ChartContainer` with title, subtitle, evaluation date badge, series legend, and accessible summary).
+   - Feedback States (`LoadingState`, `EmptyState`, `ErrorState`, `DegradedBanner`).
+   - Overlays (`Drawer` with focus trap and Escape handler; `ConfirmationModal`).
+3. **Application Shell & Navigation:**
+   - Shared `AppHeader` featuring Grid-Guard brand wordmark, stage badge, navigation tabs, and live API connection probe.
+   - Layout primitives (`DecisionCanvas` 560–680px, `OperationsCanvas` up to 1440px).
+   - `AppShell` integrating header, layout, and footer.
+4. **Interactive Component Showcase:**
+   - Built-in dev gallery accessible via the "Component Showcase" header tab or `#showcase` URL hash displaying all 11 component types with synthetic demo data.
+5. **Typed API Client & Contracts:**
+   - Fully typed request and response schemas in `frontend/src/types/api.ts` matching all 8 FastAPI routes.
+   - Resilient `apiClient` in `frontend/src/services/apiClient.ts` with timeout handling via `AbortController`, error mapping, and cancellation support.
+6. **Automated Verification:**
+   - Vitest: 15 test files, 61 unit tests passing.
+   - TypeScript: `tsc --noEmit` passed with 0 errors.
+   - ESLint: passed with 0 warnings/errors.
+   - Vite: Production build succeeded (`dist/` generated).
+   - Pytest: 162 backend tests passing.
+   - Ruff: code quality clean.
+   - Browser Visual Audit: confirmed compliance with `/designsystem.md`.
+
+---
+
+## 10. Phase 3 Boundary (Prerequisites Verified)
+
+With the Phase 2 component system and shell established, **Phase 3** will implement:
+- **Overview Dashboard:** Live KPI metrics, operational status cards, recent high-risk meter alerts.
+- **Inspection Queue Screen:** Ranked table by Expected Net Value (ENV) descending, dynamic filters (`min_env`, `min_probability`, crew capacity), row click to open meter inspection drawer.
+- **Meter Analysis Screen:** Smart meter consumption time-series visualization, baseline comparisons, tampering signature indicators.
+- **Live API Integration:** Connecting real endpoints (`/api/v1/predict`, `/api/v1/inspection/queue`, `/api/v1/metadata/model`) to the dashboard.
+

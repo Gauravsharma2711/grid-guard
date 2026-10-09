@@ -1,0 +1,25 @@
+/* ==========================================================================
+   APP SHELL COMPONENT
+   ========================================================================== */
+
+.gg-app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--gg-canvas);
+}
+
+.gg-app-shell__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.gg-app-shell__footer {
+  border-top: var(--gg-rule-width) solid var(--gg-rule);
+  padding: var(--gg-space-4) var(--gg-space-6);
+  background-color: var(--gg-canvas);
+  max-width: var(--gg-page-max-width);
+  margin: 0 auto;
+  width: 100%;
+}

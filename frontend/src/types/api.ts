@@ -48,6 +48,20 @@ export interface PublicConfigResponse {
   feature_categories: string[];
 }
 
+export interface DailyReading {
+  date: string;
+  consumption_kwh: number;
+}
+
+export interface SingleMeterPredictionRequest {
+  meter_id: string;
+  readings: DailyReading[];
+  tariff?: number;
+  dispatch_cost?: number;
+  include_explanation?: boolean;
+  decision_rule?: 'env' | 'cost_threshold' | 'fixed_threshold';
+}
+
 export interface FinancialSummary {
   estimated_recovery: number;
   dispatch_cost: number;
@@ -85,6 +99,23 @@ export interface SingleMeterPredictionResponse {
   shap_attributions?: ShapContribution[];
 }
 
+export interface BatchPredictionRequest {
+  meters: SingleMeterPredictionRequest[];
+}
+
+export interface BatchPredictionError {
+  meter_id: string;
+  error: string;
+}
+
+export interface BatchPredictionResponse {
+  total_requested: number;
+  successful_count: number;
+  failed_count: number;
+  results: SingleMeterPredictionResponse[];
+  errors: BatchPredictionError[];
+}
+
 export interface InspectionTicketResponse {
   ticket_id: string;
   meter_id: string;
@@ -95,6 +126,13 @@ export interface InspectionTicketResponse {
   detected_signatures: DetectedSignature[];
   narrative: string;
   verification_caveat: string;
+}
+
+export interface InspectionQueueRequest {
+  min_env?: number;
+  min_probability?: number;
+  limit?: number;
+  decision_rule?: 'env' | 'cost_threshold' | 'fixed_threshold';
 }
 
 export interface InspectionQueueItem {

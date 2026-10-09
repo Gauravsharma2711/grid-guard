@@ -1,0 +1,107 @@
+/* ==========================================================================
+   COMPONENT SHOWCASE STYLES
+   ========================================================================== */
+
+.gg-showcase {
+  max-width: var(--gg-page-max-width);
+  margin: 0 auto;
+  padding: var(--gg-space-8) var(--gg-space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-8);
+}
+
+.gg-showcase__banner {
+  border-bottom: 1px solid var(--gg-rule);
+  padding-bottom: var(--gg-space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-2);
+}
+
+.gg-showcase__tag {
+  align-self: flex-start;
+  font-family: var(--gg-font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  background-color: var(--gg-signal);
+  color: var(--gg-signal-ink);
+  padding: 2px 8px;
+  border-radius: var(--gg-radius-xs);
+}
+
+.gg-showcase__heading {
+  font-family: var(--gg-font-display);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--gg-ink);
+}
+
+.gg-showcase__sub {
+  font-family: var(--gg-font-body);
+  font-size: 14px;
+  color: var(--gg-ink-soft);
+  max-width: 720px;
+  line-height: 1.5;
+}
+
+.gg-showcase__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-3);
+}
+
+.gg-showcase__section-title {
+  font-family: var(--gg-font-display);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--gg-ink);
+}
+
+.gg-showcase__section-desc {
+  font-family: var(--gg-font-body);
+  font-size: 13px;
+  color: var(--gg-muted);
+  margin-bottom: var(--gg-space-2);
+}
+
+.gg-showcase__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gg-space-4);
+}
+
+.gg-showcase__form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--gg-space-4);
+}
+
+.gg-showcase__feedback-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--gg-space-4);
+}
+
+.gg-showcase__chart-placeholder {
+  height: 200px;
+  background-color: var(--gg-canvas);
+  border: 1px dashed var(--gg-rule);
+  border-radius: var(--gg-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--gg-font-mono);
+  font-size: 12px;
+  color: var(--gg-muted);
+}
+
+.gg-showcase__text {
+  font-family: var(--gg-font-body);
+  font-size: 13px;
+  color: var(--gg-ink-soft);
+  line-height: 1.5;
+  margin-bottom: var(--gg-space-4);
+}

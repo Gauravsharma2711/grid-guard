@@ -1,0 +1,154 @@
+/* ==========================================================================
+   FINANCIAL PRESENTATION PRIMITIVES
+   Authoritative source: /designsystem.md Section 6.7 & Section 2.2
+   ========================================================================== */
+
+.gg-currency {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--gg-space-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.gg-currency__amount {
+  font-family: var(--gg-font-body);
+  font-weight: 600;
+  color: var(--gg-ink);
+}
+
+.gg-currency__context {
+  font-family: var(--gg-font-mono);
+  font-size: 10px;
+  color: var(--gg-muted);
+  text-transform: uppercase;
+}
+
+/* Expected Net Value Metric Block */
+.gg-env-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--gg-space-3);
+  background-color: var(--gg-surface);
+  border: var(--gg-rule-width) solid var(--gg-rule);
+  border-radius: var(--gg-radius-sm);
+}
+
+.gg-env-metric__label {
+  font-family: var(--gg-font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--gg-muted);
+}
+
+.gg-env-metric__value {
+  font-family: var(--gg-font-display);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+.gg-env-metric--positive .gg-env-metric__value {
+  color: var(--gg-safe);
+}
+
+.gg-env-metric--negative .gg-env-metric__value {
+  color: var(--gg-ink-soft);
+}
+
+.gg-env-metric--neutral .gg-env-metric__value {
+  color: var(--gg-muted);
+}
+
+.gg-env-metric__meta {
+  font-family: var(--gg-font-body);
+  font-size: 11px;
+  color: var(--gg-muted);
+}
+
+/* Probability Metric Block */
+.gg-prob-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gg-prob-metric__label {
+  font-family: var(--gg-font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--gg-muted);
+}
+
+.gg-prob-metric__value {
+  font-family: var(--gg-font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--gg-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.gg-prob-metric__context {
+  font-family: var(--gg-font-body);
+  font-size: 11px;
+  color: var(--gg-muted);
+}
+
+/* Full Financial Summary Grid */
+.gg-fin-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--gg-space-4);
+  padding: var(--gg-space-4);
+  background-color: var(--gg-surface);
+  border: var(--gg-rule-width) solid var(--gg-rule);
+  border-radius: var(--gg-radius-lg);
+}
+
+.gg-fin-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gg-fin-col__label {
+  font-family: var(--gg-font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--gg-muted);
+}
+
+.gg-fin-col__value {
+  font-family: var(--gg-font-body);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gg-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.gg-fin-col__value--env {
+  font-family: var(--gg-font-display);
+  color: var(--gg-safe);
+}
+
+.gg-fin-col__meta {
+  font-family: var(--gg-font-body);
+  font-size: 11px;
+  color: var(--gg-muted);
+}
+
+@media (max-width: 768px) {
+  .gg-fin-summary-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .gg-fin-summary-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,167 @@
+/* ==========================================================================
+   OVERLAY COMPONENTS (Drawer & Modal)
+   Authoritative source: /designsystem.md Section 6.11 & 7
+   ========================================================================== */
+
+/* Drawer Overlay & Container */
+.gg-drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(18, 21, 18, 0.4);
+  z-index: 1000;
+  display: flex;
+  justify-content: flex-end;
+  animation: gg-fade-in var(--gg-motion-drawer);
+}
+
+.gg-drawer {
+  width: 100%;
+  max-width: var(--gg-drawer-width);
+  height: 100%;
+  background-color: var(--gg-surface);
+  border-left: var(--gg-rule-width) solid var(--gg-rule);
+  display: flex;
+  flex-direction: column;
+  outline: none;
+  animation: gg-slide-left var(--gg-motion-drawer);
+  box-shadow: -4px 0 16px rgba(18, 21, 18, 0.08);
+}
+
+.gg-drawer-header {
+  padding: var(--gg-space-4) var(--gg-space-6);
+  border-bottom: 1px solid var(--gg-rule);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gg-space-4);
+}
+
+.gg-drawer-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gg-drawer-title {
+  font-family: var(--gg-font-display);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--gg-ink);
+}
+
+.gg-drawer-subtitle {
+  font-family: var(--gg-font-body);
+  font-size: 12px;
+  color: var(--gg-muted);
+}
+
+.gg-drawer-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--gg-radius-sm);
+  color: var(--gg-muted);
+  font-size: 14px;
+  cursor: pointer;
+  background: none;
+  border: 1px solid var(--gg-rule);
+  transition: all var(--gg-motion-press);
+}
+
+.gg-drawer-close:hover {
+  background-color: var(--gg-canvas);
+  color: var(--gg-ink);
+}
+
+.gg-drawer-close:focus-visible {
+  outline: var(--gg-focus-outline);
+  outline-offset: var(--gg-focus-offset);
+}
+
+.gg-drawer-body {
+  flex: 1;
+  padding: var(--gg-space-6);
+  overflow-y: auto;
+}
+
+.gg-drawer-footer {
+  padding: var(--gg-space-4) var(--gg-space-6);
+  border-top: 1px solid var(--gg-rule);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--gg-space-3);
+  background-color: var(--gg-canvas);
+}
+
+/* Modal Overlay & Container */
+.gg-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(18, 21, 18, 0.4);
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--gg-space-4);
+  animation: gg-fade-in var(--gg-motion-modal);
+}
+
+.gg-modal {
+  width: 100%;
+  max-width: 480px;
+  background-color: var(--gg-surface);
+  border: var(--gg-rule-width) solid var(--gg-rule);
+  border-radius: var(--gg-radius-lg);
+  padding: var(--gg-space-6);
+  outline: none;
+  box-shadow: 0 4px 20px rgba(18, 21, 18, 0.12);
+  animation: gg-scale-up var(--gg-motion-modal);
+}
+
+.gg-modal-title {
+  font-family: var(--gg-font-display);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--gg-ink);
+  margin-bottom: var(--gg-space-2);
+}
+
+.gg-modal-desc {
+  font-family: var(--gg-font-body);
+  font-size: 13px;
+  color: var(--gg-ink-soft);
+  line-height: 1.5;
+  margin-bottom: var(--gg-space-6);
+}
+
+.gg-modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--gg-space-3);
+}
+
+/* Animations (200-260ms restrained) */
+@keyframes gg-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes gg-slide-left {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes gg-scale-up {
+  from { transform: scale(0.96); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}

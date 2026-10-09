@@ -1,0 +1,128 @@
+/* ==========================================================================
+   BUTTON COMPONENT
+   Authoritative source: /designsystem.md Section 6.2
+   ========================================================================== */
+
+.gg-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gg-space-2);
+  font-family: var(--gg-font-body);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  border-radius: var(--gg-radius-sm);
+  transition: all var(--gg-motion-press);
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Sizing */
+.gg-btn--normal {
+  min-height: var(--gg-control-height);
+  padding: 0 var(--gg-space-4);
+}
+
+.gg-btn--compact {
+  min-height: var(--gg-control-height-compact);
+  padding: 0 var(--gg-space-3);
+  font-size: 12px;
+}
+
+/* Accessible focus */
+.gg-btn:focus-visible {
+  outline: var(--gg-focus-outline);
+  outline-offset: var(--gg-focus-offset);
+}
+
+/* Variant: Primary */
+.gg-btn--primary {
+  background-color: var(--gg-ink);
+  color: #ffffff;
+  border: 1px solid var(--gg-ink);
+}
+
+.gg-btn--primary:hover:not(:disabled) {
+  background-color: var(--gg-ink-soft);
+  border-color: var(--gg-ink-soft);
+}
+
+.gg-btn--primary:active:not(:disabled) {
+  transform: scale(0.99);
+}
+
+/* Variant: Secondary */
+.gg-btn--secondary {
+  background-color: transparent;
+  color: var(--gg-ink);
+  border: 1px solid var(--gg-rule);
+}
+
+.gg-btn--secondary:hover:not(:disabled) {
+  background-color: var(--gg-canvas);
+  border-color: var(--gg-muted);
+}
+
+.gg-btn--secondary:active:not(:disabled) {
+  transform: scale(0.99);
+}
+
+/* Variant: Text */
+.gg-btn--text {
+  background-color: transparent;
+  color: var(--gg-ink-soft);
+  border: 1px solid transparent;
+  padding-left: var(--gg-space-2);
+  padding-right: var(--gg-space-2);
+}
+
+.gg-btn--text:hover:not(:disabled) {
+  color: var(--gg-ink);
+  text-decoration: underline;
+}
+
+/* Variant: Destructive */
+.gg-btn--destructive {
+  background-color: transparent;
+  color: var(--gg-danger);
+  border: 1px solid rgba(196, 86, 70, 0.3);
+}
+
+.gg-btn--destructive:hover:not(:disabled) {
+  background-color: #fdf3f2;
+  border-color: var(--gg-danger);
+}
+
+/* Disabled State */
+.gg-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Loading Spinner */
+.gg-btn__spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: gg-spin 0.6s linear infinite;
+  display: inline-block;
+}
+
+.gg-btn__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes gg-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,101 @@
+/* ==========================================================================
+   LAYOUT PRIMITIVES
+   Authoritative source: /designsystem.md Section 4.3
+   ========================================================================== */
+
+.gg-page-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--gg-canvas);
+}
+
+/* Decision Canvas (560–680px narrow column) */
+.gg-decision-canvas {
+  width: 100%;
+  flex: 1;
+  padding: var(--gg-space-12) var(--gg-space-6);
+  display: flex;
+  justify-content: center;
+}
+
+.gg-decision-column {
+  width: 100%;
+  max-width: var(--gg-content-width);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Operations Canvas (up to 1440px wide) */
+.gg-operations-canvas {
+  width: 100%;
+  max-width: var(--gg-page-max-width);
+  margin: 0 auto;
+  padding: var(--gg-space-8) var(--gg-space-6);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Section Header */
+.gg-section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gg-space-4);
+  margin-bottom: var(--gg-space-6);
+}
+
+.gg-section-header__titles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-1);
+}
+
+.gg-section-header__lead-row {
+  display: flex;
+  align-items: center;
+  gap: var(--gg-space-3);
+}
+
+.gg-section-header__title {
+  font-family: var(--gg-font-display);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--gg-ink);
+  line-height: 1.15;
+}
+
+.gg-section-header__badge {
+  font-family: var(--gg-font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  border-radius: var(--gg-radius-xs);
+  background-color: var(--gg-signal);
+  color: var(--gg-signal-ink);
+}
+
+.gg-section-header__desc {
+  font-family: var(--gg-font-body);
+  font-size: 13px;
+  color: var(--gg-ink-soft);
+  line-height: 1.5;
+}
+
+.gg-section-header__action {
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .gg-decision-canvas,
+  .gg-operations-canvas {
+    padding: var(--gg-space-6) var(--gg-space-4);
+  }
+
+  .gg-section-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
