@@ -1,0 +1,48 @@
+# ==============================================================================
+# Grid-Guard Render Deployment Blueprint
+# Architecture:
+#   1. grid-guard-api: Python Web Service (FastAPI + LightGBM + Tree-SHAP)
+#   2. grid-guard-frontend: Render Static Site (React + TypeScript + Vite)
+# ==============================================================================
+
+services:
+  # --------------------------------------------------------------------------
+  # 1. FastAPI Backend API Service
+  # --------------------------------------------------------------------------
+  - type: web
+    name: grid-guard-api
+    runtime: python
+    plan: free
+    region: oregon
+    buildCommand: pip install uv && uv sync --frozen --no-dev
+    startCommand: uv run uvicorn grid_guard.api.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.16
+      - key: CORS_ORIGINS
+        value: https://grid-guard-frontend.onrender.com,http://localhost:5173,http://localhost:3000
+      - key: GRID_GUARD_LOG_LEVEL
+        value: INFO
+      - key: GRID_GUARD_API__MODEL_PATH
+        value: artifacts/cost_sensitive/champion_model.txt
+
+  # --------------------------------------------------------------------------
+  # 2. React + TypeScript + Vite Frontend (Static Site)
+  # --------------------------------------------------------------------------
+  - type: web
+    name: grid-guard-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    autoDeploy: true
+    routes:
+      # SPA fallback rewrite: unknown frontend paths resolve to /index.html
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://grid-guard-api.onrender.com

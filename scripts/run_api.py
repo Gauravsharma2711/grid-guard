@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -32,7 +33,7 @@ def main() -> None:
     parser.add_argument(
         "--port",
         type=int,
-        default=settings.api.port,
+        default=int(os.environ.get("PORT", str(settings.api.port))),
         help=f"Bind port (default: {settings.api.port})",
     )
     parser.add_argument(

@@ -385,18 +385,30 @@ docker compose down
 - **FastAPI OpenAPI Documentation**: [http://localhost:8000/docs](http://localhost:8000/docs)
 - **API Health Probe**: [http://localhost:8000/health](http://localhost:8000/health)
 
-### 8.8 Running Automated Tests & Code Quality
+### 8.8 Deploying to Render (Cloud Production)
 
-Validate system correctness, leakage prevention, financial invariants, and UI components across all 266 unit and integration tests:
+Grid-Guard is configured for zero-friction cloud deployment on [Render](https://render.com) using the included root `render.yaml` Blueprint:
+
+- **Frontend (Static Site)**: React + Vite SPA with SPA rewrites (`dist/`).
+- **Backend (Web Service)**: FastAPI ASGI application with Uvicorn (`uv run uvicorn grid_guard.api.main:app --host 0.0.0.0 --port $PORT`).
+- **Blueprint Auto-Deploy**: Simply connect your repository to Render Blueprints.
+
+For step-by-step instructions, environment variable configurations, and post-deployment smoke tests, consult the [Render Deployment Guide (docs/render_deployment.md)](docs/render_deployment.md).
+
+---
+
+### 8.9 Running Automated Tests & Code Quality
+
+Validate system correctness, leakage prevention, financial invariants, and UI components across all 270 automated tests:
 
 ```bash
-# 1. Backend Python regression test suite (162 tests)
+# 1. Backend Python regression test suite (164 tests)
 uv run pytest -q
 
 # 2. Python code quality and linter check (Ruff)
 uv run ruff check .
 
-# 3. Frontend React unit and integration suite (104 tests across 27 files)
+# 3. Frontend React unit and integration suite (106 tests across 27 files)
 cd frontend
 npm run test
 

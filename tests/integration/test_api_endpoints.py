@@ -7,6 +7,8 @@ import pytest
 from fastapi.testclient import TestClient
 
 from grid_guard.api.main import create_app
+from grid_guard.config.api import APISettings
+from grid_guard.config.settings import Settings
 
 
 @pytest.fixture(scope="module")
@@ -268,3 +270,38 @@ def test_endpoint_unready_service() -> None:
             json={"meter_id": "FAIL_MTR", "readings": readings},
         )
         assert pred_res.status_code == 503
+
+
+def test_endpoint_cors_headers() -> None:
+    """Test CORS preflight and allowed origins."""
+    settings = Settings()
+    settings.api.cors_origins = ["https://grid-guard-frontend.onrender.com"]
+    custom_app = create_app(settings=settings)
+    with TestClient(custom_app) as tc:
+        # Preflight request from allowed origin
+        headers = {
+            "Origin": "https://grid-guard-frontend.onrender.com",
+            "Access-Control-Request-Method": "POST",
+            "Access-Control-Request-Headers": "Content-Type",
+        }
+        res = tc.options("/health", headers=headers)
+        assert res.status_code == 200
+        assert res.headers.get("access-control-allow-origin") == "https://grid-guard-frontend.onrender.com"
+
+        # Request from disallowed origin
+        headers_disallowed = {
+            "Origin": "https://unauthorized-origin.example.com",
+            "Access-Control-Request-Method": "POST",
+        }
+        res_disallowed = tc.options("/health", headers=headers_disallowed)
+        assert res_disallowed.headers.get("access-control-allow-origin") is None
+
+
+def test_port_and_cors_parsing_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Test that PORT and CORS_ORIGINS from environment are parsed correctly."""
+    monkeypatch.setenv("PORT", "9999")
+    monkeypatch.setenv("CORS_ORIGINS", "https://render.app,http://localhost:5173")
+    api_cfg = APISettings()
+    assert api_cfg.port == 9999
+    assert api_cfg.cors_origins == ["https://render.app", "http://localhost:5173"]
+

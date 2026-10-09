@@ -19,9 +19,14 @@ const DEFAULT_API_BASE_URL = 'http://localhost:8000';
 /**
  * Validates and normalizes an API base URL string.
  * Strips trailing slashes to guarantee consistent endpoint concatenation.
+ * In production mode, does not silently fall back to localhost.
  */
-export function normalizeApiBaseUrl(url: string | undefined): string {
+export function normalizeApiBaseUrl(url: string | undefined, isProd: boolean = false): string {
   if (!url || typeof url !== 'string' || url.trim() === '') {
+    if (isProd) {
+      // In production mode, do not silently point to developer localhost
+      return '';
+    }
     return DEFAULT_API_BASE_URL;
   }
   const trimmed = url.trim();
@@ -35,12 +40,12 @@ export function normalizeApiBaseUrl(url: string | undefined): string {
 export function getAppConfig(
   env: Record<string, string | undefined> = import.meta.env
 ): AppConfig {
-  const rawUrl = env['VITE_API_BASE_URL'];
-  const apiBaseUrl = normalizeApiBaseUrl(rawUrl);
-
   const mode = env['MODE'] ?? 'development';
   const isDev = mode === 'development';
   const isProd = mode === 'production';
+
+  const rawUrl = env['VITE_API_BASE_URL'];
+  const apiBaseUrl = normalizeApiBaseUrl(rawUrl, isProd);
 
   return {
     apiBaseUrl,

@@ -44,6 +44,7 @@ data/external/*
 artifacts/baseline/*.txt
 artifacts/imbalance/*.txt
 artifacts/cost_sensitive/*.txt
+!artifacts/cost_sensitive/champion_model.txt
 artifacts/decision/*.csv
 !artifacts/decision/top_100_inspection_tickets.csv
 artifacts/explainability/*.parquet
