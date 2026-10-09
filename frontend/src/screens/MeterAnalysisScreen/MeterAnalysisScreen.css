@@ -1,0 +1,176 @@
+/* --------------------------------------------------------------------------
+   Grid-Guard Meter Analysis Screen Styles
+   Adheres to /designsystem.md ("Calm Proof Flow")
+   -------------------------------------------------------------------------- */
+
+.gg-meter-analysis-screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-6);
+  width: 100%;
+}
+
+.gg-meter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: var(--gg-space-4);
+}
+
+.gg-meter-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-1);
+}
+
+.gg-meter-kicker {
+  color: var(--gg-text-muted);
+}
+
+.gg-meter-title {
+  margin: 0;
+  color: var(--gg-text);
+}
+
+.gg-meter-subtitle {
+  color: var(--gg-text-muted);
+  max-width: 600px;
+  margin: 0;
+}
+
+.gg-meter-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--gg-space-3);
+}
+
+.gg-preset-info-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--gg-space-3);
+  background: var(--gg-surface-subtle);
+  border: 1px solid var(--gg-border-subtle);
+}
+
+.gg-preset-id {
+  font-weight: 700;
+  color: var(--gg-text);
+}
+
+.gg-preset-desc {
+  color: var(--gg-text-muted);
+}
+
+/* Decision & Risk Banner */
+.gg-meter-decision-surface {
+  background: var(--gg-surface);
+  border: 1px solid var(--gg-border);
+}
+
+.gg-decision-banner-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--gg-space-4);
+}
+
+.gg-decision-stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-1);
+}
+
+.gg-decision-val-row {
+  display: flex;
+  align-items: center;
+  gap: var(--gg-space-2);
+}
+
+.gg-tau-val {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--gg-text);
+}
+
+/* Data Quality Surface */
+.gg-quality-surface {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-3);
+}
+
+.gg-quality-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.gg-quality-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--gg-space-3);
+}
+
+.gg-quality-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--gg-surface-subtle);
+  padding: var(--gg-space-2) var(--gg-space-3);
+  border-radius: var(--gg-radius-sm);
+}
+
+.gg-quality-item .gg-type-mono {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gg-text);
+}
+
+/* Financial Surface */
+.gg-financial-surface {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-3);
+}
+
+/* Evidence Surface */
+.gg-evidence-surface {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-3);
+}
+
+.gg-narrative-text {
+  margin: 0;
+  color: var(--gg-text);
+  line-height: 1.5;
+}
+
+.gg-signatures-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-2);
+  margin-top: var(--gg-space-2);
+}
+
+.gg-signatures-chips {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-2);
+}
+
+.gg-sig-chip {
+  padding: var(--gg-space-2) var(--gg-space-3);
+  background: var(--gg-surface-subtle);
+  border-left: 3px solid var(--gg-signal);
+  font-size: 13px;
+  color: var(--gg-text);
+}
+
+.gg-safety-disclaimer {
+  margin: 0;
+  color: var(--gg-text-muted);
+  font-style: italic;
+  font-size: 11px;
+}

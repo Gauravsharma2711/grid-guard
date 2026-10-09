@@ -1,0 +1,223 @@
+/* --------------------------------------------------------------------------
+   Grid-Guard Inspection Queue Screen Styles
+   Adheres strictly to /designsystem.md ("Calm Proof Flow")
+   -------------------------------------------------------------------------- */
+
+.gg-queue-screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-6);
+  width: 100%;
+}
+
+.gg-queue-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: var(--gg-space-4);
+}
+
+.gg-queue-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-1);
+}
+
+.gg-queue-kicker {
+  color: var(--gg-text-muted);
+}
+
+.gg-queue-title {
+  margin: 0;
+  color: var(--gg-text);
+}
+
+.gg-queue-subtitle {
+  color: var(--gg-text-muted);
+  max-width: 600px;
+  margin: 0;
+}
+
+/* Filter Bar */
+.gg-queue-filter-surface {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-4);
+}
+
+.gg-filter-bar-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: var(--gg-space-4);
+  align-items: flex-start;
+}
+
+@media (max-width: 900px) {
+  .gg-filter-bar-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gg-capacity-buttons {
+  display: flex;
+  gap: var(--gg-space-2);
+}
+
+.gg-filter-chips-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--gg-space-2);
+  padding-top: var(--gg-space-2);
+  border-top: 1px solid var(--gg-border-subtle);
+}
+
+.gg-chips-label {
+  color: var(--gg-text-muted);
+  margin-right: var(--gg-space-2);
+}
+
+/* Queue Aggregate KPI Strip */
+.gg-queue-kpi-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gg-space-4);
+  padding: var(--gg-space-3) var(--gg-space-4);
+  background: var(--gg-surface-subtle);
+  border: 1px solid var(--gg-border-subtle);
+  border-radius: var(--gg-radius-md);
+  justify-content: space-between;
+}
+
+.gg-queue-kpi-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gg-queue-kpi-val {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gg-text);
+}
+
+.gg-queue-env-val {
+  color: #15803d;
+}
+
+/* Table Cell Details */
+.gg-queue-rank {
+  font-weight: 700;
+  color: var(--gg-text-muted);
+}
+
+.gg-meter-cell-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gg-meter-id-text {
+  font-weight: 600;
+  color: var(--gg-text);
+  letter-spacing: -0.01em;
+}
+
+.gg-meter-sub {
+  color: var(--gg-text-muted);
+  font-size: 11px;
+}
+
+.gg-sig-summary-text {
+  display: inline-block;
+  max-width: 220px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--gg-text);
+}
+
+/* Slide-out Ticket Drawer Content */
+.gg-ticket-drawer-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-5);
+}
+
+.gg-drawer-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-2);
+  padding-bottom: var(--gg-space-4);
+  border-bottom: 1px solid var(--gg-border-subtle);
+}
+
+.gg-drawer-section:last-of-type {
+  border-bottom: none;
+}
+
+.gg-drawer-meter-id {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gg-text);
+}
+
+.gg-drawer-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gg-space-3);
+  font-size: 12px;
+  color: var(--gg-text-muted);
+}
+
+.gg-drawer-decision-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.gg-drawer-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--gg-space-3);
+  background: var(--gg-surface-subtle);
+  padding: var(--gg-space-3);
+  border-radius: var(--gg-radius-sm);
+}
+
+.gg-drawer-signatures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gg-space-2);
+}
+
+.gg-signature-tag {
+  background: var(--gg-surface-subtle);
+  border: 1px solid var(--gg-border);
+  padding: 4px 8px;
+  border-radius: var(--gg-radius-sm);
+  font-family: var(--gg-font-mono);
+  font-size: 11px;
+  color: var(--gg-text);
+}
+
+.gg-drawer-narrative {
+  margin: 0;
+  color: var(--gg-text);
+  line-height: 1.5;
+}
+
+.gg-drawer-caveat {
+  margin: 0;
+  color: var(--gg-text-muted);
+  font-style: italic;
+  font-size: 11px;
+}
+
+.gg-drawer-action-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-2);
+  margin-top: var(--gg-space-3);
+}

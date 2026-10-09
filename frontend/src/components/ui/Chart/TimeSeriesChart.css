@@ -1,0 +1,152 @@
+/* --------------------------------------------------------------------------
+   Grid-Guard Time-Series Chart Styles
+   Adheres to /designsystem.md ("Calm Proof Flow")
+   -------------------------------------------------------------------------- */
+
+.gg-timeseries-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.gg-timeseries-svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  display: block;
+}
+
+/* Grid lines and axes */
+.gg-chart-gridline {
+  stroke: var(--gg-border-subtle);
+  stroke-dasharray: 3 3;
+  stroke-width: 1;
+}
+
+.gg-chart-axis-label {
+  font-family: var(--gg-font-mono);
+  font-size: 11px;
+  fill: var(--gg-text-muted);
+}
+
+.gg-chart-y-label {
+  text-anchor: end;
+}
+
+.gg-chart-x-label {
+  font-size: 10px;
+}
+
+/* Baseline indicator */
+.gg-chart-baseline-line {
+  stroke: var(--gg-text-muted);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
+}
+
+.gg-chart-baseline-tag {
+  font-family: var(--gg-font-mono);
+  font-size: 10px;
+  fill: var(--gg-text-muted);
+  text-anchor: end;
+}
+
+/* Area fill & main line */
+.gg-chart-area-fill {
+  fill: var(--gg-signal);
+  opacity: 0.15;
+}
+
+.gg-chart-line {
+  fill: none;
+  stroke: var(--gg-text);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Interactive points */
+.gg-chart-point {
+  fill: var(--gg-surface);
+  stroke: var(--gg-text);
+  stroke-width: 1.5;
+  cursor: pointer;
+  transition: r var(--gg-transition-fast) ease, stroke var(--gg-transition-fast) ease;
+}
+
+.gg-chart-point:hover,
+.gg-chart-point-active,
+.gg-chart-point:focus-visible {
+  fill: var(--gg-signal);
+  stroke: var(--gg-text);
+  stroke-width: 2;
+  outline: none;
+}
+
+/* Tooltip overlay */
+.gg-chart-tooltip {
+  position: absolute;
+  top: var(--gg-space-3);
+  right: var(--gg-space-3);
+  background: var(--gg-code);
+  color: var(--gg-code-text);
+  padding: var(--gg-space-2) var(--gg-space-3);
+  border-radius: var(--gg-radius-sm);
+  display: flex;
+  gap: var(--gg-space-2);
+  align-items: center;
+  font-size: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.gg-chart-tooltip-date {
+  font-family: var(--gg-font-mono);
+  color: #a3a39e;
+}
+
+.gg-chart-tooltip-val {
+  font-family: var(--gg-font-mono);
+  font-weight: 600;
+  color: var(--gg-signal);
+}
+
+/* Statistical summary strip */
+.gg-timeseries-metrics-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gg-space-4);
+  padding: var(--gg-space-3) var(--gg-space-4);
+  background: var(--gg-surface-subtle);
+  border-top: 1px solid var(--gg-border-subtle);
+  border-radius: 0 0 var(--gg-radius-md) var(--gg-radius-md);
+}
+
+.gg-timeseries-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gg-timeseries-stat-label {
+  font-size: 11px;
+  color: var(--gg-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 500;
+}
+
+.gg-timeseries-stat-value {
+  font-family: var(--gg-font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gg-text);
+}
+
+.gg-timeseries-unit {
+  font-size: 11px;
+  color: var(--gg-text-muted);
+  font-weight: normal;
+}

@@ -1,0 +1,144 @@
+/* --------------------------------------------------------------------------
+   Grid-Guard Model Insights Screen Styles
+   Adheres to /designsystem.md ("Calm Proof Flow")
+   -------------------------------------------------------------------------- */
+
+.gg-insights-screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-6);
+  width: 100%;
+}
+
+.gg-insights-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-1);
+}
+
+.gg-insights-kicker {
+  color: var(--gg-text-muted);
+}
+
+.gg-insights-title {
+  margin: 0;
+  color: var(--gg-text);
+}
+
+.gg-insights-subtitle {
+  color: var(--gg-text-muted);
+  max-width: 650px;
+  margin: 0;
+}
+
+/* Checkpoint Surface */
+.gg-checkpoint-surface {
+  background: var(--gg-surface);
+  border: 1px solid var(--gg-border);
+}
+
+.gg-checkpoint-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: var(--gg-space-3);
+  padding-bottom: var(--gg-space-3);
+  border-bottom: 1px solid var(--gg-border-subtle);
+  margin-bottom: var(--gg-space-3);
+}
+
+.gg-checkpoint-title {
+  margin: 2px 0 0 0;
+  color: var(--gg-text);
+}
+
+.gg-checkpoint-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--gg-space-3);
+}
+
+.gg-checkpoint-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gg-checkpoint-metric .gg-type-mono {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gg-text);
+}
+
+/* Tab Switcher */
+.gg-insights-tabs {
+  display: flex;
+  gap: var(--gg-space-2);
+  flex-wrap: wrap;
+}
+
+/* Section Container */
+.gg-insights-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-3);
+}
+
+.gg-section-meta-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gg-section-meta-text h3 {
+  margin: 0;
+}
+
+.gg-section-meta-text p {
+  margin: 0;
+  color: var(--gg-text-muted);
+}
+
+/* Table Cells */
+.gg-policy-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 320px;
+}
+
+.gg-policy-title {
+  font-weight: 600;
+  color: var(--gg-text);
+}
+
+.gg-policy-desc {
+  color: var(--gg-text-muted);
+}
+
+.gg-evolution-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 300px;
+}
+
+.gg-evolution-phase {
+  font-weight: 600;
+  color: var(--gg-text);
+}
+
+.gg-evolution-strat {
+  color: var(--gg-text-muted);
+}
+
+.gg-metric-highlight {
+  font-weight: 700;
+  color: var(--gg-text);
+}
+
+.gg-topk-pill {
+  font-weight: 600;
+  color: var(--gg-text);
+}

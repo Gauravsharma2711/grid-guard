@@ -1,0 +1,221 @@
+/* --------------------------------------------------------------------------
+   Grid-Guard Overview Screen Styles
+   Strictly adheres to /designsystem.md ("Calm Proof Flow")
+   -------------------------------------------------------------------------- */
+
+.gg-overview-screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-6);
+  width: 100%;
+}
+
+.gg-overview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: var(--gg-space-4);
+}
+
+.gg-overview-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-1);
+}
+
+.gg-overview-kicker {
+  color: var(--gg-text-muted);
+}
+
+.gg-overview-title {
+  margin: 0;
+  color: var(--gg-text);
+}
+
+.gg-overview-subtitle {
+  color: var(--gg-text-muted);
+  max-width: 600px;
+  margin: 0;
+}
+
+.gg-overview-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--gg-space-2);
+}
+
+.gg-overview-conn-status {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.gg-overview-timestamp {
+  font-family: var(--gg-font-mono);
+  color: var(--gg-text-muted);
+}
+
+/* Hero Financial Block */
+.gg-overview-hero-surface {
+  background: var(--gg-surface);
+  border: 1px solid var(--gg-border);
+}
+
+.gg-overview-hero-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--gg-space-6);
+}
+
+.gg-overview-hero-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-2);
+  flex: 1;
+  min-width: 280px;
+}
+
+.gg-hero-label {
+  color: var(--gg-text-muted);
+}
+
+.gg-hero-value-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--gg-space-3);
+}
+
+.gg-hero-value {
+  font-family: var(--gg-font-display);
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--gg-text);
+  line-height: 1.1;
+}
+
+.gg-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  background: var(--gg-signal);
+  color: var(--gg-signal-ink);
+  font-family: var(--gg-font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: var(--gg-radius-sm);
+}
+
+.gg-hero-desc {
+  color: var(--gg-text-muted);
+  max-width: 540px;
+  margin: 0;
+}
+
+.gg-overview-hero-policy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-2);
+  padding: var(--gg-space-4);
+  background: var(--gg-surface-subtle);
+  border: 1px solid var(--gg-border-subtle);
+  border-radius: var(--gg-radius-md);
+  min-width: 260px;
+}
+
+.gg-policy-kicker {
+  color: var(--gg-text-muted);
+}
+
+.gg-policy-name {
+  color: var(--gg-text);
+}
+
+.gg-policy-formula {
+  color: var(--gg-text-muted);
+  font-size: 11px;
+}
+
+.gg-hero-queue-btn {
+  margin-top: var(--gg-space-2);
+}
+
+/* 4-Column KPI Grid */
+.gg-overview-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--gg-space-3);
+}
+
+.gg-kpi-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-1);
+}
+
+.gg-kpi-label {
+  color: var(--gg-text-muted);
+}
+
+.gg-kpi-value {
+  color: var(--gg-text);
+  margin-top: 2px;
+}
+
+.gg-kpi-sub {
+  color: var(--gg-text-muted);
+}
+
+/* System Bar */
+.gg-overview-system-bar {
+  background: var(--gg-surface-subtle);
+}
+
+.gg-system-bar-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gg-space-6);
+  justify-content: space-between;
+}
+
+.gg-system-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gg-system-metric .gg-type-mono {
+  font-size: 13px;
+  color: var(--gg-text);
+  font-weight: 500;
+}
+
+/* Section Header */
+.gg-overview-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gg-space-3);
+}
+
+.gg-section-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: var(--gg-space-3);
+}
+
+.gg-rank-pill {
+  font-weight: 600;
+  color: var(--gg-text-muted);
+}
+
+.gg-meter-id-cell {
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}

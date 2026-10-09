@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiClient, ApiClientError } from './apiClient';
 
 describe('ApiClient', () => {
@@ -27,6 +27,34 @@ describe('ApiClient', () => {
           'Content-Type': 'application/json',
           Accept: 'application/json',
         }),
+      })
+    );
+  });
+
+  it('successfully posts to getInspectionQueue with payload', async () => {
+    const mockQueue = {
+      queue_size: 1,
+      total_expected_recovery: 32000.0,
+      total_dispatch_cost: 100.0,
+      total_net_value: 31900.0,
+      decision_rule: 'env',
+      tickets: [],
+      processing_time_ms: 12.0,
+    };
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify(mockQueue), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      })
+    );
+
+    const result = await client.getInspectionQueue({ min_env: 500, max_inspections: 10 });
+    expect(result).toEqual(mockQueue);
+    expect(globalThis.fetch).toHaveBeenCalledWith(
+      'http://test-api:8000/api/v1/inspection/queue',
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({ min_env: 500, max_inspections: 10 }),
       })
     );
   });
