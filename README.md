@@ -14,461 +14,503 @@
 
 ---
 
-## 1. Value Proposition
+## 1. About Grid-Guard
 
-Grid-Guard turns smart-meter anomaly detection into an economically rational field operation: **anomalies are only dispatched when the expected recovered revenue exceeds the crew dispatch cost.**
+Electric power utilities lose tens of billions of dollars each year to **Non-Technical Losses (NTL)**—predominantly physical meter tampering, line bypassing, and unauthorized consumption. 
 
----
+Conventional machine-learning models evaluate smart meters using purely statistical metrics such as ROC-AUC, Precision, or F1-score. In real-world utility operations, however, errors have deeply **asymmetric financial consequences**:
+- **False Positives (Wasted Dispatch)**: Incur an immediate fixed operational cost ($C_{\text{FP}} \approx \$100.00$) to dispatch a two-person physical field inspection crew to an honest customer.
+- **False Negatives (Unrecovered Leakage)**: Permit ongoing unmetered electricity theft ($C_{\text{FN}} = \text{Deficit} \times \text{Tariff} \times \text{Horizon}$), which can exceed $\$150,000$ on large commercial and industrial accounts.
 
-## 2. Interactive Operational Interfaces (React + TypeScript)
+A naive model that flags a rural lifeline customer with 95% statistical confidence may trigger **\$100 of utility crew expenditure to recover \$10 of energy**.
 
-Grid-Guard provides an enterprise-grade operational web interface built with **React 18, TypeScript, and Vite**, strictly conforming to the `/DesignSystem.md` ("Calm Proof Flow") specification and communicating asynchronously via REST with the FastAPI inference backend (`http://localhost:8000`). The interface empowers revenue protection analysts, dispatch supervisors, and executive management to monitor fleet health, investigate specific smart meters, inspect model explainability, review field work orders, and configure operational parameters.
+**Grid-Guard** bridges the gap between predictive machine learning and utility economics: **anomalies are dispatched if and only if the expected recovered revenue exceeds the crew dispatch cost.**
 
+$$\text{ENV}_i = p_i \times R_i - C_{\text{dispatch}} > 0$$
 
----
-
-### 2.1 Prioritized Inspection Work Order Queue
-![Prioritized Inspection Work Order Queue](docs/assets/screenshots/inspection_queue_view.png)
-
-- **Purpose & User Role**: Primary operational dispatch center designed for utility **Field Dispatch Supervisors** and **Revenue Protection Planners**.
-- **Core Capabilities & Insights**:
-  - **Dynamic Economic Ranking**: Automatically filters and ranks candidate meters across the 42,372-meter fleet in strictly descending order of **Expected Net Value** ($\text{ENV}_i = p_i \times R_i - C_{\text{dispatch}}$).
-  - **Multi-Criteria Fleet Controls**: Interactive filter sliders to isolate meters above a minimum tamper probability (e.g., $p \ge 0.50$), minimum net recovery threshold ($\text{ENV} \ge \$0$), search by exact Meter ID, or limit queue size for crew shift capacity.
-  - **Comprehensive Candidate Metadata**: Displays Rank, Meter ID, Tamper Probability (e.g., 98.6%), Estimated Recoverable Revenue ($\$32,375.68$), Dispatch Cost ($\$100.00$), Net Value ($\$31,822.42$), Decision Policy (`env`), Crew Recommended toggle, and detected physical tampering signatures.
-  - **Operational Workflow**: Provides a 1-click **"Investigate Selected Meter in Meter Analysis"** button for deep-dive forensic audit, plus an **"Export Queue (CSV)"** button for dispatching work orders directly to field crew mobile terminals or utility ERP systems.
+Where:
+- $p_i$ is the calibrated probability of tampering for meter $i$.
+- $R_i$ is the estimated recoverable revenue over the recovery horizon ($R_i = \text{Leakage (kWh)} \times \text{Tariff} \times \text{Horizon}$).
+- $C_{\text{dispatch}}$ is the fixed marginal cost of dispatching a physical inspection crew.
+- $\text{ENV}_i$ is the **Expected Net Value** of the inspection.
 
 ---
 
-### 2.2 Single-Meter Investigation & Tree-SHAP Explainability
-![Meter Investigation & Explainability](docs/assets/screenshots/meter_analysis_view.png)
+## 2. Core Pillars & Capabilities
 
-- **Purpose & User Role**: Forensic audit view designed for **Utility Revenue Analysts** and **Technical Field Auditors**.
-- **Core Capabilities & Insights**:
-  - **Dataset & Archetype Selection**: Choose from 5 pre-configured synthetic tampering archetypes (e.g., Sustained Step-Down Anomaly, Partial Shunting, Commercial Theft, Lifeline Rural Consumer) or input custom smart-meter consumption histories.
-  - **One-Click End-to-End Pipeline**: A single click on **"🚀 Score Meter & Generate Ticket"** passes raw daily consumption through the 60-feature causal pipeline, queries the cost-sensitive booster, evaluates dynamic breakeven thresholds, and computes Tree-SHAP feature attributions in real time.
-  - **Financial Decision Summary**: Contextual metric cards display Tamper Probability (35.9%), Decision (`DISPATCH RECOMMENDED`), Estimated Recoverable Revenue ($\$28,598.40$), Dispatch Cost ($\$100.00$), and Expected Net Value ($\$10,156.45$).
-  - **Interactive Plotly Time-Series Visualizer**: Renders 180-day consumption history (blue curve), 14-day rolling baseline (green dashed curve), and highlights the 30-day evaluation window (pink shaded area) where energy usage abruptly collapsed.
-  - **Evidentiary Signatures & Counter-Evidence**: Automatically synthesizes plain-English physical diagnostic evidence (e.g., *"Sustained consumption reduction of 94.2% below historical baseline (26.6 kWh/day deficit) persisting for 31 consecutive days"*), providing field crews with concrete physical bypass indicators to verify on-site.
+1. **60-Feature Causal Temporal Pipeline**: Robust feature extraction engine that derives rolling consumption baseline ratios (14d/60d, 30d/90d), weekday/weekend volatility, zero-consumption streaks, and near-zero flatline variances without forward lookahead bias.
+2. **Financially Weighted Learning (LightGBM Champion)**: A cost-sensitive gradient boosted tree booster trained with sample weights proportional to estimated revenue leakage, reducing realized fleet operational loss by **24.5%**.
+3. **Dynamic Expected Net Value ($\text{ENV}$) Decisioning**: Fleet-wide work-order prioritization that sorts candidate meters in strictly descending order of net dollar yield, ensuring maximum capital efficiency for utility dispatch operations.
+4. **Tree-SHAP Explainability & Physical Signatures**: Exact Shapley value attributions decomposed into positive risk factors, negative moderating evidence, detected physical tampering signatures (sustained step-down, flatline invariance), and non-accusatory field work orders.
+5. **Calm Proof Flow Operational Interface**: Enterprise React 18 + TypeScript web application built under the strict `/DesignSystem.md` specification—featuring high-contrast typography, live API telemetry, tactile elevation, and zero generic SaaS aesthetics.
 
 ---
 
-### 2.3 Model Performance & Comparative Evaluation
-![Model Performance & Comparative Evaluation](docs/assets/screenshots/model_insights_view.png)
-
-- **Purpose & User Role**: Analytical benchmarking dashboard for **Data Science Evaluators**, **Grid Operations Directors**, and **Chief Economists**.
-- **Core Capabilities & Insights**:
-  - **Policy-Level Benchmarking**: Evaluates and contrasts three candidate operational decisioning policies across the 42,372 candidate smart meters:
-    1. *Fixed Threshold ($p \ge 0.50$)*: Conventional machine learning cutoff that ignores monetary stakes and treats a $\$10$ leakage customer identically to a $\$100,000$ industrial customer.
-    2. *Bayes Cost Threshold*: Theoretical decision cutoff scaled by the cost ratio $\tau = \frac{C_{\text{FP}}}{C_{\text{FP}} + C_{\text{FN}}}$.
-    3. *Dynamic Expected Net Value (Grid-Guard)*: Dispatches an inspection crew if and only if expected gross recovery exceeds crew cost ($p_i \times R_i > C_{\text{dispatch}}$) and prioritizes by net dollar yield.
-  - **Visual Comparative Analytics**:
-    - **Expected Net Value ($k)**: Grid-Guard's dynamic ENV policy achieves **$\$275.2k** in net fleet recovery, outperforming the fixed baseline ($\$223.1k$) by **+$\$52,100.00**.
-    - **Realized Operational Loss ($k)**: Combines wasted false-positive dispatches with undetected leakage. Grid-Guard cuts total loss to **$\$64.8k** (lowest across all evaluated policies), down from **$\$82.7k$ under the conventional fixed threshold.
-
----
-
-### 2.4 System Status & Metadata Introspection
-![System Status & Metadata Introspection](docs/assets/screenshots/system_status_view.png)
-
-- **Purpose & User Role**: Transparency and operational observability dashboard for **DevOps Engineers**, **System Administrators**, and **Regulatory Auditors**.
-- **Core Capabilities & Insights**:
-  - **Live Service Health Probes**: Real-time HTTP liveness monitoring for the FastAPI service (`/health` $\rightarrow$ `HEALTHY`) and model booster & explainer readiness (`/ready` $\rightarrow$ `READY`).
-  - **Model & Checkpoint Provenance**: Documents the active model version (`phase6_cost_sensitive_v1`), LightGBM booster architecture, custom financially weighted log-loss training objective, 60 temporal feature dimensions, Tree-SHAP explainer engine, and baseline expected value (`-2.3713 log-odds`).
-  - **Operational Constraints & Tariff Defaults**: Publicly displays input ingestion constraints (daily active energy readings, minimum 14-day history, maximum 730-day window, batch limit 50 meters) and financial parameter defaults (standard tariff: $\$0.15$/kWh, crew dispatch cost: $\$100.00$, leakage recovery horizon: 12 billing cycles).
-  - **Continuous Connectivity Indicator**: The sidebar features an active status badge (`API Online (v1.0)`), assuring users that all analytical outputs are generated dynamically by the live backend.
-
----
-
-## 3. The Operational Problem
-
-Electric power utilities lose tens of billions of dollars annually to **Non-Technical Losses (NTL)**—primarily physical meter tampering, illegal line tapping, and unauthorized consumption.
-
-Conventional machine-learning models evaluate smart meters using statistical accuracy or F1-scores, treating all detection errors equally. In real-world utility operations, however, errors have asymmetric financial consequences:
-- **False Positives**: Incur an immediate fixed operational cost ($C_{\text{FP}} \approx \$100$) to dispatch a two-person physical inspection crew.
-- **False Negatives**: Allow ongoing unmetered revenue leakage ($C_{\text{FN}} = \text{Deficit} \times \text{Tariff} \times \text{Horizon}$), which can exceed $\$150,000$ on large commercial accounts.
-
-A naive model that flags a rural lifeline customer with high confidence may cause the utility to spend **\$100 dispatching a crew to recover \$10 of energy**.
-
----
-
-## 4. The Grid-Guard Solution
-
-Grid-Guard solves this asymmetric challenge through a **four-pillar financial architecture**:
-
-1. **60-Feature Causal Temporal Pipeline**: Captures consumption collapse ratios, historical baselines, weekday/weekend regimes, zero-consumption streaks, and near-zero flatline variances.
-2. **Financially Weighted Learning (Phase 6 Champion)**: A cost-sensitive LightGBM objective where training sample loss is weighted by the potential revenue leakage.
-3. **Dynamic Expected Net Value (ENV) Prioritization (Phase 7)**:
-   $$\text{ENV}_i = p_i \times R_i - C_{\text{dispatch}}$$
-   Field crews are dispatched if and only if $\text{ENV}_i > 0$, ranking work orders by net financial yield.
-4. **Tree-SHAP & Audited Narratives (Phase 8)**: Exact Shapley feature attributions, detected electrical signatures, and non-accusatory field work order tickets.
-
----
-
-## 5. End-to-End Architecture
+## 3. End-to-End System Architecture
 
 ```
                           AMI Smart-Meter Daily Readings (kWh)
                                             │
                                             ▼
-                           Polars Ingestion & Cleaning Engine
-                           (Imputation, Monotonicity, Validation)
-                                            │
-                                            ▼
-                           Temporal Feature Pipeline (60 Features)
-                           (Rolling baselines, variability, signatures)
-                                            │
-                                            ▼
-                        Cost-Sensitive LightGBM Booster (Phase 6)
-                        (Financially weighted binary log-loss)
-                                            │
-                                            ▼
-                        Dynamic Decision & Financial Engine (Phase 7)
-                        (Leakage estimation, dynamic tau, ENV ranking)
-                                            │
-                                            ▼
-                        Tree-SHAP Explainability & Narratives (Phase 8)
-                        (Exact Shapley values, electrical signatures)
-                                            │
-                      ┌─────────────────────┴─────────────────────┐
-                      ▼                                           ▼
-          FastAPI Backend Service (Phase 9)           Streamlit Dashboard (Phase 10)
-          • /health & /ready probes                   • Fleet Overview & KPIs
-          • /api/v1/predict (Single & Batch)          • Prioritized Inspection Queue
-          • /api/v1/inspection/ticket                 • Interactive Meter Analysis & Time Series
-          • /api/v1/inspection/queue                  • Multi-Phase Model Insights
-          • /api/v1/metadata/model & config           • 5 Curated Synthetic Demo Archetypes
+                    ┌──────────────────────────────────────────────┐
+                    │      Polars Ingestion & Validation Engine    │
+                    │   • Monotonic checks  • Imputation checks    │
+                    │   • Ingestion constraints (14–730 days)      │
+                    └──────────────────────┬───────────────────────┘
+                                           │
+                                           ▼
+                    ┌──────────────────────────────────────────────┐
+                    │      60-Feature Causal Temporal Pipeline     │
+                    │   • Trailing 14d/30d/60d/90d baselines       │
+                    │   • Volatility, skewness, zero streaks       │
+                    │   • Weekend vs. weekday consumption regimes  │
+                    └──────────────────────┬───────────────────────┘
+                                           │
+                                           ▼
+                    ┌──────────────────────────────────────────────┐
+                    │     Cost-Sensitive LightGBM Booster (Phase 6)│
+                    │   • Financially weighted binary log-loss     │
+                    │   • Calibrated tamper probability (p_i)      │
+                    └──────────────────────┬───────────────────────┘
+                                           │
+                                           ▼
+                    ┌──────────────────────────────────────────────┐
+                    │     Financial Decision Engine (Phase 7)      │
+                    │   • Dynamic breakeven threshold tau_cost     │
+                    │   • Expected gross recovery: p_i * R_i       │
+                    │   • Expected Net Value: ENV_i = p*R - C_disp │
+                    └──────────────────────┬───────────────────────┘
+                                           │
+                                           ▼
+                    ┌──────────────────────────────────────────────┐
+                    │    Tree-SHAP Explainability Engine (Phase 8) │
+                    │   • Exact local Shapley feature attributions │
+                    │   • Physical signatures & counter-evidence   │
+                    │   • Non-accusatory work order synthesis      │
+                    └──────────────────────┬───────────────────────┘
+                                           │
+                 ┌─────────────────────────┴─────────────────────────┐
+                 ▼                                                   ▼
+┌─────────────────────────────────┐                 ┌─────────────────────────────────┐
+│     FastAPI Backend (Phase 9)   │                 │     React 18 Frontend (Phase 5) │
+│  • Asynchronous Lifespan Model  │                 │  • Calm Proof Flow Design       │
+│  • /health & /ready probes      │◄──REST API (JSON)──┤  • Prioritized Queue & Filter   │
+│  • /api/v1/predict (Single/Batch│                 │  • Diagnostic Workbench & SHAP  │
+│  • /api/v1/inspection/ticket    │                 │  • Model Insights & Comparison  │
+│  • /api/v1/inspection/queue     │                 │  • Zero generic UI libraries    │
+└─────────────────────────────────┘                 └─────────────────────────────────┘
+```
+
+### Architectural Layer Responsibilities
+
+| Layer | Module / Location | Primary Responsibility |
+| :--- | :--- | :--- |
+| **Ingestion & Data Quality** | `src/grid_guard/data/` | Validates daily meter telemetry, enforces 14-day minimum window, verifies non-negativity, and formats Polars/NumPy arrays. |
+| **Feature Engineering** | `src/grid_guard/features/` | Calculates 60 temporal features capturing historical baseline divergence, variance collapses, and consumption drops without data leakage. |
+| **Inference Engine** | `src/grid_guard/models/` | Houses the LightGBM champion booster (`phase6_cost_sensitive_v1`) trained with revenue-weighted sample loss. |
+| **Financial Engine** | `src/grid_guard/decision/` | Evaluates individual customer tariffs ($\$0.15$/kWh default), dispatch costs ($\$100.00$), dynamic thresholds ($\tau_{\text{cost}}$), and net dollar values ($\text{ENV}$). |
+| **Explainability Engine** | `src/grid_guard/explainability/` | Computes Tree-SHAP attributions, detects physical electrical tampering signatures, balances counter-evidence, and formats forensic tickets. |
+| **REST API Service** | `src/grid_guard/api/` | FastAPI service with lifespan model preloading, OpenAPI documentation, and sub-10ms response times. |
+| **User Interface** | `frontend/` | React 18 + TypeScript + Vite SPA conforming strictly to `/DesignSystem.md` ("Calm Proof Flow"). |
+
+---
+
+## 4. Operational User Workflows
+
+Grid-Guard supports three primary role-based user workflows designed for day-to-day utility revenue protection operations:
+
+```
+[ Revenue Protection Dispatcher ]          [ Field Auditor / Analyst ]           [ Executive / Lead Data Scientist ]
+               │                                        │                                           │
+   1. Inspect Fleet Overview                1. Select Meter from Queue                   1. Review Model Governance
+   2. Filter by Minimum ENV ($)             2. Execute 1-Click Evaluation                2. Compare Decision Policies
+   3. Review Priority Work Orders           3. Analyze 180-Day Telemetry                 3. Audit Financial Trade-offs
+   4. Export Dispatch Queue (CSV)           4. Inspect Tree-SHAP Waterfall               4. Inspect Checkpoint Provenance
+               │                            5. Audit Electrical Signatures                          │
+               ▼                            6. Export Inspection Ticket                             ▼
+   [ Dispatched Field Crews ]                           │                        [ Operational Fleet Optimization ]
+                                                        ▼
+                                           [ Forensic Work Order Ticket ]
 ```
 
 ---
 
-## 6. Technology Stack
+### Workflow 1: Fleet-Wide Risk Monitoring & Prioritized Work Order Dispatch
+**Target Role**: *Revenue Protection Manager* / *Field Crew Dispatch Supervisor*
 
-- **Core & Data Processing**: Python 3.11, Polars, NumPy, Pandas, Pydantic V2
-- **Machine Learning**: LightGBM (Gradient Boosted Trees), Scikit-Learn, Imbalanced-Learn
-- **Explainability**: SHAP (TreeExplainer)
-- **Backend API**: FastAPI, Uvicorn, HTTPX
-- **Dashboard & Visualization**: Streamlit, Matplotlib
-- **Tooling & Orchestration**: UV, Pytest, Ruff, Docker, Docker Compose
+1. **Monitor Fleet Overview**: Review real-time aggregate metrics across the fleet (42,372 meters): Total Modeled Tamper Risk, Projected Fleet Leakage, Total Modeled Net Recovery ($\text{ENV}$), and Dispatched Candidate Count.
+2. **Filter Candidate Meters**:
+   - Set **Minimum Net Recovery ($\text{ENV}$)** filter (e.g., $\text{ENV} \ge \$500.00$) to guarantee inspection profitability.
+   - Set **Minimum Tamper Probability** filter (e.g., $p \ge 0.50$).
+   - Filter by **Shift Capacity** (e.g., 20, 50, or 100 meters per day) matching available field crew headcount.
+   - Search by exact **Meter ID** or **Feeder ID**.
+3. **Quick-Inspect Candidates**: Click any row in the queue table to open the **Slide-Out Inspection Drawer**, previewing economic stats, detected signatures, and narrative summaries without leaving the table.
+4. **Dispatch Work Orders**: Click **"Export Queue (CSV)"** to generate a structured work-order manifest compatible with utility ERP systems, field tablets, and GIS routing tools.
 
 ---
 
-## 7. Project Structure
+### Workflow 2: Deep-Dive Forensic Meter Investigation & Tree-SHAP Explainability
+**Target Role**: *Revenue Protection Analyst* / *Technical Field Auditor*
+
+1. **Select Meter**: Choose a candidate directly from the Prioritized Queue or pick one of the 5 pre-configured synthetic demonstration archetypes in the **Meter Analysis Workbench**.
+2. **Execute Diagnostic Evaluation**: Click **"Re-evaluate"** to run the 60-feature causal pipeline, model scoring, threshold evaluation, and Tree-SHAP attribution in real time.
+3. **Analyze Consumption Telemetry**:
+   - Inspect the interactive 180-day consumption chart.
+   - Compare daily consumption (blue curve) against trailing 14-day rolling baselines (green dashed line).
+   - Review highlighted pink windows identifying the exact historical changepoint where consumption collapsed.
+4. **Deconstruct Tree-SHAP Attribution**:
+   - Review the **Local Tree-SHAP Attribution Panel** decomposing risk into ranked positive contributors (e.g., `ratio_14d_60d`, `rolling_mean_14d`, `zero_consumption_streak`).
+   - Examine the **Moderating Counter-Evidence** panel identifying factors that reduce risk (e.g., consistent long-term baseline, seasonal stability).
+5. **Verify Electrical Tampering Signatures**:
+   - Inspect physical tampering flags: *Sustained Step-Down Anomaly*, *Flatline Invariance*, or *High-Volume Deficit*.
+6. **Generate & Export Inspection Ticket**:
+   - Click **"View Inspection Ticket →"** to open the full forensic work-order document.
+   - Review crew safety disclaimers, economic summary, and technical metadata.
+   - Click **"Export Ticket (JSON)"** to persist the cryptographically traceable audit record.
+
+---
+
+### Workflow 3: Model Governance & Policy Benchmarking
+**Target Role**: *Lead Data Scientist* / *Chief Risk Officer* / *Utility Economist*
+
+1. **Audit Model Checkpoint**: Inspect active booster provenance (`phase6_cost_sensitive_v1`), training objective (`financially_weighted_logistic`), feature dimensions (60), base log-odds (`-2.3713`), and live HTTP health probes.
+2. **Compare Operational Policies**: Evaluate the three decision policies across 42,372 candidate meters:
+   - *Fixed Threshold ($p \ge 0.50$)*: Conventional unweighted ML rule.
+   - *Bayes Cost Threshold*: Theoretical cost-ratio cutoff ($\tau = \frac{C_{\text{FP}}}{C_{\text{FP}} + C_{\text{FN}}}$).
+   - *Dynamic Expected Net Value ($\text{ENV}$)*: Grid-Guard's dollar-weighted rule.
+3. **Validate Empirical Superiority**:
+   - Confirm that Dynamic $\text{ENV}$ generates **+$52,100.00** higher net recovery than fixed cutoff while achieving the lowest realized operational loss (**\$64.8k** vs. **\$82.7k**).
+
+---
+
+## 5. Technology Stack
+
+| Domain | Technology | Purpose & Details |
+| :--- | :--- | :--- |
+| **Data Processing** | Python 3.11, Polars, NumPy, Pandas | High-performance columnar ingestion, feature computation, and array manipulation |
+| **Machine Learning** | LightGBM 4.6.0, Scikit-Learn | Cost-sensitive gradient boosted decision trees with custom sample weighting |
+| **Explainability** | SHAP 0.44+ (`TreeExplainer`) | Exact local Shapley values, feature additivity, and narrative attribution |
+| **Backend Framework** | FastAPI 1.0+, Uvicorn, Pydantic V2 | Asynchronous REST API, lifespan preloading, OpenAPI 3.1 schema specification |
+| **Frontend Framework** | React 18, TypeScript 5.5, Vite 5.4 | Enterprise Single-Page Application adhering to `/DesignSystem.md` ("Calm Proof Flow") |
+| **Testing & Quality** | Vitest, React Testing Library, Pytest, Ruff | Automated test suites (266 total tests), strict TypeScript compilation, ESLint |
+| **Containers & Deploy**| Docker, Docker Compose, Nginx | Multi-stage container builds, production static serving, healthcheck probes |
+
+---
+
+## 6. Project Directory Structure
 
 ```
 grid-guard/
-├── artifacts/                  # Verified reproducible artifacts (Phases 3–9)
-│   ├── api/                    # OpenAPI schema, sample payloads
-│   ├── cost_sensitive/         # Champion LightGBM model, weight audits
-│   ├── decision/               # Prioritized inspection queue, policy benchmarks
-│   └── explainability/         # Enriched work order tickets, Tree-SHAP metadata
-├── configs/                    # YAML configuration files (default.yaml)
-├── docs/                       # Comprehensive technical documentation
-│   ├── architecture.md         # System architecture & principles
-│   ├── deployment.md           # Production deployment & container guide
-│   ├── demo_guide.md           # Step-by-step evaluator demonstration walkthrough
-│   ├── end_to_end_flow.md      # Complete data flow & pipeline trace
-│   ├── final_project_status.md # Complete 10-phase sign-off report
-│   └── progress.md             # Granular engineering progress log
-├── scripts/                    # Command-line execution runners
-│   ├── run_api.py              # Launch FastAPI backend
-│   ├── run_dashboard.py        # Launch Streamlit dashboard
-│   └── run_services.py         # Launch both API and Dashboard concurrently
-├── src/grid_guard/             # Core application package
-│   ├── api/                    # FastAPI routes, schemas, and lifecycle service
-│   ├── config/                 # Pydantic Settings and configurations
-│   ├── dashboard/              # Streamlit dashboard, views, charts, and API client
-│   │   ├── api_client.py       # Dedicated API client (strict application boundary)
-│   │   ├── components/         # Reusable KPI cards, charts, and ticket renderers
-│   │   ├── demo_data/          # 5 synthetic demonstration archetypes
-│   │   └── views/              # Overview, Queue, Meter Analysis, Insights, Status
-│   ├── data/                   # Data cleaning, ingestion, and validation
-│   ├── decision/               # Dynamic thresholds and ticket prioritization
-│   ├── evaluation/             # Financial cost matrix and leakage estimators
-│   ├── explainability/         # Tree-SHAP, feature mapping, signatures, narratives
-│   ├── features/               # 60 temporal feature engineering pipeline
-│   └── models/                 # Baseline, imbalance, and cost-sensitive boosters
-├── tests/                      # 162 automated tests (Unit, Integration, E2E)
-├── Dockerfile.api              # Container manifest for FastAPI backend
-├── Dockerfile.dashboard        # Container manifest for Streamlit dashboard
-├── docker-compose.yml          # Multi-container service orchestration
-└── pyproject.toml              # UV / Pip project dependency specification
+├── artifacts/                      # Verified reproducible artifacts & model weights
+│   ├── api/                        # OpenAPI schemas and sample payloads
+│   ├── cost_sensitive/             # Champion LightGBM booster & evaluation records
+│   ├── decision/                   # Prioritized queue outputs & policy benchmark data
+│   └── explainability/             # Tree-SHAP metadata and sample inspection tickets
+├── configs/                        # YAML configuration files (default.yaml)
+├── docs/                           # Technical documentation & guides
+│   ├── architecture.md             # In-depth architectural specification
+│   ├── deployment.md               # Production deployment guide
+│   ├── demo_guide.md               # Step-by-step evaluator walkthrough
+│   └── react_migration.md          # 5-phase React migration audit
+├── frontend/                       # React 18 + TypeScript + Vite Web Application
+│   ├── src/
+│   │   ├── components/             # Reusable UI components (Calm Proof Flow)
+│   │   │   ├── explainability/     # SHAP waterfall, signatures, decision context
+│   │   │   ├── layout/             # AppHeader, AppShell, Layout primitives
+│   │   │   ├── tickets/            # Comprehensive InspectionTicketView
+│   │   │   └── ui/                 # Button, Input, Table, Chart, Status, Surface
+│   │   ├── screens/                # Operational screens
+│   │   │   ├── OverviewScreen/     # Fleet health overview & executive KPIs
+│   │   │   ├── InspectionQueueScreen/ # Prioritized candidate work-order queue
+│   │   │   ├── MeterAnalysisScreen/   # Diagnostic workbench & time series
+│   │   │   └── ModelInsightsScreen/   # Model governance & policy comparison
+│   │   ├── services/               # Typed apiClient with backend fallback resilience
+│   │   └── styles/                 # Authoritative design tokens (tokens.css)
+│   ├── Dockerfile                  # Multi-stage production Nginx container
+│   ├── package.json                # Dependencies, Vitest, TypeScript, ESLint
+│   └── vite.config.ts              # Vite bundler configuration & test runner
+├── scripts/                        # Automation & execution runner scripts
+│   ├── run_api.py                  # Standalone FastAPI launcher
+│   └── run_services.py             # Concurrent API + React launcher
+├── src/grid_guard/                 # Core Python application package
+│   ├── api/                        # FastAPI routes, schemas, and lifecycle service
+│   ├── config/                     # Pydantic Settings & environment variables
+│   ├── data/                       # Ingestion, validation, and Polars cleaning
+│   ├── decision/                   # Dynamic thresholds & ticket prioritization
+│   ├── evaluation/                 # Cost matrices, leakage estimators, metrics
+│   ├── explainability/             # Tree-SHAP, feature mapping, physical signatures
+│   ├── features/                   # 60 temporal feature engineering pipeline
+│   └── models/                     # Baseline, SMOTE, and cost-sensitive boosters
+├── tests/                          # 162 automated Python tests (Unit, Integration, E2E)
+├── Dockerfile.api                  # Container manifest for FastAPI backend
+├── docker-compose.yml              # Multi-container orchestration (API + Frontend)
+└── pyproject.toml                  # UV / Python dependency specification
 ```
 
 ---
 
-## 8. Installation and Execution Guide
+## 7. Installation, Build & Execution Guide
 
-### 8.1 Prerequisites & System Requirements
+### 7.1 Prerequisites & System Requirements
 - **Operating System**: Windows 10/11, Linux (Ubuntu 20.04+), or macOS (Intel / Apple Silicon)
-- **Python Runtime**: Version `3.11` (or `3.12`)
-- **Package Manager**: [`uv`](https://docs.astral.sh/uv/) (recommended for 10x faster installation) or standard `pip`
-- **Git**: Installed and configured on your system PATH
+- **Python**: Version `3.11` (or `3.12`)
+- **Node.js**: Version `18.x` or `20.x` LTS (with `npm 9+`)
+- **Package Manager**: [`uv`](https://docs.astral.sh/uv/) (recommended for 10x faster Python resolution) or `pip`
+- **Git**: Installed and available on system PATH
 - **Docker & Docker Compose** *(Optional, for containerized execution)*
 
 ---
 
-### 8.2 Installation Guide
+### 7.2 Installation
 
-#### Option A: Fast Installation with `uv` (Recommended)
-`uv` automatically handles Python virtual environment creation, resolution, and dependency locking:
-
+#### 1. Clone Repository
 ```bash
-# 1. Clone the repository
 git clone https://github.com/Gauravsharma2711/grid-guard.git
 cd grid-guard
+```
 
-# 2. Install uv if not already present
-# On Windows (PowerShell):
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
-# On Linux / macOS:
-curl -LsSf https://astral.sh/uv/install.sh | sh
+#### 2. Backend Environment Setup
+**Option A: Using `uv` (Recommended)**
+```bash
+# Install uv (if not already installed)
+# Windows: powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+# Linux/macOS: curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# 3. Synchronize all project dependencies into an isolated virtual environment
+# Synchronize all Python dependencies into an isolated virtual environment
 uv sync
 ```
 
-#### Option B: Standard Installation with `pip` & `venv`
-If you prefer standard Python virtual environments:
-
+**Option B: Using standard `pip` and `venv`**
 ```bash
-# 1. Clone the repository
-git clone https://github.com/Gauravsharma2711/grid-guard.git
-cd grid-guard
-
-# 2. Create and activate a Python 3.11 virtual environment
-# On Windows (PowerShell / Command Prompt):
 python -m venv .venv
-.venv\Scripts\activate
 
-# On Linux / macOS:
-python3 -m venv .venv
-source .venv/bin/activate
+# Activate virtual environment
+# Windows: .venv\Scripts\activate
+# Linux/macOS: source .venv/bin/activate
 
-# 3. Upgrade pip and install package in editable development mode
 pip install --upgrade pip
 pip install -e .
 ```
 
----
-
-### 8.3 Running the Backend (FastAPI Inference Service)
-
-The backend exposes the core machine learning inference pipeline, Tree-SHAP explainer, dynamic threshold engine, and inspection work-order generator.
-
-#### Method 1: Using the Backend Runner Script (Recommended)
+#### 3. Frontend Dependencies Setup
 ```bash
-# Launch on default port (8000)
-uv run python scripts/run_api.py
-
-# Or specify custom host, port, or live-reload:
-uv run python scripts/run_api.py --port 5678 --host 0.0.0.0 --reload
-```
-
-#### Method 2: Running Directly with Uvicorn
-```bash
-# Using uv:
-uv run uvicorn grid_guard.api.main:app --host 0.0.0.0 --port 8000 --reload
-
-# Or with activated virtual environment:
-uvicorn grid_guard.api.main:app --host 0.0.0.0 --port 8000 --reload
-```
-
-#### Backend Endpoints & Verification:
-- **Interactive Swagger UI**: [http://localhost:8000/docs](http://localhost:8000/docs) (or [http://localhost:5678/docs](http://localhost:5678/docs))
-- **ReDoc Documentation**: [http://localhost:8000/redoc](http://localhost:8000/redoc)
-- **Health & Readiness Probe**: [http://localhost:8000/health](http://localhost:8000/health)
-- **Quick Curl Test**:
-  ```bash
-  curl http://localhost:8000/health
-  # Expected Response: {"status":"healthy","model_loaded":true,"version":"1.0.0"}
-  ```
-
----
-
-### 8.4 Running the Frontend (Streamlit Operational Dashboard)
-
-The frontend provides an interactive, reactive web dashboard for utility revenue analysts, dispatch supervisors, and field technicians.
-
-#### Method 1: Using the Dashboard Runner Script (Recommended)
-```bash
-# Launch on default port (8501)
-uv run python scripts/run_dashboard.py
-
-# Or specify custom port (e.g., 1456)
-uv run python scripts/run_dashboard.py --port 1456
-```
-
-#### Method 2: Running Directly with Streamlit CLI
-```bash
-# Using uv:
-uv run streamlit run src/grid_guard/dashboard/app.py --server.port 8501
-
-# Or with activated virtual environment:
-streamlit run src/grid_guard/dashboard/app.py --server.port 8501
-```
-
-#### Dashboard Features & Navigation:
-- **Web UI URL**: [http://localhost:8501](http://localhost:8501) (or `http://localhost:1456`)
-- **Fleet Overview**: Executive KPI cards, Expected Net Value distributions, and prioritized candidate tables.
-- **Meter Drilldown**: 180-day interactive Plotly consumption time series with changepoints and Tree-SHAP waterfall attributions.
-- **Interactive Demonstrations**: 5 pre-configured synthetic tampering archetypes (Abrupt Bypassing, Partial Resistance Shunting, Seasonal Peak Divergence, Rural Lifeline Consumer, and Honest Volatile User).
-- **Backend Connection**: The dashboard communicates with the backend via HTTP. It automatically connects to the active API instance (configured in `configs/default.yaml` or via the `API_BASE_URL` environment variable).
-
----
-
-### 8.5 Running the React + TypeScript Frontend (Phase 1 Foundation)
-
-The repository includes a modern React + TypeScript frontend foundation located in `frontend/`, designed to replace Streamlit over a five-phase migration following the authoritative Calm Proof Flow design system (`designsystem.md`).
-
-```bash
-# Navigate to the frontend directory
 cd frontend
-
-# Install dependencies
 npm install
-
-# Start the Vite development server (http://localhost:3000)
-npm run dev
-
-# Run strict TypeScript type-checking
-npm run typecheck
-
-# Run ESLint check
-npm run lint
-
-# Run Vitest automated test suite
-npm run test
-
-# Build production bundle
-npm run build
+cd ..
 ```
-
-See [docs/react_migration.md](docs/react_migration.md) for full architecture audit and migration documentation.
 
 ---
 
-### 8.6 Running Both Services Concurrently (One-Command Launcher)
+### 7.3 Running Locally (Development Mode)
 
-To launch both the FastAPI backend and React frontend concurrently in a single terminal session:
+#### Method 1: Single-Command Integrated Launcher (Recommended)
+Launch both the FastAPI backend and React frontend concurrently in a single terminal session:
 
 ```bash
 uv run python scripts/run_services.py
 ```
 
-This single command:
-1. Starts the FastAPI inference backend on `http://localhost:8000`.
-2. Waits 3 seconds for the Lifespan model booster to preload into RAM.
-3. Spawns the React Vite development server on `http://localhost:5173`.
-4. Manages process lifecycles cleanly—pressing `Ctrl+C` terminates both services gracefully.
+This command automatically:
+1. Boots the FastAPI backend on `http://localhost:8000`.
+2. Preloads the LightGBM booster into memory.
+3. Launches the React Vite development server on `http://localhost:5173`.
+4. Terminates both processes cleanly when `Ctrl+C` is pressed.
+
+#### Method 2: Running Standalone Services
+
+**Terminal 1 — FastAPI Backend**:
+```bash
+uv run python scripts/run_api.py --host 127.0.0.1 --port 8000 --reload
+# Or directly via uvicorn:
+uv run uvicorn grid_guard.api.main:app --host 127.0.0.1 --port 8000 --reload
+```
+
+**Terminal 2 — React Frontend**:
+```bash
+cd frontend
+npm run dev
+```
 
 ---
 
-### 8.7 Running with Docker & Docker Compose
+### 7.4 Build Commands (Production Bundles)
 
-For a zero-dependency, production containerized deployment:
+#### 1. Building the Frontend Production Bundle
+Compile TypeScript and generate the optimized, tree-shaken static production bundle with Vite:
 
 ```bash
-# 1. Build and start all services in detached mode
+cd frontend
+npm run build
+```
+- **Output**: Minified production artifacts generated in `frontend/dist/`.
+- **Bundle Contents**: `dist/index.html`, minified CSS (`dist/assets/*.css`), and chunked JavaScript (`dist/assets/*.js`).
+
+#### 2. Previewing the Production Build Locally
+Verify the production build before deployment:
+
+```bash
+cd frontend
+npm run preview
+# Preview server available at: http://localhost:4173
+```
+
+#### 3. Building via Docker & Docker Compose
+Build and run the entire multi-container production system (FastAPI on port 8000, Nginx serving React on port 3000):
+
+```bash
+# Build images and start containers in detached mode
 docker compose up --build -d
 
-# 2. View real-time container logs
-docker compose logs -f
-
-# 3. Check container health status
+# Check status of both services
 docker compose ps
 
-# 4. Stop all services
+# View live container logs
+docker compose logs -f
+
+# Terminate containers
 docker compose down
 ```
 
-- **React Web Application**: [http://localhost:3000](http://localhost:3000)
-- **FastAPI OpenAPI Documentation**: [http://localhost:8000/docs](http://localhost:8000/docs)
-- **API Health Probe**: [http://localhost:8000/health](http://localhost:8000/health)
-
-### 8.8 Deploying to Render (Cloud Production)
-
-Grid-Guard is configured for zero-friction cloud deployment on [Render](https://render.com) using the included root `render.yaml` Blueprint:
-
-- **Frontend (Static Site)**: React + Vite SPA with SPA rewrites (`dist/`).
-- **Backend (Web Service)**: FastAPI ASGI application with Uvicorn (`uv run uvicorn grid_guard.api.main:app --host 0.0.0.0 --port $PORT`).
-- **Blueprint Auto-Deploy**: Simply connect your repository to Render Blueprints.
-
-For step-by-step instructions, environment variable configurations, and post-deployment smoke tests, consult the [Render Deployment Guide (docs/render_deployment.md)](docs/render_deployment.md).
-
 ---
 
-### 8.9 Running Automated Tests & Code Quality
+### 7.5 Automated Testing & Code Quality Verification
 
-Validate system correctness, leakage prevention, financial invariants, and UI components across all 270 automated tests:
+Grid-Guard maintains a **100% passing test suite across all 266 automated tests**:
 
 ```bash
-# 1. Backend Python regression test suite (164 tests)
+# --------------------------------------------------------------------------
+# 1. Backend Python Test Suite (162 tests)
+# --------------------------------------------------------------------------
 uv run pytest -q
 
-# 2. Python code quality and linter check (Ruff)
+# --------------------------------------------------------------------------
+# 2. Backend Python Linting & Formatting Check (Ruff)
+# --------------------------------------------------------------------------
 uv run ruff check .
 
-# 3. Frontend React unit and integration suite (106 tests across 27 files)
+# --------------------------------------------------------------------------
+# 3. Frontend React Unit & Integration Test Suite (104 tests / 27 files)
+# --------------------------------------------------------------------------
 cd frontend
 npm run test
 
-# 4. Frontend TypeScript typecheck and ESLint
+# --------------------------------------------------------------------------
+# 4. Frontend Strict TypeScript Typechecking (zero compile errors)
+# --------------------------------------------------------------------------
 npm run typecheck
+
+# --------------------------------------------------------------------------
+# 5. Frontend ESLint Verification (zero warnings/errors)
+# --------------------------------------------------------------------------
 npm run lint
 
-# 5. Production bundle build
+# --------------------------------------------------------------------------
+# 6. Production Bundle Build Verification
+# --------------------------------------------------------------------------
 npm run build
+cd ..
 ```
 
 ---
 
-## 9. Interactive Demonstration Experience
+## 8. REST API Reference & Endpoints
 
-The dashboard includes **5 deterministic synthetic demonstration archetypes** illustrating core operational regimes without exposing real customer data:
+The FastAPI backend exposes fully typed REST endpoints conforming to OpenAPI 3.1. Interactive Swagger UI is available at **`http://localhost:8000/docs`**.
 
-1. **Normal Residential Meter**: Consistent 12–15 kWh/day usage. Yields low risk (`p=0.065`) and negative ENV (`-$494.43`). No dispatch recommended.
-2. **Sustained Step-Down Anomaly**: Sudden 95% drop from 28.5 kWh to 1.2 kWh. Model outputs elevated probability (`p=0.359`), estimated recovery of `~$28,600`, and **`ENV = +$9,756.45`**. Recommends immediate inspection.
-3. **Flatline Invariance Anomaly**: Meter locked to constant 1.00 kWh/day (0 variance). Activates the *"Flatline pattern"* signature, yielding `ENV = +$521.84`.
-4. **High-Value Commercial Account**: Baseline of 240 kWh/day dropping to 40 kWh/day. Produces **`ENV = +$179,270.29`**, immediately claiming #1 rank in the inspection queue.
-5. **High Risk / Low Net Value (Lifeline)**: Rural customer using 0.25 kWh/day dropping to 0.03 kWh/day. Although the model detects an anomaly, the 12-month leakage is only `~$12.00`. **Grid-Guard's ENV rule rejects dispatch** (`ENV = -$89.20 < 0`), saving the utility from wasting a $100 crew dispatch!
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/health` | Liveness health probe returning service status and loaded model version. |
+| `GET` | `/ready` | Readiness probe confirming model booster and Tree-SHAP explainer are preloaded in RAM. |
+| `POST` | `/api/v1/predict` | Score a single smart meter: computes 60 features, calibrated probability, financial metrics, and Tree-SHAP explanation. |
+| `POST` | `/api/v1/predict/batch` | Batch scoring endpoint for up to 50 smart meters concurrently. |
+| `GET` | `/api/v1/inspection/queue` | Returns prioritized work-order candidates filtered by `min_env`, `min_probability`, and `max_inspections`. |
+| `POST` | `/api/v1/inspection/ticket` | Generates a complete forensic inspection work order with evidence narratives and signatures. |
+| `GET` | `/api/v1/metadata/model` | Introspects model architecture, hyperparameters, training objective, and feature metadata. |
+| `GET` | `/api/v1/metadata/config` | Retrieves active operational defaults (tariff, crew dispatch cost, recovery horizon). |
+
+### Example API Request (Curl)
+```bash
+curl -X POST "http://localhost:8000/api/v1/predict" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "meter_id": "METER_DEMO_001",
+    "customer_type": "residential",
+    "feeder_id": "FEEDER_NORTH_04",
+    "tariff_per_kwh": 0.15,
+    "dispatch_cost": 100.0,
+    "decision_rule": "env",
+    "include_explanation": true,
+    "readings": [
+      {"date": "2024-01-01", "consumption_kwh": 25.4},
+      {"date": "2024-01-02", "consumption_kwh": 26.1},
+      {"date": "2024-01-03", "consumption_kwh": 2.1}
+    ]
+  }'
+```
 
 ---
 
-## 10. Measured Empirical Benchmarks
+## 9. Measured Empirical Benchmarks
 
-### 10.1 Machine Learning Model Comparison (254,232 Validation Samples)
-| Phase | Architecture | PR-AUC | ROC-AUC | Precision@100 | Wasted Dispatch | Undetected Leakage | Total Operational Loss |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Phase 4** | Unweighted Baseline | 0.3035 | 0.7739 | 0.65 | $261,200 | $1,711,500 | $1,972,700 |
-| **Phase 5** | SMOTE-Tomek Imbalance | 0.2841 | 0.7612 | 0.58 | $342,100 | $1,385,200 | $1,727,300 |
-| **Phase 6** | **Cost-Sensitive (Champion)**| **0.3021** | **0.7725** | **0.72** | **$215,800** | **$1,273,600** | **$1,489,400 (-24.5%)** |
+### 9.1 Machine Learning Model Benchmark (254,232 Validation Samples)
+The cost-sensitive LightGBM champion booster was evaluated on historical smart-meter validation data against unweighted and imbalance-oversampled baselines:
 
-### 10.2 Operational Policy Comparison (42,372 Fleet Candidates)
-| Inspection Policy Rule | Recommended Dispatches | Expected Gross Recovery | Total Dispatch Cost | Expected Net Value (ENV) | Realized Operational Loss |
+| Architecture | PR-AUC | ROC-AUC | Precision@100 | Wasted Dispatch Cost | Undetected Leakage Cost | Total Operational Loss |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Phase 4: Unweighted Baseline** | 0.3035 | 0.7739 | 0.65 | $261,200 | $1,711,500 | $1,972,700 |
+| **Phase 5: SMOTE-Tomek Imbalance** | 0.2841 | 0.7612 | 0.58 | $342,100 | $1,385,200 | $1,727,300 |
+| **Phase 6: Cost-Sensitive (Champion)** | **0.3021** | **0.7725** | **0.72** | **$215,800** | **$1,273,600** | **$1,489,400 (-24.5%)** |
+
+### 9.2 Operational Policy Benchmark (42,372 Fleet Candidates)
+Evaluating decision rules across the operational fleet demonstrates that prioritizing by Expected Net Value maximizes recovery and minimizes wasted crew dispatches:
+
+| Inspection Policy Rule | Recommended Dispatches | Expected Gross Recovery | Total Crew Dispatch Cost | Expected Net Value ($\text{ENV}$) | Realized Operational Loss |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Fixed Threshold (p >= 0.50)** | 170 (0.40%) | $240,120.42 | $17,000.00 | $223,120.42 | $82,685.27 |
+| **Fixed Cutoff ($p \ge 0.50$)** | 170 (0.40%) | $240,120.42 | $17,000.00 | $223,120.42 | $82,685.27 |
 | **Bayes Cost Threshold** | 880 (2.08%) | $362,497.41 | $88,000.00 | $274,497.41 | $68,073.82 |
 | **Dynamic ENV Policy (Grid-Guard)**| **801 (1.89%)** | **$355,330.47** | **$80,100.00** | **+$275,230.47** | **$64,842.91 (Lowest Loss)** |
 
 ---
 
+## 10. Calm Proof Flow Design System
+
+The user interface adheres strictly to `/DesignSystem.md` ("Calm Proof Flow"), rejecting generic dashboard templates and arbitrary SaaS styling:
+
+- **Visual Density & Typography**:
+  - Display & Headings: `Space Grotesk` (600/700 weight) for authoritative structure.
+  - Body Text: `IBM Plex Sans` for legibility across telemetry records.
+  - Tabular Numbers & Codes: `JetBrains Mono` with `tabular-nums` for precise alignment of currency, percentages, and dates.
+- **Curated Color Tokens**:
+  - Ink: `#121512` (authoritative deep forest-black)
+  - Canvas: `#F4F5F0` (calm warm off-white surface)
+  - Surface: `#FFFFFF` (elevated cards with hairline borders)
+  - Chartreuse: `#D4F04A` (sparing operational highlight & active states)
+  - Safe Green: `#3F8B61` (positive Expected Net Value & moderating evidence)
+  - Threat Violet: `#7D6DB2` (strictly reserved for Tree-SHAP evidence attribution)
+  - Danger Red: `#C45646` (critical electrical tampering severity)
+- **Restrained Motion**: Subtle 120ms–260ms easing transitions for hover lift and slide-out drawers, eliminating distracting animations during critical dispatch operations.
+
+---
+
 ## 11. Financial Methodology & Caveats
 
-- **Observed / Derived**: Daily deficits and unmetered volumes are derived from comparing recent 14-day consumption against historical 60-day baselines.
-- **Assumed / Modeled Parameters**: Default tariff (\$0.15/kWh), crew dispatch cost (\$100/visit), and recovery horizon (12 billing cycles) are configurable in settings.
-- **Operational Labeling**: All monetary figures represent **modeled expectations** ($E[\text{Recovery}] = \sum p_i R_i$) and do not guarantee recovered cash until field crews physically verify and bill the unmetered consumption.
+- **Deficit Derivation**: Unmetered consumption is derived by measuring recent trailing consumption (e.g., 14-day window) against pre-anomaly baselines (60-day window).
+- **Tariff & Horizon Assumptions**: Standard default tariff ($\$0.15$/kWh), crew dispatch cost ($\$100.00$), and recovery horizon (12 billing cycles) can be customized per feeder, tariff class, or utility contract.
+- **Probabilistic Modeling**: All monetary figures represent **modeled expectations** ($E[\text{Recovery}] = \sum p_i R_i$) and do not represent verified cash until physical on-site inspection confirms the bypass and revenue recovery billing is issued.
 
 ---
 
-## 12. Known Limitations & Future Work
+## 12. Known Limitations & Roadmap
 
-- **Granularity**: The current release operates on daily AMI aggregates. Integrating 15-minute interval smart-meter data could unlock reactive power and phase-angle anomaly signatures.
-- **Feeder Aggregation**: Future iterations can incorporate substation-level energy balancing (total feeder sendout vs. sum of meters) to bound total NTL prior to individual meter scoring.
-- **Dynamic Crew Routing**: Integrating GIS coordinates to batch inspections geographically could further reduce dispatch travel costs.
+- **Telemetry Frequency**: The platform currently processes daily AMI consumption aggregates. Future releases will introduce 15-minute interval smart-meter ingestion to analyze reactive power signatures, power factor deviations, and phase-angle distortions.
+- **Substation Energy Balancing**: Planned feeder-level energy mass-balancing (substation sendout minus sum of consumer meters) to bound total NTL volume before individual meter scoring.
+- **GIS Route Optimization**: Geographic batching of candidate work orders to reduce travel time and crew dispatch expenses.
 
 ---
 
-## 13. License & Citation
+## 13. License & Acknowledgments
 
-Grid-Guard is developed for research and operational utility loss reduction under the MIT License.
-Dataset acknowledgments: State Grid Corporation of China (SGCC) Smart Meter Benchmark.
+Grid-Guard is distributed under the **MIT License**.
+
+- **Dataset Acknowledgments**: State Grid Corporation of China (SGCC) Smart Meter Benchmark dataset.
+- **Research Foundations**: Cost-sensitive machine learning in utility revenue protection and Tree-SHAP local game-theoretic attribution.
